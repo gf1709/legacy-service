@@ -1,0 +1,26 @@
+{
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.format.settings.url": ".vscode/java-formatter.xml",
+    "workbench.colorCustomizations": {
+        "activityBar.activeBackground": "#38555c",
+        "activityBar.background": "#38555c",
+        "activityBar.foreground": "#e7e7e7",
+        "activityBar.inactiveForeground": "#e7e7e799",
+        "activityBarBadge.background": "#281825",
+        "activityBarBadge.foreground": "#e7e7e7",
+        "commandCenter.border": "#e7e7e799",
+        "sash.hoverBorder": "#38555c",
+        "statusBar.background": "#25383c",
+        "statusBar.foreground": "#e7e7e7",
+        "statusBarItem.hoverBackground": "#38555c",
+        "statusBarItem.remoteBackground": "#25383c",
+        "statusBarItem.remoteForeground": "#e7e7e7",
+        "titleBar.activeBackground": "#25383c",
+        "titleBar.activeForeground": "#e7e7e7",
+        "titleBar.inactiveBackground": "#25383c99",
+        "titleBar.inactiveForeground": "#e7e7e799"
+    },
+    "peacock.color": "#25383c",
+    "git.ignoreLimitWarning": true
+}

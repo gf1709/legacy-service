@@ -1,0 +1,291 @@
+<div class="row">
+  <h2 style="text-align: center; padding: 5px;">Gestione Oggetti</h2>
+  <div class="row row-cols-auto justify-content-center">
+    <h6>
+      Filtri di ricerca
+    </h6>
+  </div>
+
+  <div class="row row-cols-auto justify-content-center">
+    <div class="col">
+      <span class="gf_label">Libreria</span>
+      <div class="input-group input-group-sm mb-2">
+        <input type="text" id="filter_lib" name="filter_lib" class="form-control border-end-0 border shadow-none mt-0"
+          placeholder="LBxxyUDT, *ALL, *LIBL" [(ngModel)]="m_listFilter.libreria" data-toggle="tooltip"
+          data-placement="top" title="Specificare il filtro sulla libreria (es. LBFCBUDT o *ALL)">
+        <span class="input-group-text bg-transparent">
+          <i class="bi bi-folder" title="Specificare il filtro sulla libreria (es. LBFCBUDT o *ALL)"></i>
+        </span>
+      </div>
+    </div>
+
+    <div class="col">
+      <span class="gf_label">Oggetto</span>
+      <div class="input-group input-group-sm mb-2">
+        <input type="text" id="filter_obj" name="filter_obj" class="form-control border-end-0 border shadow-none mt-0"
+          placeholder="Oggetto" [(ngModel)]="m_listFilter.nome" (keydown)="onKeydown($event)" data-toggle="tooltip"
+          data-placement="top" title="Specificare il filtro sull'oggetto (es. A01*)">
+        <span class="input-group-text bg-transparent">
+          <i class="bi bi-database" title="Specificare l'oggetto"></i>
+        </span>
+      </div>
+    </div>
+
+    <div class="col">
+      <span class="gf_label">Tipo</span>
+      <div class="input-group input-group-sm mb-2">
+        <input type="text" id="filter_type" name="filter_type" class="form-control border-end-0 border shadow-none mt-0"
+          placeholder="Tipo (*FILE, *LIB)" [(ngModel)]="m_listFilter.tipo" (keydown)="onKeydown($event)"
+          data-toggle="tooltip" data-placement="top" title="Specificare il filtro sul tipo oggetto (es. *FILE, *PGM)">
+        <span class="input-group-text bg-transparent" title="Specificare il filtro sul tipo oggetto (es. *FILE, *PGM)">
+          <i class="bi bi-fonts" title="Specificare il tipo"></i>
+        </span>
+      </div>
+    </div>
+
+    <div class="col p-0">
+      <button class="col btn btn-primary btn-sm mt-4" type="button" title="Ricerca Oggetti" (click)="getObjetcList()">
+        Ricerca
+      </button>
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="row row-cols-auto justify-content-center">
+      <h6 class="mt-4">
+        Elenco oggetti
+      </h6>
+    </div>
+    <div class="row row-cols-auto justify-content-center text-align-center">
+      <table class="table table-sm small align-middle table-hover" style="max-width: 600px;">
+        <thead>
+          <tr>
+            <td scope="col">
+              <p>Libreria</p>
+            </td>
+            <td scope="col">
+              <p>Nome</p>
+            </td>
+            <td scope="col">
+              <p>Tipo</p>
+            </td>
+            <td scope="col">
+              <p>Attr.</p>
+            </td>
+            <td scope="col">
+              <p>Descrizione.</p>
+            </td>
+            <td scope="col" colspan="2">
+              <p> </p>
+            </td>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (item of m_object_list(); track $index; let i = $index) {
+          <tr>
+            <td class="py-0 px-1">
+              {{item.library}}
+            </td>
+            <td class="py-0 px-1">
+              {{item.name}}
+            </td>
+            <td class="py-0 px-1">
+              {{item.type}}
+            </td>
+            <td class="py-0 px-1">
+              {{item.attribute}}
+            </td>
+            <td class="py-0 px-1">
+              {{item.description}}
+            </td>
+            <td class="py-0 px-1">
+              <button class="btn btn-sm rounded-0" type="button" title="Dettagli" (click)="showDetail(item)"
+                data-bs-toggle="modal" data-bs-target="#objectDetailModal">
+                <i class="bi bi-info-circle"></i>
+              </button>
+            </td>
+            <td class="py-0 px-1">
+              @if(item.type==='FILE'){
+              <button class="btn btn-sm rounded-0" type="button" title="FFD" (click)="showFFD(item)"
+                data-bs-toggle="modal" data-bs-target="#ffdModal">
+                <i class="bi bi-eye"></i>
+              </button>
+              }
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+
+
+      <!-- Object Deail Form -->
+      <div class="modal fade" id="objectDetailModal" tabindex="-1" role="dialog" aria-labelledby="objectDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header justify-content-center">
+              <h5 class="modal-title" id="objectDetailModalLabel">Dettagli oggetto</h5>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                <div class="row col-10 offset-1 justify-content-center">
+                  <table class="table small table-borderless">
+                    <tbody>
+                      <tr>
+                        <td class="p-0">
+                          <p class="text-end m-0"><b>Libreria :</b></p>
+                        </td>
+                        <td class="p-0">
+                          <p class="mx-2 my-0">{{m_objectDescriptionDetail().library}}</p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-0">
+                          <p class="text-end m-0"><b>Nome :</b></p>
+                        </td>
+                        <td class="p-0">
+                          <p class="mx-2 my-0">{{m_objectDescriptionDetail().name}}</p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-0">
+                          <p class="text-end m-0"><b>Tipo :</b></p>
+                        </td>
+                        <td class="p-0">
+                          <p class="mx-2 my-0">{{m_objectDescriptionDetail().type}}</p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-0">
+                          <p class="text-end m-0"><b>Attributo :</b></p>
+                        </td>
+                        <td class="p-0">
+                          <p class="mx-2 my-0">{{m_objectDescriptionDetail().attribute}}</p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-0">
+                          <p class="text-end m-0"><b>Descrizione :</b></p>
+                        </td>
+                        <td class="p-0">
+                          <p class="mx-2 my-0">{{m_objectDescriptionDetail().description}}</p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-0">
+                          <p class="text-end m-0"><b>Proprietario :</b></p>
+                        </td>
+                        <td class="p-0">
+                          <p class="mx-2 my-0">{{m_objectDescriptionDetail().owner}}</p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-0">
+                          <p class="text-end m-0"><b>Data creazione :</b></p>
+                        </td>
+                        <td class="p-0">
+                          <p class="mx-2 my-0">{{m_objectDescriptionDetail().creationDate}}</p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-0">
+                          <p class="text-end m-0"><b>Utente :</b></p>
+                        </td>
+                        <td class="p-0">
+                          <p class="mx-2 my-0">{{m_objectDescriptionDetail().creationUser}}</p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-0">
+                          <p class="text-end m-0"><b>Dimensione :</b></p>
+                        </td>
+                        <td class="p-0">
+                          <p class="mx-2 my-0">{{m_objectDescriptionDetail().size}}</p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-0">
+                          <p class="text-end m-0"><b>Data ultima modifica :</b></p>
+                        </td>
+                        <td class="p-0">
+                          <p class="mx-2 my-0">{{m_objectDescriptionDetail().changeDate}}</p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- Object Deail Form end -->
+
+
+    <!-- FFD Form -->
+    <div class="modal fade" id="ffdModal" tabindex="-1" role="dialog" aria-labelledby="ffdModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header row row-cols-auto justify-content-center">
+            <h5 class="modal-title" id="ffdModalLabel">FFD - {{m_ffd().library}}/{{m_ffd().ddsName}}
+              [Len:{{getFFDLen()}}]</h5>
+          </div>
+          <div class="modal-body">
+            <div class="container">
+              <div class="row row-cols-auto justify-content-center">
+                <table class="table table-sm small align-middle w-auto">
+                  <thead>
+                    <tr>
+                      <th class="py-0 pt-1 pb-3">#</th>
+                      <th class="py-0 pt-1 pb-3">Nome</th>
+                      <th class="py-0 pt-1 pb-3">Tipo</th>
+                      <th class="py-0 pt-1 pb-3">Lun.</th>
+                      <th class="py-0 pt-1 pb-3">Scala</th>
+                      <th class="py-0 pt-1 pb-3">Des.</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (field of m_ffd().fields; track $index; let fd_i=$index) {
+                    <tr>
+                      <td scope="row py-0 px-1">{{field.fieldNo}}</td>
+                      <td class="py-0 px-1">{{field.fieldName}}</td>
+                      <td class="pe-0 ps-3 py-1">{{field.fieldType}}</td>
+                      <td class="pe-0 ps-3 py-1">{{field.fieldLength}}</td>
+                      <td class="pe-0 ps-3 py-1">
+                        @if(field.fieldType==='A' || field.fieldType==='L' || field.fieldType==='T'){
+                        <div class="m-0 p-0">
+                          <span>-</span>
+                        </div>
+                        }
+                        @if (field.fieldType==='P' || field.fieldType==='S') {
+                        <div class="m-0 p-0">
+                          <span>{{field.fieldScale}}</span>
+                        </div>
+                        }
+                      </td>
+                      <td class="pe-0 ps-3 py-1">{{field.fieldDescription}}</td>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- FFD Form end -->
+
+  </div>

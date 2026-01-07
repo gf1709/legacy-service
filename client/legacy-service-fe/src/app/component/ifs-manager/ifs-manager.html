@@ -1,0 +1,402 @@
+<div>
+  <h2 style="text-align: center; padding: 5px;">Gestione file IFS</h2>
+  <div class="container">
+    <div class="row row-cols-auto justify-content-center">
+      <h6>
+        Parametri di ricerca
+      </h6>
+    </div>
+
+    <form #jobListFileForm="ngForm" (ngSubmit)="listFiles()">
+      <div class="row row-cols-auto justify-content-center">
+        <div class="col">
+          <span class="gf_label">Directory</span>
+          <div class="input-group input-group-sm mb-2" style="width: 400px;">
+            <input #filter_directory type="text" id="filter_directory" name="filter_directory"
+              class="form-control border-end-0 border shadow-none mt-0" [(ngModel)]="m_directory" data-toggle="tooltip"
+              data-placement="top" title="Directory">
+            <span class="input-group-text bg-transparent">
+              <i class="bi bi-folder" title="Specificare la directory"></i>
+            </span>
+          </div>
+        </div>
+        <div class="col">
+          <span class="gf_label">Nome file da elencare</span>
+          <div class="input-group input-group-sm mb-2" style="width: 200px;">
+            <input #filter_filepattern type="text" id="filter_filepattern" name="filter_filepattern"
+              class="form-control border-end-0 border shadow-none mt-0" [(ngModel)]="m_file_pattern"
+              data-toggle="tooltip" data-placement="top" title="File pattern">
+            <span class="input-group-text bg-transparent">
+              <i class="bi bi-regex" title="Specificare il filtro sul nome dei file da elencare"></i>
+            </span>
+          </div>
+        </div>
+        <div class="col mt-4">
+          <button class="btn btn-sm btn-primary" type="submit" title="Elenca file" [disabled]="!jobListFileForm.valid">
+            Elenca
+          </button>
+        </div>
+
+      </div>
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="row row-cols-auto justify-content-center">
+      <h6 class="mt-3">
+        File [{{m_fileList().files.length}}]
+      </h6>
+    </div>
+    <div class="row row-cols-auto justify-content-center fixed-table-loading table table-bordered table-hover">
+      <table class="table table-sm small table-hover" style="width:80%">
+        <thead>
+          <tr>
+            <th style="width:5%">
+              <label>
+                <input type="checkbox" title="select" (click)="toggleSelectDeselectAllRows()"
+                  [value]="m_allRowsSelected">
+              </label>
+            </th>
+
+            <th style="width:5%">
+              <button class="btn btn-sm border-0 p-0" type="button" (click)="sort('type')">
+                <span class="me-2 text fw-bold text-center">Type</span>
+                @if (m_sort_mode===SortMode.Type_ASC) {<i class="bi bi-sort-alpha-down"></i>}
+                @else if (m_sort_mode===SortMode.Type_DESC) {<i class="bi bi-sort-alpha-down-alt"></i>}
+                @else { <i class="bi bi-arrow-down-up"></i> }
+              </button>
+            </th>
+            <th style="width:50%">
+              <button class="btn btn-sm border-0 p-0" type="button" (click)="sort('name')">
+                <span class="me-2 text fw-bold">Name</span>
+                @if (m_sort_mode===SortMode.Name_ASC) {<i class="bi bi-sort-alpha-down"></i>}
+                @else if (m_sort_mode===SortMode.Name_DESC) {<i class="bi bi-sort-alpha-down-alt"></i>}
+                @else { <i class="bi bi-arrow-down-up"></i> }
+              </button>
+            </th>
+            <th style="width:18%">
+              <button class="btn btn-sm border-0 p-0" type="button" (click)="sort('date')">
+                <span class="me-2 text fw-bold">Date</span>
+                @if (m_sort_mode===SortMode.Date_ASC) {<i class="bi bi-sort-alpha-down"></i>}
+                @else if (m_sort_mode===SortMode.Date_DESC) {<i class="bi bi-sort-alpha-down-alt"></i>}
+                @else { <i class="bi bi-arrow-down-up"></i> }
+              </button>
+            </th>
+            <th style="width: 7%;">
+              <button class="btn btn-sm border-0 p-0" type="button" (click)="sort('size')">
+                <span class="me-2 text fw-bold">Size</span>
+                @if (m_sort_mode===SortMode.Size_ASC) {<i class="bi bi-sort-alpha-down"></i>}
+                @else if (m_sort_mode===SortMode.Size_DESC) {<i class="bi bi-sort-alpha-down-alt"></i>}
+                @else { <i class="bi bi-arrow-down-up"></i> }
+              </button>
+            </th>
+            <th style="width: 0%;">
+            </th>
+            <th style="width: 5%;" class="p-0">
+              @if (isAlmostOneFileSelected) {
+              <button class="btn btn-sm" type="button" title="Download all listed file content"
+                (click)="downloadFileListedFileContent()">
+                <i class="bi bi-download"></i>
+              </button>
+              }
+            </th>
+            <th style="width: 5%; " class="p-0">
+              @if (isAlmostOneFileSelected) {
+              <button class="btn btn-sm" type="button" title="Delete all listed file"
+                (click)="deleteAllSelectedFiles()">
+                <i class="bi bi-trash"></i>
+              </button>
+              }
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <ng-container *ngFor="let item of m_fileList().files; let i=index">
+            <tr class="border-top">
+              <td>
+                @if (item.type==='f') {
+                <label>
+                  <input type="checkbox" title="select" (click)="selectRow(i,$event)" [value]="item.isSelected"
+                    [checked]="item.isSelected">
+                </label>
+                }
+              </td>
+              <td>
+                <p class="text-center m-0 me-4  small">{{item.type}}</p>
+              </td>
+              <td>
+                @if(item.type==='f') {
+                <ng-container>
+                  <p class="m-0 me-4 small">{{item.name}}</p>
+                </ng-container>
+                }
+                @if(item.type==='d') {
+                <ng-container>
+                  <button class="btn btn-sm m-0 p-0" type="button" title="Vai alla directory"
+                    (click)="gotoDir(m_fileList().directory, item.name)">
+                    <p class="m-0 p-0 text-body-primary small" style="color:blue;">{{item.name}}</p>
+                  </button>
+                </ng-container>
+                }
+              </td>
+              <td>
+                <p class="m-0 me-4 small">{{item.changeDate}}</p>
+              </td>
+              <td>
+                <p class="m-0 me-4 small">{{item.size}}</p>
+              </td>
+              <td class="p-0">
+                @if(item.type==='f' && item.size>0) {
+                <ng-container>
+                  <button class="btn btn-sm" type="button" title="Visualizza file"
+                    (click)="showFileContent(m_fileList().directory, item.name, i)" data-bs-toggle="modal"
+                    data-bs-target="#showFileModal">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </ng-container>
+                }
+              </td>
+
+              <td class="p-0">
+                @if(item.type==='f' && item.size>0) {
+                <ng-container>
+                  <button class="btn btn-sm" type="button" title="Download file"
+                    (click)="downloadFile(m_fileList().directory, item.name, i)">
+                    <i class="bi bi-download"></i>
+                  </button>
+                </ng-container>
+                }
+              </td>
+
+              <td class="p-0">
+                @if(item.type==='f') {
+                <ng-container>
+                  <button class="btn btn-sm" type="button" title="Delete file"
+                    (click)="deleteIFSFile(m_fileList().directory, item.name, i)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </ng-container>
+                }
+              </td>
+
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+
+  <!-- Show file in modal form -->
+  <div class="modal fade" id="showFileModal" tabindex="-1" role="dialog" aria-labelledby="showFileModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"> File [{{m_current_file.dir}}/{{m_current_file.file}} ]</h5>
+          <div>
+            <button type="button" class="btn btn-sm btn-light me-2" data-bs-dismiss="modal" title="Cancella file"
+              (click)="deleteIFSFile(m_current_file.dir, m_current_file.file, m_current_file.idx)">
+              <i class="bi bi-trash"></i>
+            </button>
+
+            <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal" title="Chiudi">
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </div>
+        </div>
+        <div class="modal-body" tabindex="0">
+          <div class="d-flex" *ngFor="let item of this.m_file_content(); let joblogLineIdx=index">
+            <div class="row">
+              <div class="col">
+                @if (isHighlighted(joblogLineIdx)) {
+                <pre
+                  class="m-0 text-wrap"><small class="fw-bold text-primary">[{{joblogLineIdx}}] {{item}}</small></pre>
+                } @else {
+                <pre class="m-0 text-wrap"><small>[{{joblogLineIdx}}] {{item}}</small></pre>
+                }
+              </div>
+
+              @if (isISYCallOutput(joblogLineIdx)) {
+              <div class="row">
+                <div class="col-auto">
+                  <button class="btn btn-sm border-0 ms-1 p-0 ps-1 pe-1 btn-info" type="button"
+                    (click)="showISYDsOutput(joblogLineIdx)" title="Show ISY Call Output">
+                    @if(isJobLogLineExpanded(joblogLineIdx)) {
+                    <i class="bi bi-dash"></i>
+                    } @else {
+                    <i class="bi bi-plus"></i>
+                    }
+                  </button>
+                </div>
+                @if(isJobLogLineExpanded(joblogLineIdx)) {
+                <div class="col-auto border border-2 border-info rounded px-4 ms-2 mt-2 mb-2">
+                  <h6 class="text-center">Messaggio di output</h6>
+                  @for (programCallResponse of m_programCallResponses(); track $index; let $callIdx= $index) {
+                  <div class="row border rounded border-2 mb-1">
+                    <div class="col-auto">
+                      <table class="table table-sm">
+
+                        <tr>
+                          <td>
+                            <span class="text-primary fw-bold small me-1">Call nr:</span>
+                            <span class="small text-primary fw-bold"> {{$callIdx}} </span>
+                          </td>
+                          <td>
+                            <span class="fw-bold small me-1">Return Code:</span>
+                            <span class="small"> {{programCallResponse.result}} </span>
+                          </td>
+                          <td>
+                            <span class="fw-bold small me-1">Ds Output:</span>
+                            <span class="small"> {{programCallResponse.dsout}} </span>
+                          </td>
+                        </tr>
+
+                        @if(programCallResponse.dsout.length>0 && programCallResponse.values.length>0) {
+                        <tr>
+                          <td colspan="3" class="text-center mb-2"> <span class="fw-bold small me-1">Ds Output</span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="3">
+                            <table class="table table-sm">
+                              <thead>
+                                <tr>
+                                  <th scope="col" class="small">Nome</th>
+                                  <th scope="col" class="small">Valore</th>
+                                  <th scope="col" class="small">Tipo</th>
+                                  <th scope="col" class="small">Lunghezza</th>
+                                  <th scope="col" class="small">Dec.</th>
+                                  <th scope="col" class="small">Descrizione</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                @for (fieldValue of programCallResponse.values; track fieldValue.name; let $fldIdx =
+                                $index) {
+                                <tr scope="row">
+                                  <td class="small"><span class="small">{{fieldValue.name}} </span> </td>
+                                  <td class="small"><span class="small text-wrap text-break">{{fieldValue.value}}</span>
+                                  </td>
+                                  <td class="small"><span class="small">{{fieldValue.type}}</span></td>
+                                  <td class="small"><span class="small">{{fieldValue.length}}</span></td>
+                                  <td class="small"><span class="small">{{fieldValue.scale}}</span></td>
+                                  <td class="small"><span class="small">{{fieldValue.description}}</span></td>
+                                </tr>
+                                }
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                        }
+                      </table>
+                    </div>
+                  </div>
+                  }
+
+                </div>
+                }
+              </div>
+              }
+
+              @if (isISYCallInput(joblogLineIdx)) {
+              <div class="row">
+                <div class="col-auto">
+                  <button class="btn btn-sm border-0 ms-1 p-0 ps-1 pe-1 btn-primary" type="button"
+                    (click)="showISYDsInput(joblogLineIdx)" title="Show ISY Call Input">
+                    @if(isJobLogLineExpanded(joblogLineIdx)) {
+                    <i class="bi bi-dash"></i>
+                    }
+                    @else() {
+                    <i class="bi bi-plus"></i>
+                    }
+                  </button>
+                </div>
+
+                @if(isJobLogLineExpanded(joblogLineIdx)) {
+                <div class="col-auto border border-2 border-primary rounded px-4 ms-2 mt-2 mb-2">
+                  <h6 class="text-center">Messaggio di input</h6>
+                  @for (programCallRequest of m_programCallRequests(); track $callIdx; let $callIdx = $index) {
+                  <div class="row border rounded border-2 mb-1">
+                    <div class="col-auto">
+                      <table class="table table-sm mb-1 caption-top">
+                        <tr>
+                          <td>
+                            <span class="fw-bold small me-1">Call nr:</span>
+                            <span class="me-4 small text-primary fw-bold"> {{$callIdx}} </span>
+                          </td>
+                          <td>
+                            <span class="fw-bold small me-1">Program:</span>
+                            <span class="me-4 small"> {{programCallRequest.program}} </span>
+                          </td>
+                          <td>
+                            <span class="fw-bold small me-1">Command:</span>
+                            <span class="me-4 small"> {{programCallRequest.command}} </span>
+                          </td>
+                          <td>
+                            <span class="fw-bold small me-1">Ds Input:</span>
+                            <span class="me-4 small"> {{programCallRequest.dsin}} </span>
+                          </td>
+                          <td>
+                            <span class="fw-bold small me-1">Ds Output:</span>
+                            <span class="me-4 small"> {{programCallRequest.dsout}} </span>
+                          </td>
+                          <td>
+                            <span class="fw-bold small me-1">Times:</span>
+                            <span class="me-4 small"> {{programCallRequest.times}} </span>
+                          </td>
+
+                        </tr>
+
+                        <tr *ngIf="hasInput(programCallRequest)">
+                          <td colspan="6" class="text-center mb-2"> <span class="fw-bold small me-1">Ds Input</span>
+                          </td>
+                        </tr>
+                        <tr *ngIf="hasInput(programCallRequest)">
+                          <td colspan="6">
+                            <table class="table table-sm">
+                              <thead>
+                                <tr>
+                                  <th scope="col" class="small">Nome</th>
+                                  <th scope="col" class="small">Valore</th>
+                                  <th scope="col" class="small">Tipo</th>
+                                  <th scope="col" class="small">Lunghezza</th>
+                                  <th scope="col" class="small">Dec.</th>
+                                  <th scope="col" class="small">Descrizione</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                @for (fieldValue of programCallRequest.values; track $fldIdx; let $fldIdx = $index) {
+                                <tr scope="row">
+                                  <td class="small"><span class="small">{{fieldValue.name}} </span> </td>
+                                  <td class="small"><span class="small text-wrap text-break">{{fieldValue.value}}</span>
+                                  </td>
+                                  <td class="small"><span class="small">{{fieldValue.type}}</span></td>
+                                  <td class="small"><span class="small">{{fieldValue.length}}</span></td>
+                                  <td class="small"><span class="small">{{fieldValue.scale}}</span></td>
+                                  <td class="small"><span class="small">{{fieldValue.description}}</span></td>
+                                </tr>
+                                }
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+
+
+                    </div>
+                  </div>
+                  }
+
+                </div>
+              }
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

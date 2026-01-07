@@ -1,0 +1,148 @@
+<div>
+  <h2 style="text-align: center; padding: 5px;">Visualizzazione Sorgenti</h2>
+  <div class="container">
+    <div class="row row-cols-auto justify-content-center">
+      <h6>
+        Filtri di ricerca
+      </h6>
+    </div>
+    <form #sourceFilterForm="ngForm" (ngSubmit)="getSourceList()">
+      <div class="row row-cols-auto justify-content-center">
+        <div class="col">
+          <span class="gf_label">Libreria</span>
+          <div class="input-group input-group-sm mb-2 max_width_200">
+            <input #filter_lib type="text" name="filter_lib" class="form-control border-end-0 border shadow-none mt-0"
+              placeholder="Libreria" [(ngModel)]="m_source_filter.library" data-toggle="tooltip" data-placement="top"
+              title="Specificare libreria (es. LIBFCSRC)" required minlength="2">
+            <span class="input-group-text bg-transparent">
+              <i class="bi bi-folder" title="Specificare la libreria (Es. LIBFCSRC)"></i>
+            </span>
+          </div>
+        </div>
+
+        <div class="col">
+          <span class="gf_label">File sorgente</span>
+          <div class="input-group input-group-sm mb-2 max_width_200">
+            <input #filter_file type="text" name="filter_file" class="form-control border-end-0 border shadow-none mt-0"
+              placeholder="File sorgente" [(ngModel)]="m_source_filter.file" data-toggle="tooltip" data-placement="top"
+              required minlength="3">
+            <span class="input-group-text bg-transparent">
+              <i class="bi bi-files" title="Specificare il file sorgente (es. QRPGSRC)"></i>
+            </span>
+          </div>
+        </div>
+
+        <div class="col">
+          <span class="gf_label">Membro</span>
+          <div class="input-group input-group-sm mb-2 max_width_200">
+            <input #filter_member type="text" name="filter_member"
+              class="form-control border-end-0 border shadow-none mt-0" placeholder="Membro"
+              [(ngModel)]="m_source_filter.member" data-toggle="tooltip" data-placement="top" required minlength="3">
+            <span class="input-group-text bg-transparent">
+              <i class="bi bi-file" title="Membro sorgente (es. ZR1*)"></i>
+            </span>
+          </div>
+        </div>
+
+        <div class="col p-0">
+          <button class="btn btn-primary btn-sm mt-4" type="submit" title="Ricerca Sorgenti"
+            [disabled]="!sourceFilterForm.valid">
+            Elenca
+          </button>
+        </div>
+      </div>
+    </form>
+
+    @if(getSourceListEmpty()) {
+    <div class="row">
+      <div class="row row-cols-auto justify-content-center">
+        <h6 class="mt-4">
+          Sorgenti
+        </h6>
+      </div>
+      <div class="row row-cols-auto justify-content-center text-align-center">
+        <table class="table table-sm small align-middle table-hover" style="max-width: 600px;">
+          <thead>
+            <tr>
+              <th scope="col">
+                <p>Nome</p>
+              </th>
+              <th scope="col" colspan="2">
+                <p>Descrizione</p>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of m_source_list().sources; track $index; let i= $index) {
+            <tr>
+              <td>
+                {{item.sourceMember}}
+              </td>
+              <td>
+                {{item.sourceMemberDescription}}
+              </td>
+              <td>
+                <div class="vr"></div>
+
+                <button class="btn btn-sm rounded-0" type="button" title="Visualizza Codice"
+                  (click)="showSource(item.library, item.sourceFile, item.sourceMember, false)" data-bs-toggle="modal"
+                  data-bs-target="#showSourceModal">
+                  <i class="bi bi-eye"></i>
+                </button>
+                <button class="btn btn-sm rounded-0" type="button" title="Visualizza Codice (Esploso)"
+                  (click)="showSource(item.library, item.sourceFile, item.sourceMember,true)" data-bs-toggle="modal"
+                  data-bs-target="#showSourceModal">
+                  <i class="bi bi-eyeglasses"></i>
+                </button>
+                <div class="vr"></div>
+
+                <button class="btn btn-sm rounded-0" type="button" title="Download Codice"
+                  (click)="getSource(item.library, item.sourceFile, item.sourceMember, false)">
+                  <i class="bi bi-download"></i>
+                </button>
+                <button class="btn btn-sm rounded-0" type="button" title="Download Codice (Esploso)"
+                  (click)="getSource(item.library, item.sourceFile, item.sourceMember,true)">
+                  <i class="bi bi-file-arrow-down"></i>
+                </button>
+
+              </td>
+            </tr>
+            }
+          </tbody>
+
+        </table>
+
+        <!-- Show Source in modal form -->
+        <div class="modal fade" id="showSourceModal" tabindex="-1" role="dialog" aria-labelledby="showSourceModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">{{ m_source_result().library}}.{{ m_source_result().sourceFile}}.{{
+                  m_source_result().sourceMember}}</h5>
+                <div>
+                  <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal" title="Chiudi">
+                    <i class="bi bi-x-lg"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="modal-body" tabindex="0">
+                <div class="justify-content-center">
+                  @for (item of m_source_result().source; track $index; let i=$index) {
+                  <pre class="m-0"><small>{{item}}</small></pre>
+                  }
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    }
+
+
+
+  </div>
+</div>

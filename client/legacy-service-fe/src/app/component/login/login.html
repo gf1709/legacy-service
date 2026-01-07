@@ -1,0 +1,72 @@
+<h1 class="m-3 p-3" style="text-align: center;">Allitude - Legacy Service</h1>
+
+<form #loginForm="ngForm" (ngSubmit)="doLogin(loginForm.value)" class="mx-auto text-center" style="width: 250px;">
+  <div class="row mb-3 m-3 ">
+    <h4 class="fst-italic fw-bold">
+      Enter your login details
+    </h4>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col text-start">
+      <span class="gf_label">Username</span>
+      <div class="input-group">
+        <input #username id="username" type="text" name="username" class="form-control border-end-0 border shadow-none"
+          placeholder="Enter username" ngModel required minlength="3" maxlength="10">
+        <span class="input-group-text bg-transparent">
+          <i class="bi bi-person-circle ms-1" title="Enter username"></i>
+        </span>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row mb-2">
+    @if (loginForm.invalid && (loginForm.controls['username']!.dirty || loginForm.controls['username'].touched)) {
+    @if(loginForm.controls['username'].hasError('required')) {
+    <small class="text-danger">
+      This field is required.
+    </small>
+    }
+    @if(loginForm.controls['username']!.hasError('minlength')) {
+    <small class="text-danger">
+      The minimum length for this field is {{loginForm.controls['username']!.errors!['minlength'].requiredLength}}
+      characters.
+    </small>
+    }
+    }
+  </div>
+
+  <div class="row mb-3">
+    <div class="col text-start">
+      <span class="gf_label">Password</span>
+      <div class="input-group">
+        <input #password type="password" name="password" id="password"
+          class="form-control border-end-0 border shadow-none" placeholder="Enter password" ngModel required minlength="3" maxlength="10">
+        <span class="input-group-text bg-transparent">
+          <i class="bi bi-lock-fill ms-1" title="Enter password"></i>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col text-start">
+      <span class="gf_label">Session</span>
+    </div>
+    <div class="input-group">
+      <input #session type="text" name="session" name="session" class="form-control border-end-0 border shadow-none"
+        placeholder="Enter session (FCTxx)" ngModel required minlength="1" maxlength="10">
+      <span class="input-group-text bg-transparent">
+        <i class="bi bi-terminal-fill" title="Enter session (FCTxx)"></i>
+      </span>
+    </div>
+  </div>
+
+  <div class="row mb-3 mt-3">
+    <div class="mx-auto text-end">
+      <button class="btn btn-primary" type="submit" [disabled]="!loginForm.valid">Login</button>
+    </div>
+  </div>
+
+</form>

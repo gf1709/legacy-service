@@ -1,0 +1,120 @@
+<div class="container">
+  <div class="row row-cols-auto justify-content-center">
+    <table class="table table-borderless table-sm small align-middle" style="max-width: 600px;">
+      <tbody>
+        <tr class="border-bottom">
+          <td colspan="2" class="fs-5 pt-2"><b>Dati banca</b></td>
+        </tr>
+        <tr>
+          <td class="text-end"><b>Banca :</b></td>
+          <td>{{session_values().descrizione_1_CR}}{{session_values().descrizione_2_CR}}
+            {{session_values().descrizione_breve_CR}}</td>
+        </tr>
+        <tr>
+          <td class="text-end"><b>Abi :</b></td>
+          <td>{{session_values().abi}}</td>
+        </tr>
+        <tr>
+          <td class="text-end"><b>Filiale :</b></td>
+          <td>{{session_values().codiceFiliale}} - {{session_values().cab}} -
+            {{session_values().descrizioneFiliale}}
+            {{session_values().descrizioneFilialeBreve}}</td>
+        </tr>
+        <tr>
+          <td class="text-end"><b>Targa cassa e ambiente :</b></td>
+          <td>{{session_values().targaCassa}} {{session_values().ambiente}}</td>
+        </tr>
+        <tr>
+          <td class="text-end"><b>Utente :</b></td>
+          <td>{{session_values().user}}</td>
+        </tr>
+        <tr>
+          <td class="text-end"><b>Terminale :</b></td>
+          <td>{{session_values().terminal}}</td>
+        </tr>
+        <tr>
+          <td class="text-end"><b>Terminale Applicativo :</b></td>
+          <td>{{session_values().terminaleApplicativo}}</td>
+        </tr>
+        <tr class="border-bottom">
+          <td colspan="2" class=" pt-2 fs-5"><b>Librerie</b></td>
+        </tr>
+        <tr>
+          <td class="text-end"><b>Dati :</b></td>
+          <td>{{session_values().libreria1}}</td>
+        </tr>
+        <tr>
+          <td class="text-end"><b>Dati storici :</b></td>
+          <td>{{session_values().ambienteDatiStorici}}</td>
+        </tr>
+        <tr>
+          <td class="text-end"><b>Dati banca :</b></td>
+          <td>{{session_values().libreriaDatiBanca}}</td>
+        </tr>
+        <tr>
+          <td class="text-end"><b>Procedure :</b></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="text-end"><b>{{session_values().libreriaProcedure}} :</b></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="text-end"><b>Rete :</b></td>
+          <td>{{session_values().libreriaRete}}</td>
+        </tr>
+        @if(session_values().libreriaTemporanea.length>0) {
+        <tr>
+          <td class="text-end"><b>Temporanea :</b></td>
+          <td>{{session_values().libreriaTemporanea}}</td>
+        </tr>
+        }
+        @if(session_values().libreria2.length>0) {
+        <tr>
+          <td class="text-end"><b>Libreria 2 :</b></td>
+          <td>{{session_values().libreria2}}</td>
+        </tr>
+        }
+        @if(session_values().libreria3.length>0) {
+        <tr>
+          <td class="text-end"><b>Libreria 3 :</b></td>
+          <td>{{session_values().libreria3}}</td>
+        </tr>
+        }
+        @if(session_values().libreria4.length>0) {
+        <tr>
+          <td class="text-end"><b>Libreria 4 :</b></td>
+          <td>{{session_values().libreria4}}</td>
+        </tr>
+        }
+        <tr class="border-bottom">
+          <td colspan="2" class="pt-2 fs-5"><b>Percorsi</b></td>
+        </tr>
+        <tr>
+          <td class="text-end"><b>Cartella Ambiente Dati :</b></td>
+          <td>{{session_values().cartellaAmbienteDati}}</td>
+        </tr>
+        <tr>
+          <td class="text-end"><b>Cartella File Transfer :</b></td>
+          <td>{{session_values().cartellaFileTransfer}}</td>
+        </tr>
+        <tr>
+          <td class="text-end"><b>InfoBanking :</b></td>
+          <td>{{session_values().documentale_InfoBanking}}</td>
+        </tr>
+        <tr>
+          <td class="text-end"><b>Documentale SIB2000 :</b></td>
+          <td>{{session_values().documentale_SIB2000}}</td>
+        </tr>
+        <tr>
+          <td class="text-end"><b>Documentale SID :</b></td>
+          <td>{{session_values().server_SID2000}}</td>
+        </tr>
+        <tr>
+          <td class="text-end"><b>Sib Dicrectory :</b></td>
+          <td>{{session_values().sib_Directory}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

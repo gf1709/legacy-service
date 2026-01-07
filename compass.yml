@@ -1,0 +1,17 @@
+name: legacy-service
+id: 'ari:cloud:compass:9847943f-e9d2-4d8b-bdea-ae4c6fac1bda:component/05014f76-f3d9-4216-814f-973bbc2847a6/450a83cd-28f4-40c6-86d1-e64b1d75f6cb'
+description: null
+configVersion: 1
+typeId: SERVICE
+ownerId: null
+fields:
+  tier: 4
+links:
+  - name: null
+    type: REPOSITORY
+    url: 'https://github.com/gf1709/legacy-service.git'
+relationships: {}
+labels: null
+customFields: null
+# Scopri di più sulla formattazione di compass.yml:
+# https://go.atlassian.com/compass-yml-format

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.7.16</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>it.allitude</groupId>
+	<artifactId>legacy-service-web</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>legacy-service-web</name>
+	<description>Legacy sib2000 utilities </description>
+	<properties>
+		<java.version>17</java.version>
+	</properties>
+
+<!-- <repositories>
+    <repository>
+        <id>confluent</id>
+        <url>https://packages.confluent.io/maven/</url>
+    </repository>
+</repositories> -->
+
+<repositories>
+    <repository>
+        <id>confluent</id>
+        <url>https://mvnrepository.com/</url>
+    </repository>
+</repositories>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+<dependency>
+<groupId>net.sf.jt400</groupId>
+<artifactId>jt400</artifactId>
+<version>9.1</version>
+</dependency>
+
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+
+
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.11.2</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.11.2</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-gson</artifactId>
+			<version>0.11.2</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka-streams</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+<!-- <dependency>
+    <groupId>io.confluent</groupId>
+	<artifactId>kafka-streams-protobuf-serde</artifactId>
+    <version>7.5.1</version>
+</dependency> -->
+
+<!-- https://mvnrepository.com/artifact/io.confluent/kafka-connect-protobuf-converter -->
+<dependency>
+    <groupId>io.confluent</groupId>
+    <artifactId>kafka-connect-protobuf-converter</artifactId>
+    <version>7.5.1</version>
+</dependency>
+
+
+<dependency>
+    <groupId>io.confluent</groupId>
+    <artifactId>kafka-avro-serializer</artifactId>
+    <!-- For Confluent Platform 7.0.1 -->
+    <version>7.0.1</version>
+  </dependency>
+
+
+  <dependency>
+	<groupId>com.oracle.database.jdbc</groupId>
+	<artifactId>ojdbc8</artifactId>
+	<optional>true</optional>
+</dependency>
+<dependency>
+	<groupId>com.oracle.database.jdbc</groupId>
+	<artifactId>ucp</artifactId>
+	<optional>true</optional>
+</dependency>
+<dependency>
+	<groupId>com.oracle.database.ha</groupId>
+	<artifactId>ons</artifactId>
+	<optional>true</optional>
+</dependency>
+<dependency>
+	<groupId>com.oracle.database.security</groupId>
+	<artifactId>oraclepki</artifactId>
+	<optional>true</optional>
+</dependency>
+<dependency>
+	<groupId>com.oracle.database.security</groupId>
+	<artifactId>osdt_core</artifactId>
+	<optional>true</optional>
+</dependency>
+<dependency>
+	<groupId>com.oracle.database.security</groupId>
+	<artifactId>osdt_cert</artifactId>
+	<optional>true</optional>
+</dependency>
+
+<dependency>
+    <groupId>org.json</groupId>
+    <artifactId>json</artifactId>
+    <version>20240205</version>
+</dependency>
+
+</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+<plugin>    
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+            <source>1.8</source>
+            <target>1.8</target>
+        </configuration>
+</plugin>
+
+<!-- Questa configurazione  consente di copiare in ${project.build.directory}/classes/static il progetto angular-->
+<plugin>				
+	<artifactId>maven-resources-plugin</artifactId> 
+	<executions>
+		<execution> 
+			<id>copy-resources</id> 
+			<phase>validate</phase>
+			<goals>
+				<goal>copy-resources</goal>
+			</goals> 
+			<configuration> 
+				<outputDirectory>${project.build.directory}/classes/static</outputDirectory>
+				<resources>
+					<resource>
+						<directory>../client/legacy-service-fe/dist/legacy-service-fe/browser</directory>
+					</resource>
+				</resources>
+			</configuration>
+		</execution>    
+	</executions>
+</plugin>
+
+		</plugins>
+	</build>
+
+</project>

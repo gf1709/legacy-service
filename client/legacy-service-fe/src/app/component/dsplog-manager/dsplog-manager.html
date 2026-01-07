@@ -1,0 +1,67 @@
+<h2 class="text-center">Display ISeries Log - Journal Entries</h2>
+
+<form #sqlscript="ngForm" (ngSubmit)="dsplog()">
+
+
+  <div class="row row-cols-auto justify-content-center mt-2">
+
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="inputGroupSelect01">Choose Log type</label>
+      </div>
+      <select class="custom-select" id="inputGroupSelect01" (change)=sourceLogChanged($event)>
+        <option selected [value]="0">Display Log</option>
+        <option [value]="1">Display Authorization failure (Journal)</option>
+        <option [value]="2">Display file changes (Journal)</option>
+      </select>
+    </div>
+
+  </div>
+
+  <div class="row row-cols-auto justify-content-center mt-2">
+    <div class="col-12">
+      <span class="gf_label">Parameters:</span>
+      <textarea #sqllog_sql name="sqllog_sql" class="form-control form-control-sm" placeholder="Sql parameters"
+        style="height: 180px;" [(ngModel)]="m_sql">
+      </textarea>
+    </div>
+  </div>
+
+  <div class="row row-cols-auto justify-content-center">
+    <div class="col mt-4">
+      <button class="btn btn-sm btn-primary" type="submit" title="Esegui istruzione">
+        Esegui
+      </button>
+    </div>
+  </div>
+
+</form>
+
+<div class="row mt-4">
+  <div class="col-12">
+    @if(m_result().length>0) {
+    <ng-container>
+      <span class="gf_label"> Log Items: {{m_result().length}}. (Max record number is 500)</span>
+      <table class="table table-bordered w-auto" style="font-size: 11px;">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th *ngFor="let col of getColumns(); let colIndex=index">
+              {{col}}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of m_result(); let rowIndex=index">
+            <td>{{rowIndex+1}}</td>
+            <td *ngFor="let col of getColumns(); let colIndex=index">
+              {{row[col]}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+    }
+  </div>
+
+</div>

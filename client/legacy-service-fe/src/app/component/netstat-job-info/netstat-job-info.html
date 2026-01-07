@@ -1,0 +1,62 @@
+<div>
+  <h2 style="text-align: center; padding: 5px;">Gestione lavori in ascolto su porta tcp locale</h2>
+  <div class="container">
+    <div class="row row-cols-auto justify-content-center">
+      <h6>
+        Filtri di ricerca
+      </h6>
+    </div>
+
+
+    <form #jobListFilterForm="ngForm" (ngSubmit)="netstat_job_info()">
+
+      <div class="row row-cols-auto justify-content-center">
+        <div class="col">
+          <span class="gf_label">Porta</span>
+          <div class=" input-group input-group-sm mb-2 max_width_200">
+            <input #filter_port type="number" id="filter_port" name="filter_port"
+              class="form-control border-end-0 border shadow-none mt-0" placeholder="Porta (es. 22008)"
+              [(ngModel)]="m_job_filter_port" data-toggle="tooltip" data-placement="top" title="Porta TcpIp" required
+              minlength="1">
+            <span class="input-group-text bg-transparent">
+              <i class="bi bi-hdd-network" title="Specificare la porta TcpIp"></i>
+            </span>
+          </div>
+        </div>
+        <div class="col">
+          <span class="gf_label">Nome utente</span>
+          <div class="input-group input-group-sm mb-2 max_width_200">
+            <input #filter_username type="text" id="filter_username" name="filter_username"
+              class="form-control border-end-0 border shadow-none mt-0 text-uppercase"
+              [(ngModel)]="m_job_filter_userName" data-toggle="tooltip" data-placement="top"
+              title="Filtro per nome utente">
+            <span class="input-group-text bg-transparent">
+              <i class="bi bi-person-gear" title="Specificare il filtro sul nome utente"></i>
+            </span>
+          </div>
+        </div>
+        <div class="col">
+          <span class="gf_label">Nome lavoro</span>
+          <div class="input-group input-group-sm mb-2 max_width_200">
+            <input #filter_job_name type="text" id="filter_job_name" name="filter_job_name"
+              class="form-control border-end-0 border shadow-none mt-0 text-uppercase"
+              [(ngModel)]="m_job_filter_jobName" data-toggle="tooltip" data-placement="top" title="Nome lavoro">
+            <span class="input-group-text bg-transparent">
+              <i class="bi bi-gear" title="Specificare il filtro sul nome del lavoro"></i>
+            </span>
+          </div>
+        </div>
+
+        <div class="col d-flex align-items-end mb-2">
+          <button class="btn btn-sm btn-primary" type="submit" title="Elenca Lavori"
+            [disabled]="!jobListFilterForm.valid">
+            Elenca
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <app-job-list-viewer [joblist]="m_job_list()" (updateList)="netstat_job_info()"></app-job-list-viewer>
+
+  </div>
+</div>

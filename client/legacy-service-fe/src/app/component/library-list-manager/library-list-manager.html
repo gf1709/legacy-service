@@ -1,0 +1,89 @@
+<div>
+  <div class="container">
+    <h2 style="text-align: center; padding: 6px;">Gestione Lista delle librerie</h2>
+
+    <div class="row row-cols-auto justify-content-center">
+      <h4 class="m-0 p-2">
+        Lista Libreria
+      </h4>
+      <button class="btn btn-sm rounded-0" type="button" title="Aggiungi libreria" data-bs-toggle="modal"
+        data-bs-target="#addLibraryModal">
+        <i class="bi bi-plus-lg"></i>
+      </button>
+    </div>
+
+
+    <!-- Add lib in modal form -->
+    <form #addLibraryForm="ngForm" (ngSubmit)="addLibraryFromLibraryList()">
+      <div class="modal fade" id="addLibraryModal" tabindex="-1" role="dialog" aria-labelledby="addLibraryModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-xs">
+          <div class="modal-content">
+            <div class="modal-header justify-content-center">
+              <h5 class="modal-title"> Aggiungi libreria alla lista</h5>
+              <div>
+                <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal" title="Chiudi">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              </div>
+            </div>
+            <div class="modal-body" tabindex="0">
+              <input #add_lib type="text" name="add_lib" class="form-control form-control-sm mt-0"
+                placeholder="Specificare la libreria da aggiungere" [(ngModel)]="m_library_to_add" data-toggle="tooltip"
+                data-placement="top" title="Specificare la libreria da aggiungere alla lista delle librerie" required
+                minlength="2">
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-primary m-2" type="submit" title="Aggiungi" [disabled]="!addLibraryForm.valid"
+                data-bs-dismiss="modal">
+                Aggiungi
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div class="row row-cols-auto justify-content-center mt-3">
+      <table class="table table-sm small align-middle table-hover" style="max-width: 700px;">
+        <thead>
+          <tr>
+            <th scope="col">
+              <p>Libreria</p>
+            </th>
+            <th scope="col">
+              <p>Tipo</p>
+            </th>
+            <th scope="col" colspan="2">
+              <p>Descrizione</p>
+            </th>
+          </tr>
+
+        </thead>
+
+        <tbody *ngFor="let item of m_library_list(); let i=index">
+          <tr>
+            <td>
+              {{item.library}}
+            </td>
+            <td>
+              {{item.type}}
+            </td>
+            <td>
+              {{item.description}}
+            </td>
+            <td>
+              <div *ngIf="canRemove(item)">
+                <button class="btn btn-sm rounded-0" type="button" title="Visualizza Codice"
+                  (click)="removeLibraryFromLibraryList(item.library)">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,191 @@
+<div class="row">
+  <div class="row row-cols-auto justify-content-center">
+    <h6 class="mt-3">
+      Elenco servizi Sibank [{{m_servizi_list().length}}]
+    </h6>
+  </div>
+
+  <div class="row row-cols-auto justify-content-center text-align-center">
+    <table class="table table-sm align-middle table-hover" style="max-width: 800px;">
+      <thead>
+
+        <tr>
+          <th scope="col">
+            <div>#</div>
+          </th>
+          <th scope="col" style="width: 80px;">
+            <div class="input-group input-group-sm mb-2">
+              <input type="text" name="abi_flt" id="abi_flt"
+                class="form-control form-control-sm border-end-0 border shadow-none mt-0 p-1" placeholder="Abi"
+                [(ngModel)]="m_filter_abi">
+              <span class="input-group-text bg-transparent">
+                <i class="bi bi-funnel" title="Filtro per abi"></i>
+              </span>
+            </div>
+          </th>
+          <th scope="col" style="width: 80px;">
+            <div class="input-group input-group-sm mb-2">
+              <input type="text" name="targa" id="targa_flt"
+                class="form-control form-control-sm border-end-0 border shadow-none mt-0 p-1" placeholder="Targa"
+                [(ngModel)]="m_filter_targa">
+              <span class="input-group-text bg-transparent">
+                <i class="bi bi-funnel" title="Filtro per targa"></i>
+              </span>
+            </div>
+          </th>
+          <th scope="col" style="width: 110px;">
+            <div class="input-group input-group-sm mb-2">
+              <input type="text" name="ambiente" id="ambiente_flt"
+                class="form-control form-control-sm border-end-0 border shadow-none mt-0 p-1" placeholder="Ambiente"
+                [(ngModel)]="m_filter_ambiente">
+              <span class="input-group-text bg-transparent">
+                <i class="bi bi-funnel" title="Filtro per ambiente"></i>
+              </span>
+            </div>
+
+          </th>
+          <th scope="col" style="width: 110px;">
+            <div class="input-group input-group-sm mb-2">
+              <input type="text" name="servizio" id="servizio_flt"
+                class="form-control form-control-sm border-end-0 border shadow-none mt-0 p-1" placeholder="Servizio"
+                [(ngModel)]="m_filter_servizio">
+              <span class="input-group-text bg-transparent">
+                <i class="bi bi-funnel" title="Filtro per servizio"></i>
+              </span>
+            </div>
+          </th>
+          <th scope="col" style="width: 120px;">
+            <div class="input-group input-group-sm mb-2">
+              <input type="text" name="porta" id="porta_flt"
+                class="form-control form-control-sm border-end-0 border shadow-none mt-0 p-1" placeholder="Porta"
+                [(ngModel)]="m_filter_porta">
+              <span class="input-group-text bg-transparent">
+                <i class="bi bi-funnel" title="Filtro per porta"></i>
+              </span>
+            </div>
+          </th>
+          <th scope="col" style="width: 120px;">
+          </th>
+          <th scope="col" style="width: 120px;">
+            <div class="input-group input-group-sm mb-2">
+              <input type="text" name="abilitato" id="abilitato_flt"
+                class="form-control form-control-sm border-end-0 border shadow-none mt-0 p-1" placeholder="Abilitato"
+                [(ngModel)]="m_filter_abilitato">
+              <span class="input-group-text bg-transparent">
+                <i class="bi bi-funnel" title="Filtro per abilitato"></i>
+              </span>
+            </div>
+          </th>
+        </tr>
+
+        <tr>
+          <th scope="col">
+            <div>#</div>
+          </th>
+          <th scope="col">
+            <div>
+              <button class="btn btn-sm ps-2 p-0" type="button" (click)="sort('abi')" title="Ordina">
+                <span class="me-2 text fw-bold">Abi</span>
+                @if(isCurrentSortASC()) {
+                <i class="bi bi-sort-alpha-down"></i>
+                } @else {
+                <i class="bi bi-sort-alpha-down-alt"></i>
+                }
+              </button>
+            </div>
+          </th>
+          <th scope="col">
+            <div class=" text-center align-middle">
+              <button class="btn btn-sm p-0" type="button" (click)="sort('targa')">
+                <span class="me-2 text fw-bold">Targa</span>
+                @if(isCurrentSortASC()) {
+                <i class="bi bi-sort-alpha-down"></i>
+                } @else {
+                <i class="bi bi-sort-alpha-down-alt"></i>
+                }
+              </button>
+            </div>
+
+          </th>
+          <th scope="col">
+            <div class=" text-center align-middle">
+              <button class="btn btn-sm p-0" type="button" (click)="sort('ambiente')">
+                <span class="me-2 text fw-bold">Ambiente</span>
+                @if(isCurrentSortASC()) {
+                <i class="bi bi-sort-alpha-down"></i>
+                } @else {
+                <i class="bi bi-sort-alpha-down-alt"></i>
+                }
+              </button>
+            </div>
+
+          </th>
+          <th scope="col">
+            <div class=" text-center align-middle">
+              <button class="btn btn-sm p-0" type="button" (click)="sort('servizio')">
+                <span class="me-2 text fw-bold">Servizio</span>
+                @if(isCurrentSortASC()) {
+                <i class="bi bi-sort-alpha-down"></i>
+                } @else {
+                <i class="bi bi-sort-alpha-down-alt"></i>
+                }
+              </button>
+            </div>
+          </th>
+          <th scope="col">
+            <div class=" text-center align-middle">
+              <button class="btn btn-sm p-0" type="button" (click)="sort('porta')">
+                <span class="me-2 text fw-bold">Porta</span>
+                @if(isCurrentSortASC()) {
+                <i class="bi bi-sort-alpha-down"></i>
+                } @else {
+                <i class="bi bi-sort-alpha-down-alt"></i>
+                }
+              </button>
+            </div>
+          </th>
+          <th scope="col">
+            <div>
+              Programma
+            </div>
+          </th>
+          <th scope="col">
+            <div class=" text-center align-middle">
+              Abilitato
+            </div>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let item of m_servizi_list(); let i=index">
+          <tr class="border-top small">
+            <td>
+              {{i}}
+            </td>
+            <td>
+              <p class="text-center m-0 me-4">{{item.abi}}</p>
+            </td>
+            <td>
+              <p class="text-center m-0 me-2">{{item.targa}}</p>
+            </td>
+            <td>
+              <p class="text-center m-0">{{item.ambiente}}</p>
+            </td>
+            <td>
+              <p class="text-center m-0 me-2">{{item.name}}</p>
+            </td>
+            <td>
+              <p class="text-center m-0 me-2"><a class="link-opacity-90"
+                  href="/netstat-job-info/?port={{item.port}}">{{item.port}}</a></p>
+            </td>
+            <td>
+              <p class="text-center m-0 me-2">{{item.program}}</p>
+            </td>
+            <td>
+              <p class="text-center m-0 me-2">{{item.enabled}}</p>
+            </td>
+        </ng-container>
+      </tbody>
+
+    </table>
+  </div>
+</div>

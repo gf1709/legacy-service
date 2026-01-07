@@ -1,0 +1,34 @@
+div.max_width_200 {
+  max-width: 200px;
+}
+
+div.max_width_400 {
+  max-width: 400px;
+}
+
+div.max_width_150 {
+  max-width: 150px;
+}
+
+div.max_width_80 {
+  max-width: 80px;
+}
+
+div.max_width_100 {
+  max-width: 100px;
+}
+
+span.gf_label {
+  color: rgb(108, 117, 125);
+  font-size: small;
+}
+
+div.gf_back_color_green {
+  background-color: rgb(9, 131, 159);
+}
+div.gf_back_color_green a:hover {
+    background-color:rgb(8, 106, 128);
+}
+ul.gf_back_color_green {
+  background-color: rgb(9, 131, 159);
+}

@@ -1,0 +1,154 @@
+<div>
+
+  <div class="container">
+    <div class="row row-cols-auto justify-content-center p-2">
+      <h5>
+        Chiamata a programmi (ZZTRUT)
+      </h5>
+    </div>
+
+    <form [formGroup]="main_form" (ngSubmit)="callProgram()">
+      <div class="row row-cols-auto justify-content-center">
+        <div class="col-sm-1">
+          <span class="gf_label">Programma</span>
+          <input #program type="text" id="program" name="program" class="form-control form-control-sm text-uppercase"
+            formControlName="m_program" data-toggle="tooltip" data-placement="top" title="Programma" required
+            minlength="3">
+        </div>
+        <div class="col-sm-1">
+          <span class="gf_label">Comando</span>
+          <input #comando type="text" id="comando" name="comando" class="form-control form-control-sm text-uppercase"
+            formControlName="m_comando" data-toggle="tooltip" data-placement="top" title="Comando">
+        </div>
+
+        <div class="col-sm-2">
+          <span class="gf_label">Ds Input</span>
+          <div class="input-group input-group-sm">
+            <input #dsin type="text" id="dsin" name="dsin"
+              class="form-control form-control-sm text-uppercase border-end-0" formControlName="m_dsin"
+              data-toggle="tooltip" data-placement="top" title="Nome Ds Input" (blur)="showDDSIn()">
+            <span class="input-group-text bg-transparent">
+              <i (click)="showDDSIn()" class="bi bi-file-spreadsheet" title="Visualizza i campi della ds di input"></i>
+            </span>
+          </div>
+        </div>
+
+
+        <div class="col-sm-2">
+          <span class="gf_label">Ds Output</span>
+          <input #dsout type="text" id="dsout" name="dsout" class="form-control form-control-sm text-uppercase"
+            formControlName="m_dsout" data-toggle="tooltip" data-placement="top"
+            title="Nome Ds Output">
+        </div>
+        <div class="col-sm-1">
+          <span class="gf_label">Tipo</span>
+          <input #tipo type="text" id="tipo" name="tipo" class="form-control form-control-sm text-uppercase"
+            formControlName="m_tipo" data-toggle="tooltip" data-placement="top"
+            title="Tipo Programma">
+        </div>
+        <div class="col-sm-1">
+          <span class="gf_label">Flag IO</span>
+          <input #flag_io type="text" id="flag_io" name="flag_io" class="form-control form-control-sm"
+            formControlName="m_flag_io" data-toggle="tooltip" data-placement="top"
+            title="Flag IO">
+        </div>
+        <div class="col-sm-1 mt-4">
+          <button type="submit" class="btn btn-sm btn-primary" [disabled]="!main_form.valid">Call</button>
+        </div>
+      </div>
+
+      <div class="row row-cols-auto justify-content-center small p-2">
+        <div *ngIf="!callHasError()">
+          <p class="text-success">Result: {{m_call_result()}}</p>
+        </div>
+        <div *ngIf="callHasError()">
+          <p class="text-danger">Result: {{m_call_result()}}</p>
+        </div>
+        <div>
+          Execution time:
+          <ng-container *ngIf="m_seconds>0">
+            {{m_seconds}} seconds
+          </ng-container>
+        </div>
+      </div>
+
+    </form>
+
+
+    <div class="row row-cols-1">
+
+      <div class="col col-10">
+        <form [formGroup]="main_form" (ngSubmit)="callProgram()">
+          <div class="row row-cols-1 mt-3">
+            <div class="col col-6">
+              <div class="card">
+                <h6 class="text-center bg-light p-1">Input DS</h6>
+                <div formArrayName="m_dsinput_field_controls">
+                  <div class="card-body p-2">
+                    <ng-container *ngFor="let fldin of dsinput_field_controls.controls; let i=index">
+                      <div class="form-group input-group-sm row small mb-1">
+                        <small class="col-sm-4 card-text p-1 ms-1">
+                          {{m_dsinput_fields[i].getFullDescription()}}</small>
+                        <div class="col-sm-6 p-0 m-0">
+                          <input class="form-control form-control-sm" id="fldin-{{ i }}" type="text"
+                            [formControlName]="i" placeholder="{{m_dsinput_fields[i].name}}">
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col col-6">
+              <div class="card">
+                <!-- <div class="card" *ngIf="showDsOutput()"> -->
+                <h6 class="text-center bg-light p-1">Output DS</h6>
+                <div class="card-body col-sm-12 p-2">
+                  <table class="table table-sm table-bordered small">
+                    <tbody>
+                      <tr class="border-top" *ngFor="let fldout of m_dsouput_fields; let i=index">
+                        <td class="col-sm-1"><small>{{m_dsouput_fields[i].name}} </small></td>
+                        <td class="col-sm-5">
+                          <small>{{m_dsouput_fields[i].getFullDescription()}}</small>
+                        </td>
+                        <td class="col-sm-6"><small>{{m_dsouput_fields[i].value}}</small></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="col col-2 small" style="overflow:auto; max-height:700px;">
+        <b class="text-center"> History Call: </b>
+        <table class="table table-sm small table-borderless ">
+          <tbody>
+            <tr *ngFor="let call of m_historyCall; let i=index">
+              <td>
+                <button class="btn btn-sm rounded-0 m-0 p-0" type="button" title="Imposta call"
+                  (click)="getCallFromHistory(call)">
+                  <i class="bi bi-star m-0 p-0"></i>
+                </button>
+
+              </td>
+              <td>
+                <small>
+                  {{getCallRequestDescription(call)}}
+                </small>
+              </td>
+              <td>
+                <button class="btn btn-sm rounded-0 m-0 p-0" type="button" title="Rimuovi call dalla history"
+                  (click)="deleteCallFromHistory(call)">
+                  <i class="fa-regular fa-trash-can m-0 p-0"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

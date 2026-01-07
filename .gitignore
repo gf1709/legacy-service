@@ -1,0 +1,6 @@
+.vscode/extensions.json
+run_time_resources/static/call_history/FC0382_FCTXE.txt
+public*.pub
+public*.key
+private*.key
+hs_err_pid*

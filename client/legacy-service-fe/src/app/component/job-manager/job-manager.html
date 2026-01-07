@@ -1,0 +1,65 @@
+<div>
+  <h2 style="text-align: center; padding: 5px;">Gestione lavori</h2>
+  <div class="container">
+    <div class="row row-cols-auto justify-content-center">
+      <h6>
+        Filtri di ricerca
+      </h6>
+    </div>
+
+    <form #jobListFilterForm="ngForm" (ngSubmit)="getJobList()">
+
+      <div class="row row-cols-auto justify-content-center align-items-center">
+        <div class="col">
+          <span class="gf_label">Nome utente (es. FC0123)</span>
+          <div class="input-group input-group-sm mb-2 max_width_200">
+            <input #filter_username type="text" id="filter_username" name="filter_username"
+              class="form-control border-end-0 border shadow-none mt-0 text-uppercase"
+              [(ngModel)]="m_job_filter_userName" data-toggle="tooltip" data-placement="top"
+              title="Filtro per nome utente">
+            <span class="input-group-text bg-transparent">
+              <i class="bi bi-person-gear" title="Specificare il filtro sul nome utente"></i>
+            </span>
+          </div>
+        </div>
+
+        <div class="col">
+          <span class="gf_label">Nome lavoro (es. FC*)</span>
+          <div class="input-group input-group-sm mb-2 max_width_200">
+            <input #filter_job_name type="text" id="filter_job_name" name="filter_job_name"
+              class="form-control border-end-0 border shadow-none mt-0 text-uppercase"
+              [(ngModel)]="m_job_filter_jobName" data-toggle="tooltip" data-placement="top" title="Nome lavoro">
+            <span class="input-group-text bg-transparent">
+              <i class="bi bi-gear" title="Specificare il filtro sul nome del lavoro"></i>
+            </span>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="form-check m-0">
+            <input #filter_sort_by_jobname type="checkbox" name="filter_sort_by_jobname" class="form-check-input" title="Ordina per nome del lavoro"
+              id="filter_sort_by_jobname" [(ngModel)]="m_job_filter_sortByJobName">
+            <span class="gf_label">Ordina per nome del lavoro</span>
+          </div>
+
+          <div class="form-check m-0">
+            <input #filter_sort_by_jobstatus type="checkbox" name="filter_sort_by_jobstatus" class="form-check-input" title="Ordina per stato del lavoro"
+              id="filter_sort_by_jobstatus" [(ngModel)]="m_job_filter_sortByJobStatus">
+            <span class="gf_label">Ordina per stato del lavoro</span>
+          </div>
+        </div>
+        <div class="col">
+          <div class="d-flex align-items-end">
+            <button class="btn btn-sm btn-primary" type="submit" title="Elenca Lavori" [disabled]="!m_can_search">
+              Elenca
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </form>
+
+    <app-job-list-viewer [joblist]="m_job_list()" (updateList)="getJobList()"></app-job-list-viewer>
+
+  </div>
+</div>

@@ -1,0 +1,52 @@
+<div>
+  <div class="container">
+
+    <div class="row row-cols-auto justify-content-center p-3">
+      <h5>
+        Creazione DDL per tabelle CDC
+      </h5>
+    </div>
+
+    <form #createCDCTableScript="ngForm" (ngSubmit)="createScript()">
+      <div class="row row-cols-auto justify-content-center">
+        <div class="col-sm-2">
+          <span class="gf_label">Libreria</span>
+          <input #library type="text" name="library" class="form-control form-control-sm text-uppercase"
+            [(ngModel)]="m_library" data-toggle="tooltip" data-placement="top"
+            title="Specificare la libreria AS400 da utilizzare per creare lo script" required minlength="2">
+        </div>
+        <div class="col-sm-2">
+          <span class="gf_label">File</span>
+          <input #file type="text" name="file" class="form-control form-control-sm text-uppercase" [(ngModel)]="m_file"
+            data-toggle="tooltip" data-placement="top"
+            title="Specificare il nome del file AS400 da utilizzare per creare lo script" required minlength="2">
+        </div>
+        <div class="col-sm-2">
+          <button class="btn btn-sm btn-primary mt-4" type="submit" title="Crea script"
+            [disabled]="!createCDCTableScript.valid">
+            Crea script
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <div class="row row-cols-auto justify-content-center mt-4">
+      <h5 class="text-center m-0 p-0">
+        DDL di creazione del file
+      </h5>
+      @if(m_ddl_script_lines.length>0) {
+      <button class="btn ms-3 p-0" type="button" title="Copia negli appunti" (click)="copyToClipboard()">
+        <i class="bi bi-clipboard"></i>
+      </button>
+      }
+
+    </div>
+
+    <div class="small" style="max-width: 1000px;">
+      @for (line of m_ddl_script_lines(); track $index) {
+      <pre class="m-0 small text-start"><small>{{line}}</small></pre>
+      }
+
+    </div>
+
+  </div>
