@@ -13,7 +13,7 @@
           <span class="gf_label">Directory</span>
           <div class="input-group input-group-sm mb-2" style="width: 400px;">
             <input #filter_directory type="text" id="filter_directory" name="filter_directory"
-              class="form-control border-end-0 border shadow-none mt-0" [(ngModel)]="m_directory" data-toggle="tooltip"
+              class="form-control border-end-0 border shadow-none mt-0" [(ngModel)]="ifsManagerSearchParams.directory" data-toggle="tooltip"
               data-placement="top" title="Directory">
             <span class="input-group-text bg-transparent">
               <i class="bi bi-folder" title="Specificare la directory"></i>
@@ -24,7 +24,7 @@
           <span class="gf_label">Nome file da elencare</span>
           <div class="input-group input-group-sm mb-2" style="width: 200px;">
             <input #filter_filepattern type="text" id="filter_filepattern" name="filter_filepattern"
-              class="form-control border-end-0 border shadow-none mt-0" [(ngModel)]="m_file_pattern"
+              class="form-control border-end-0 border shadow-none mt-0" [(ngModel)]="ifsManagerSearchParams.filePattern"
               data-toggle="tooltip" data-placement="top" title="File pattern">
             <span class="input-group-text bg-transparent">
               <i class="bi bi-regex" title="Specificare il filtro sul nome dei file da elencare"></i>

@@ -1,3 +1,4 @@
+import { SourceManager } from './../component/source-manager/source-manager';
 import { Injectable, WritableSignal, inject, signal } from '@angular/core';
 import { environment } from '../environment';
 import { AnonymousSubject } from 'rxjs/internal/Subject';
@@ -36,15 +37,7 @@ export class JobListItem {
   function: WritableSignal<string>  = signal('');
   remoteAddresses: WritableSignal<string[]> = signal([]);
 
-  constructor() {
-    // this.name = '';
-    // this.user = '';
-    // this.userDescription = '';
-    // this.currentUser = '';
-    // this.currentUserDescription = '';
-    // this.number = '';
-    // this.status = '';
-  }
+  constructor() {}
 };
 
 export class JobListItemExtended {
@@ -75,19 +68,6 @@ export class JobListItemExtended {
     this.showJobOpenFileInfo = false;
     this.showJobCallStackInfo = false;
   };
-
-  // from(aListIem: JobListItem) {
-  //   this.job.name = aListIem.name;
-  //   this.job.number = aListIem.number;
-  //   this.job.status = aListIem.status;
-  //   this.job.user = aListIem.user;
-  //   this.job.userDescription = aListIem.userDescription;
-  //   this.job.currentUser = aListIem.currentUser;
-  //   this.job.currentUserDescription = aListIem.currentUserDescription;
-  //   this.job.function = aListIem.function;
-  //   this.job.remoteAddresses = aListIem.remoteAddresses;
-  // }
-
 };
 
 export class ObjectDescription {
@@ -278,6 +258,28 @@ export class IfsFileListFileResult {
   files: IfsFile[] = [];
 };
 
+export class IfsManagerSearchParams {
+  directory: string = '/tmp';
+  filePattern: string = '*';
+};
+
+export class ObjectManagerListFilterParams {
+  libreria: string = '*LIBL';
+  nome: string = '';
+  tipo: string = '';
+};
+export class SourceManagerFilterParams {
+  library: string = 'LIBFCSRC';
+  file: string = 'QRPGSRC';
+  member: string = 'ZR1*';
+};
+export class SpoolManagerFilterParams {
+  userName: string = '';
+  spoolJobNameFilter: string = '';
+  spoolNameFilter: string = '';
+  spoolDateFilter: string = '';
+};
+
 @Injectable({
   providedIn: 'root'
 })
@@ -285,10 +287,14 @@ export class IfsFileListFileResult {
 export class BkService {
 
   httpClient: HttpClient = inject(HttpClient);
+  private ffdCache = new Map<string, FFDResult>();
+
+  public g_objectManagerListFilterParams: ObjectManagerListFilterParams = new ObjectManagerListFilterParams();
+  public g_ifsManagerSearchParams: IfsManagerSearchParams = new IfsManagerSearchParams();
+  public g_sourceManagerFilterParams: SourceManagerFilterParams = new SourceManagerFilterParams();
+  public g_spoolManagerFilterParams: SpoolManagerFilterParams = new SpoolManagerFilterParams();
 
   constructor() { }
-
-  private ffdCache = new Map<string, FFDResult>();
 
   getServiziSibank() {
     console.log('[0] getServiziSibank');

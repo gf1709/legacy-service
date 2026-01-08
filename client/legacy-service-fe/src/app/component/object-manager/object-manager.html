@@ -11,7 +11,7 @@
       <span class="gf_label">Libreria</span>
       <div class="input-group input-group-sm mb-2">
         <input type="text" id="filter_lib" name="filter_lib" class="form-control border-end-0 border shadow-none mt-0"
-          placeholder="LBxxyUDT, *ALL, *LIBL" [(ngModel)]="m_listFilter.libreria" data-toggle="tooltip"
+          placeholder="LBxxyUDT, *ALL, *LIBL" [(ngModel)]="objectManagerListFilterParams.libreria" data-toggle="tooltip"
           data-placement="top" title="Specificare il filtro sulla libreria (es. LBFCBUDT o *ALL)">
         <span class="input-group-text bg-transparent">
           <i class="bi bi-folder" title="Specificare il filtro sulla libreria (es. LBFCBUDT o *ALL)"></i>
@@ -23,7 +23,7 @@
       <span class="gf_label">Oggetto</span>
       <div class="input-group input-group-sm mb-2">
         <input type="text" id="filter_obj" name="filter_obj" class="form-control border-end-0 border shadow-none mt-0"
-          placeholder="Oggetto" [(ngModel)]="m_listFilter.nome" (keydown)="onKeydown($event)" data-toggle="tooltip"
+          placeholder="Oggetto" [(ngModel)]="objectManagerListFilterParams.nome" (keydown)="onKeydown($event)" data-toggle="tooltip"
           data-placement="top" title="Specificare il filtro sull'oggetto (es. A01*)">
         <span class="input-group-text bg-transparent">
           <i class="bi bi-database" title="Specificare l'oggetto"></i>
@@ -35,7 +35,7 @@
       <span class="gf_label">Tipo</span>
       <div class="input-group input-group-sm mb-2">
         <input type="text" id="filter_type" name="filter_type" class="form-control border-end-0 border shadow-none mt-0"
-          placeholder="Tipo (*FILE, *LIB)" [(ngModel)]="m_listFilter.tipo" (keydown)="onKeydown($event)"
+          placeholder="Tipo (*FILE, *LIB)" [(ngModel)]="objectManagerListFilterParams.tipo" (keydown)="onKeydown($event)"
           data-toggle="tooltip" data-placement="top" title="Specificare il filtro sul tipo oggetto (es. *FILE, *PGM)">
         <span class="input-group-text bg-transparent" title="Specificare il filtro sul tipo oggetto (es. *FILE, *PGM)">
           <i class="bi bi-fonts" title="Specificare il tipo"></i>

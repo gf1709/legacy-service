@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, signal, WritableSignal } from '@angular/core';
-import { BkService, FFDResult, ObjectDescription, ObjectDescriptionDetail } from '../../services/bk.service';
+import { BkService, FFDResult, ObjectDescription, ObjectDescriptionDetail, ObjectManagerListFilterParams } from '../../services/bk.service';
 import { MessageHelperService } from '../../services/message-helper.service';
 import { FormsModule } from '@angular/forms';
-
 class DSPOBJDResult {
   library: string = '';
 }
@@ -19,18 +18,17 @@ export class ObjectManager {
   constructor(private bkService: BkService, private message_service: MessageHelperService) {
   }
 
-  m_listFilter = {
-    libreria: '*LIBL',
-    nome: '',
-    tipo: ''
-  };
-
-  // m_object_list: ObjectDescription[] = [];
   m_object_list: WritableSignal<ObjectDescription[]> = signal([]);
 
-  // m_objectDescriptionDetail: ObjectDescriptionDetail = new ObjectDescriptionDetail();
   m_objectDescriptionDetail: WritableSignal<ObjectDescriptionDetail> = signal(new ObjectDescriptionDetail());
   m_ffd: WritableSignal<FFDResult> = signal(new FFDResult());
+
+  get objectManagerListFilterParams(): ObjectManagerListFilterParams {
+    return this.bkService.g_objectManagerListFilterParams;
+  }
+  set objectManagerListFilterParams(value: ObjectManagerListFilterParams) {
+    this.bkService.g_objectManagerListFilterParams = value;
+  }
 
   getObjetcList() {
     this.m_object_list.set([
@@ -42,8 +40,9 @@ export class ObjectManager {
         description: ''
       }
     ]);
+
     console.log('[0]-getObjetcList');
-    this.bkService.getWRKOBJ(this.m_listFilter.libreria, this.m_listFilter.nome, this.m_listFilter.tipo).subscribe(
+    this.bkService.getWRKOBJ(this.objectManagerListFilterParams.libreria, this.objectManagerListFilterParams.nome, this.objectManagerListFilterParams.tipo).subscribe(
       data => {
         console.log(data);
         this.m_object_list.set(data);
@@ -61,9 +60,9 @@ export class ObjectManager {
   }
   clean_filter() {
     console.log('clean_filter');
-    this.m_listFilter.libreria = '*LIBL';
-    this.m_listFilter.nome = '';
-    this.m_listFilter.tipo = '';
+    this.objectManagerListFilterParams.libreria = '*LIBL';
+    this.objectManagerListFilterParams.nome = '';
+    this.objectManagerListFilterParams.tipo = '';
   }
 
   showDetail(o: ObjectDescription) {

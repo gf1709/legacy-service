@@ -12,7 +12,7 @@
           <span class="gf_label">Libreria</span>
           <div class="input-group input-group-sm mb-2 max_width_200">
             <input #filter_lib type="text" name="filter_lib" class="form-control border-end-0 border shadow-none mt-0"
-              placeholder="Libreria" [(ngModel)]="m_source_filter.library" data-toggle="tooltip" data-placement="top"
+              placeholder="Libreria" [(ngModel)]="sourceFilterParams.library" data-toggle="tooltip" data-placement="top"
               title="Specificare libreria (es. LIBFCSRC)" required minlength="2">
             <span class="input-group-text bg-transparent">
               <i class="bi bi-folder" title="Specificare la libreria (Es. LIBFCSRC)"></i>
@@ -24,7 +24,7 @@
           <span class="gf_label">File sorgente</span>
           <div class="input-group input-group-sm mb-2 max_width_200">
             <input #filter_file type="text" name="filter_file" class="form-control border-end-0 border shadow-none mt-0"
-              placeholder="File sorgente" [(ngModel)]="m_source_filter.file" data-toggle="tooltip" data-placement="top"
+              placeholder="File sorgente" [(ngModel)]="sourceFilterParams.file" data-toggle="tooltip" data-placement="top"
               required minlength="3">
             <span class="input-group-text bg-transparent">
               <i class="bi bi-files" title="Specificare il file sorgente (es. QRPGSRC)"></i>
@@ -37,7 +37,7 @@
           <div class="input-group input-group-sm mb-2 max_width_200">
             <input #filter_member type="text" name="filter_member"
               class="form-control border-end-0 border shadow-none mt-0" placeholder="Membro"
-              [(ngModel)]="m_source_filter.member" data-toggle="tooltip" data-placement="top" required minlength="3">
+              [(ngModel)]="sourceFilterParams.member" data-toggle="tooltip" data-placement="top" required minlength="3">
             <span class="input-group-text bg-transparent">
               <i class="bi bi-file" title="Membro sorgente (es. ZR1*)"></i>
             </span>

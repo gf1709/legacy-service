@@ -9,7 +9,7 @@
           <div class=" input-group input-group-sm mb-2 max_width_200">
             <input #filter_username type="text" id="filter_username" name="filter_username"
               class="form-control border-end-0 border shadow-none mt-0 text-uppercase"
-              [(ngModel)]="m_spool_filter_username" data-toggle="tooltip" data-placement="top" title="Porta TcpIp"
+              [(ngModel)]="spoolManagerFilterParams.userName" data-toggle="tooltip" data-placement="top" title="Porta TcpIp"
               required minlength="2">
             <span class="input-group-text bg-transparent">
               <i class="bi bi-person" title="Specificare la porta TcpIp"></i>
@@ -42,15 +42,15 @@
               <p class="m-0">Utente</p>
             </th>
             <th scope="col" class="ps-1 p-0">
-              @if(m_spool_file_list_all.length>0) {
+              @if(m_spool_file_list_all().length>0) {
               <div class="input-group input-group-sm">
                 <input type="text" name="nome_flt" id="nome_flt"
                   class="form-control form-control-sm border-end-0 border shadow-none p-1" placeholder="Nome"
-                  [(ngModel)]="m_filter_nome" (keydown)="onKeydown($event)">
+                  [(ngModel)]="spoolManagerFilterParams.spoolNameFilter" (keydown)="onKeydown($event)">
                 <span class="input-group-text bg-transparent">
-                  @if(m_filter_nome.length<=0) { <i class="bi bi-funnel" title="Filtro per nome"></i>
+                  @if(spoolManagerFilterParams.spoolNameFilter.length<=0) { <i class="bi bi-funnel" title="Filtro per nome"></i>
                     }
-                    @if(m_filter_nome.length>0) {
+                    @if(spoolManagerFilterParams.spoolNameFilter.length>0) {
                     <i class="bi bi-funnel-fill" title="Filtro per nome"></i>
                     }
                 </span>
@@ -76,15 +76,15 @@
               <p class="m-0">Stato</p>
             </th>
             <th scope="col" class="p-0">
-              @if(m_spool_file_list_all.length>0) {
+              @if(m_spool_file_list_all().length>0) {
               <div class="input-group input-group-sm">
                 <input type="text" name="data_flt" id="data_flt"
                   class="form-control form-control-sm border-end-0 border shadow-none text-center"
-                  placeholder="Data Creazione" [(ngModel)]="m_filter_data" (keydown)="onKeydown($event)">
+                  placeholder="Data Creazione" [(ngModel)]="spoolManagerFilterParams.spoolDateFilter" (keydown)="onKeydown($event)">
                 <span class="input-group-text bg-transparent">
-                  @if(m_filter_data.length<=0) { <i class="bi bi-funnel" title="Filtro per data"></i>
+                  @if(spoolManagerFilterParams.spoolDateFilter.length<=0) { <i class="bi bi-funnel" title="Filtro per data"></i>
                     }
-                    @if(m_filter_data.length>0) {
+                    @if(spoolManagerFilterParams.spoolDateFilter.length>0) {
                     <i class="bi bi-funnel-fill" title="Filtro per data"></i>
                     }
                 </span>
@@ -113,15 +113,15 @@
             </th>
             <th scope="col" class="p-0">
               <div class="ms-3">
-                @if(m_spool_file_list_all.length>0) {
+                @if(m_spool_file_list_all().length>0) {
                 <div class="input-group input-group-sm">
                   <input type="text" name="jobname_flt" id="jobname_flt"
                     class="form-control form-control-sm border-end-0 border shadow-none p-1" placeholder="Nome lavoro"
-                    [(ngModel)]="m_filter_jobname" (keydown)="onKeydown($event)">
+                    [(ngModel)]="spoolManagerFilterParams.spoolJobNameFilter" (keydown)="onKeydown($event)">
                   <span class="input-group-text bg-transparent">
-                    @if(m_filter_jobname.length<=0) { <i class="bi bi-funnel" title="Filtro per nome job"></i>
+                    @if(spoolManagerFilterParams.spoolJobNameFilter.length<=0) { <i class="bi bi-funnel" title="Filtro per nome job"></i>
                       }
-                      @if(m_filter_jobname.length>0) {
+                      @if(spoolManagerFilterParams.spoolJobNameFilter.length>0) {
                       <i class="bi bi-funnel-fill" title="Filtro per nome job"></i>
                       }
                   </span>

@@ -1,5 +1,5 @@
 import { Component, signal, WritableSignal } from '@angular/core';
-import { BkService, SpoolFileItem } from '../../services/bk.service';
+import { BkService, SpoolFileItem, SpoolManagerFilterParams } from '../../services/bk.service';
 import { LoaderService } from '../../services/loader.service';
 import { tap } from 'rxjs';
 import { FormsModule } from '@angular/forms';
@@ -24,23 +24,25 @@ enum SortMode {
 export class SpoolManager  {
 
   m_sort_mode: SortMode = SortMode.undefined;
-  m_spool_filter_username: string = '';
   protected readonly m_spool_file_list: WritableSignal<SpoolFileItem[]> = signal([]);
   protected readonly m_spool_file_list_all: WritableSignal<SpoolFileItem[]> = signal([]);
   protected readonly m_spool_file_item_selected_index: WritableSignal<number> = signal(-1);
   protected readonly m_spool_file_item_selected: WritableSignal<SpoolFileItem> = signal(new SpoolFileItem());
   protected readonly m_spool_file_item_content: WritableSignal<string[]> = signal([]);
 
-  m_filter_nome: string = '';
-  m_filter_data: string = '';
-  m_filter_jobname: string = '';
+  get spoolManagerFilterParams(): SpoolManagerFilterParams {
+    return this.bkService.g_spoolManagerFilterParams;
+  }
+  set spoolManagerFilterParams(value: SpoolManagerFilterParams) {
+    this.bkService.g_spoolManagerFilterParams = value;
+  }
 
   constructor(private bkService: BkService, private message_service: MessageHelperService, private loadingService: LoaderService) {
   }
 
-
   getSpoolFileList() {
-    this.bkService.getSpoolFileList(this.m_spool_filter_username).subscribe(
+    console.log('getSpoolFileList params are:', this.spoolManagerFilterParams);
+    this.bkService.getSpoolFileList(this.spoolManagerFilterParams.userName).subscribe(
       data => {
         console.log(data);
         this.m_spool_file_list.set(data);
@@ -120,9 +122,9 @@ export class SpoolManager  {
   }
 
   deleteAllSpool() {
-    if (!confirm("Sicuro di voler cancellare tutti gli spool per l'utente " + this.m_spool_filter_username.toUpperCase()))
+    if (!confirm("Sicuro di voler cancellare tutti gli spool per l'utente " + this.spoolManagerFilterParams.userName.toUpperCase()))
       return;
-    this.bkService.deleteAllSpools(this.m_spool_filter_username).subscribe(
+    this.bkService.deleteAllSpools(this.spoolManagerFilterParams.userName).subscribe(
       data => {
         this.getSpoolFileList();
         this.message_service.info('Cancellazione degli spool terminata con successo');
@@ -183,9 +185,9 @@ export class SpoolManager  {
   onKeydown(event: any) {
     console.log('onKeydown', event);
     if (event.code.indexOf('Enter') > -1) {
-      console.log('onKeydown-filterSpool', event, 'm_filter_nome is: ', this.m_filter_nome);
-      console.log('onKeydown-filterSpool', event, 'm_filter_data is: ', this.m_filter_data);
-      console.log('onKeydown-filterSpool', event, 'm_filter_jobname is: ', this.m_filter_jobname);
+      console.log('onKeydown-filterSpool', event, 'm_filter_nome is: ', this.spoolManagerFilterParams.spoolNameFilter);
+      console.log('onKeydown-filterSpool', event, 'm_filter_data is: ', this.spoolManagerFilterParams.spoolDateFilter);
+      console.log('onKeydown-filterSpool', event, 'm_filter_jobname is: ', this.spoolManagerFilterParams.spoolJobNameFilter);
       this.filterSpool();
     }
   }
@@ -194,26 +196,22 @@ export class SpoolManager  {
     var i = this.m_spool_file_list.length;
     while (i--) {
       var element: SpoolFileItem = this.m_spool_file_list()[i];
-      if (this.m_filter_nome.length > 0 && element.spoolfileName.indexOf(this.m_filter_nome.toUpperCase()) < 0) {
+      if (this.spoolManagerFilterParams.spoolNameFilter.length > 0 && element.spoolfileName.indexOf(this.spoolManagerFilterParams.spoolNameFilter.toUpperCase()) < 0) {
         this.m_spool_file_list().splice(i, 1);
         continue;
       }
 
-      if (this.m_filter_data.length > 0 && element.creation_ts.indexOf(this.m_filter_data.toUpperCase()) < 0) {
+      if (this.spoolManagerFilterParams.spoolDateFilter.length > 0 && element.creation_ts.indexOf(this.spoolManagerFilterParams.spoolDateFilter.toUpperCase()) < 0) {
         this.m_spool_file_list().splice(i, 1);
         continue;
       }
 
-      if (this.m_filter_jobname.length > 0 && (element.jobName + element.jobUser + element.jobNumber).indexOf(this.m_filter_jobname.toUpperCase()) < 0) {
+      if (this.spoolManagerFilterParams.spoolJobNameFilter.length > 0 && (element.jobName + element.jobUser + element.jobNumber).indexOf(this.spoolManagerFilterParams.spoolJobNameFilter.toUpperCase()) < 0) {
         this.m_spool_file_list().splice(i, 1);
         continue;
       }
     }
   }
 
-  ciao()
-  {
-    console.log('toast closed....');
-  }
 }
 

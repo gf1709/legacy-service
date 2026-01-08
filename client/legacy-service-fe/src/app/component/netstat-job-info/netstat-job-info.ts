@@ -3,7 +3,6 @@ import { BkService, JobListItemExtended } from '../../services/bk.service';
 import { MessageHelperService } from '../../services/message-helper.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
-import { g_job_filter } from '../../environment.prod';
 import { FormsModule } from '@angular/forms';
 import { JobListViewer } from '../job-list-viewer/job-list-viewer';
 
@@ -38,7 +37,6 @@ export class NetstatJobInfo {
   }
 
   netstat_job_info() {
-    console.log('[0]-netstat_job_info', g_job_filter);
     console.log('[0]-input_port', this.input_port);
     this.m_job_list.set([]);
     this.bkService.netstat_job_info(this.m_job_filter_port, this.m_job_filter_userName, this.m_job_filter_jobName).subscribe(

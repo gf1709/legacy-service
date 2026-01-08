@@ -1,6 +1,6 @@
 import { Component, ViewChild, WritableSignal, signal } from '@angular/core';
 import { MessageHelperService } from '../../services/message-helper.service';
-import { BkService, SourceListResult, SourceResult } from '../../services/bk.service';
+import { BkService, SourceListResult, SourceManagerFilterParams, SourceResult } from '../../services/bk.service';
 import { FormsModule, NgForm } from '@angular/forms';
 import { tap } from 'rxjs';
 
@@ -17,11 +17,12 @@ export class SourceManager {
   constructor(private bkService: BkService, private message_service: MessageHelperService) {
   }
 
-  m_source_filter = {
-    library: 'LIBFCSRC',
-    file: 'QRPGSRC',
-    member: 'ZR1*'
-  };
+  get sourceFilterParams():SourceManagerFilterParams {
+    return this.bkService.g_sourceManagerFilterParams;
+  }
+  set sourceFilterParams(value: SourceManagerFilterParams) {
+    this.bkService.g_sourceManagerFilterParams = value;
+  }
 
   m_source_list: WritableSignal<SourceListResult> = signal(new SourceListResult());
   m_source_result: WritableSignal<SourceResult> = signal(new SourceResult());
@@ -29,7 +30,7 @@ export class SourceManager {
   getSourceList() {
 
     console.log('[0]-getSourceList');
-    this.bkService.getSourceList(this.m_source_filter.library, this.m_source_filter.file, this.m_source_filter.member).subscribe(
+    this.bkService.getSourceList(this.sourceFilterParams.library, this.sourceFilterParams.file, this.sourceFilterParams.member).subscribe(
       data => {
         console.log(data);
         this.m_source_list.set(data);
@@ -49,13 +50,6 @@ export class SourceManager {
     this.m_source_result.set(
       new SourceResult()
     )
-    // this.m_source_result.library = '';
-    // this.m_source_result.sourceFile = '';
-    // this.m_source_result.sourceMember = '';
-    // this.m_source_result.sourceType = '';
-    // this.m_source_result.explodeCOPY = false;
-    // this.m_source_result.source = [];
-
     console.log('[0]-getSourceContent');
     return this.bkService.getSource(library, sourceFile, sourceMember, explodeCopy).pipe(
       tap(data => console.log('Source result is: ' + JSON.stringify(data))),
@@ -103,8 +97,8 @@ export class SourceManager {
 
   clean_filter() {
     console.log('clean_filter');
-    this.m_source_filter.library = '';
-    this.m_source_filter.file = '';
-    this.m_source_filter.member = '';
+    this.sourceFilterParams.library = '';
+    this.sourceFilterParams.file = '';
+    this.sourceFilterParams.member = '';
   }
 }

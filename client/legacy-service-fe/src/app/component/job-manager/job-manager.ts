@@ -2,7 +2,6 @@ import { Component, signal, WritableSignal } from '@angular/core';
 import { BkService, JobListItemExtended } from '../../services/bk.service';
 import { MessageHelperService } from '../../services/message-helper.service';
 import { DomSanitizer } from '@angular/platform-browser';
-import { g_job_filter } from '../../environment.prod';
 import { FormsModule } from '@angular/forms';
 // import { JobListViewer } from "../job-list-viewer/job-list-viewer";
 import { JobListViewer } from '../job-list-viewer/job-list-viewer';
@@ -30,7 +29,6 @@ export class JobManager {
   }
 
   getJobList() {
-    console.log('[0]-getJobList', g_job_filter);
     this.m_job_list.set([]);
     this.bkService.getJobList(this.m_job_filter_userName, this.m_job_filter_jobName, this.m_job_filter_sortByJobName, this.m_job_filter_sortByJobStatus).subscribe(
       data => {

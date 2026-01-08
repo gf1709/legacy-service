@@ -1,9 +1,8 @@
 import { Component, signal, WritableSignal } from '@angular/core';
-import { ProgramCallRequest, ProgramCallResponse } from './../../services/bk.service';
+import { IfsManagerSearchParams, ProgramCallRequest, ProgramCallResponse } from './../../services/bk.service';
 import { BkService, IfsFile, IfsFileListFileResult, JobListItem, JobListItemExtended } from '../../services/bk.service';
 import { MessageHelperService } from '../../services/message-helper.service';
 import { DomSanitizer } from '@angular/platform-browser';
-import { g_ifs_search_params } from '../../environment';
 import { formatDate } from '@angular/common';
 import {CommonModule} from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
@@ -42,32 +41,25 @@ export class IfsManager {
   constructor(private bkService: BkService, private message_service: MessageHelperService, private sanitizer: DomSanitizer) {
   }
 
+  get ifsManagerSearchParams(): IfsManagerSearchParams {
+    return this.bkService.g_ifsManagerSearchParams;
+  }
+  set ifsManagerSearchParams(value: IfsManagerSearchParams) {
+    this.bkService.g_ifsManagerSearchParams = value;
+  }
+
   setCurrentFileEmpty() {
     this.m_current_file = { dir: '', file: '', idx: -1 };
     this.m_file_content.set([]);
   }
 
-  public get m_directory(): string {
-    return g_ifs_search_params.dirname;
-  }
-  public set m_directory(val: string) {
-    g_ifs_search_params.dirname = val;
-  }
-
-  public get m_file_pattern(): string {
-    return g_ifs_search_params.filePattern;
-  }
-  public set m_file_pattern(val: string) {
-    g_ifs_search_params.filePattern = val;
-  }
-
   listFiles() {
-    console.log('[0]-listFiles', this.m_directory, this.m_file_pattern);
+    console.log('[0]-listFiles', this.ifsManagerSearchParams.directory, this.ifsManagerSearchParams.filePattern);
     // this.m_job_list = [];
-    this.bkService.listIFSFiles(this.m_directory, this.m_file_pattern).subscribe(
+    this.bkService.listIFSFiles(this.ifsManagerSearchParams.directory, this.ifsManagerSearchParams.filePattern).subscribe(
       data => {
         this.m_fileList.set(data);
-        this.m_directory = this.m_fileList().directory;
+        this.ifsManagerSearchParams.directory = this.m_fileList().directory;
         if (this.m_fileList().files.length > 0) {
           let parentdir: IfsFile = new IfsFile();
           parentdir.name = '..';
@@ -168,7 +160,7 @@ let file=new File([this.pdfResult],"sample.xlsx")
     this.m_fileList().files.forEach(
       (ele) => {
         if (ele.type === 'f' && ele.isSelected)
-          fNames.push(this.m_directory + "/" + ele.name);
+          fNames.push(this.ifsManagerSearchParams.directory + "/" + ele.name);
       }
     );
     this.bkService.getIFSFilesContent(fNames).subscribe(
@@ -302,7 +294,7 @@ let file=new File([this.pdfResult],"sample.xlsx")
     for (let idx: number = 0; idx < this.m_fileList().files.length; idx++) {
       let ele: IfsFile = this.m_fileList().files[idx];
       if (ele.type === 'f' && ele.isSelected) {
-        bFullFileNamesToDelete.push(this.getFullFileName(this.m_directory, ele.name));
+        bFullFileNamesToDelete.push(this.getFullFileName(this.ifsManagerSearchParams.directory, ele.name));
         bFullFileIndexesToDelete.push(idx);
       }
     }
@@ -351,7 +343,7 @@ let file=new File([this.pdfResult],"sample.xlsx")
   }
 
   gotoDir(dir: string, fileName: string) {
-    this.m_directory = this.getFullFileName(dir, fileName);
+    this.ifsManagerSearchParams.directory = this.getFullFileName(dir, fileName);
     this.listFiles();
   }
 
