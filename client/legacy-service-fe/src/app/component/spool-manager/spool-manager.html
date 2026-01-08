@@ -2,15 +2,15 @@
   <h2 style="text-align: center; padding: 5px;">Gestione Spool</h2>
 
   <div class="container">
-    <form #spoolListFilterForm="ngForm" (ngSubmit)="getSpoolFileList()">
+    <form #spoolListInputForm="ngForm" (ngSubmit)="getSpoolFileList()">
       <div class="row row-cols-auto justify-content-center mb-3">
         <div class="col">
           <span class="gf_label">Nome Utente</span>
           <div class=" input-group input-group-sm mb-2 max_width_200">
             <input #filter_username type="text" id="filter_username" name="filter_username"
               class="form-control border-end-0 border shadow-none mt-0 text-uppercase"
-              [(ngModel)]="spoolManagerFilterParams.userName" data-toggle="tooltip" data-placement="top" title="Porta TcpIp"
-              required minlength="2">
+              [(ngModel)]="spoolManagerFilterParams.userName" data-toggle="tooltip"
+              data-placement="top" title="Porta TcpIp" required minlength="2">
             <span class="input-group-text bg-transparent">
               <i class="bi bi-person" title="Specificare la porta TcpIp"></i>
             </span>
@@ -19,217 +19,214 @@
 
         <div class="col align-items-end mt-4">
           <button class="btn btn-sm btn-primary" type="submit" title="Elenca Spool"
-            [disabled]="!spoolListFilterForm.valid">
+            [disabled]="!spoolListInputForm.valid">
             Elenca
           </button>
         </div>
 
       </div>
+
+      <div class="row row-cols-auto justify-content-center mb-1">
+        <h6>
+          Elenco spool [#{{getSpoolListLen()}}]
+        </h6>
+      </div>
     </form>
 
-    <div class="row row-cols-auto justify-content-center mb-1">
+      <div class="row row-cols-auto justify-content-center">
+        <table class="table table-sm small align-middle table-hover" style="max-width: 1300px;">
+          <thead>
 
-      <h6>
-        Elenco spool [#{{getSpoolListLen()}}]
-      </h6>
-    </div>
-    <div class="row row-cols-auto justify-content-center">
-      <table class="table table-sm small align-middle table-hover" style="max-width: 1200px;">
-        <thead>
-
-          <tr>
-            <th scope="col" class="p-0">
-              <p class="m-0">Utente</p>
-            </th>
-            <th scope="col" class="ps-1 p-0">
-              @if(m_spool_file_list_all().length>0) {
-              <div class="input-group input-group-sm">
-                <input type="text" name="nome_flt" id="nome_flt"
-                  class="form-control form-control-sm border-end-0 border shadow-none p-1" placeholder="Nome"
-                  [(ngModel)]="spoolManagerFilterParams.spoolNameFilter" (keydown)="onKeydown($event)">
-                <span class="input-group-text bg-transparent">
-                  @if(spoolManagerFilterParams.spoolNameFilter.length<=0) { <i class="bi bi-funnel" title="Filtro per nome"></i>
-                    }
-                    @if(spoolManagerFilterParams.spoolNameFilter.length>0) {
-                    <i class="bi bi-funnel-fill" title="Filtro per nome"></i>
-                    }
-                </span>
-              </div>
-              }
-              <div>
-                <button class="btn btn-sm border-0 p-0" type="button" (click)="sort('nome')">
-                  <span class="me-2 text fw-bold">Nome</span>
-                  @if(isCurrentSortASC()) {
-                  <i class="bi bi-sort-alpha-down"></i>
-                  }
-                  @if(!isCurrentSortASC()) {
-                  <i class="bi bi-sort-alpha-down-alt"></i>
-                  }
-                </button>
-              </div>
-
-            </th>
-            <th scope="col" class="p-0">
-              <p class="m-0">#</p>
-            </th>
-            <th scope="col" class="p-0">
-              <p class="m-0">Stato</p>
-            </th>
-            <th scope="col" class="p-0">
-              @if(m_spool_file_list_all().length>0) {
-              <div class="input-group input-group-sm">
-                <input type="text" name="data_flt" id="data_flt"
-                  class="form-control form-control-sm border-end-0 border shadow-none text-center"
-                  placeholder="Data Creazione" [(ngModel)]="spoolManagerFilterParams.spoolDateFilter" (keydown)="onKeydown($event)">
-                <span class="input-group-text bg-transparent">
-                  @if(spoolManagerFilterParams.spoolDateFilter.length<=0) { <i class="bi bi-funnel" title="Filtro per data"></i>
-                    }
-                    @if(spoolManagerFilterParams.spoolDateFilter.length>0) {
-                    <i class="bi bi-funnel-fill" title="Filtro per data"></i>
-                    }
-                </span>
-              </div>
-              }
-              <div class=" text-center">
-                <button class="btn btn-sm border-0 p-0" type="button" (click)="sort('data')">
-                  <span class="me-2 text fw-bold">Data Creazione</span>
-                  @if(isCurrentSortASC()) {
-                  <i class="bi bi-sort-alpha-down"></i>
-                  }
-                  @if(!isCurrentSortASC()) {
-                  <i class="bi bi-sort-alpha-down-alt"></i>
-                  }
-                </button>
-              </div>
-            </th>
-            <th scope="col" class="p-0">
-              <p class="m-0">Dati Utente</p>
-            </th>
-            <th scope="col" class="p-0">
-              <p class="m-0">Dim.</p>
-            </th>
-            <th scope="col" class="p-0">
-              <p class="m-0">Pag.</p>
-            </th>
-            <th scope="col" class="p-0">
-              <div class="ms-3">
+            <tr>
+              <th scope="col" class="p-0">
+                <p class="m-0">Utente</p>
+              </th>
+              <th scope="col" class="ps-1 p-0">
                 @if(m_spool_file_list_all().length>0) {
                 <div class="input-group input-group-sm">
-                  <input type="text" name="jobname_flt" id="jobname_flt"
-                    class="form-control form-control-sm border-end-0 border shadow-none p-1" placeholder="Nome lavoro"
-                    [(ngModel)]="spoolManagerFilterParams.spoolJobNameFilter" (keydown)="onKeydown($event)">
+                  <input #spoolNameFilterParam id="spoolNameFilterParam" type="text" name="nome_flt" id="nome_flt"
+                    class="form-control form-control-sm border-end-0 border shadow-none p-1 text-center gf_label"
+                    placeholder="Nome" (input)="onChangeSpoolNameFilter($event.target.value)">
                   <span class="input-group-text bg-transparent">
-                    @if(spoolManagerFilterParams.spoolJobNameFilter.length<=0) { <i class="bi bi-funnel" title="Filtro per nome job"></i>
-                      }
-                      @if(spoolManagerFilterParams.spoolJobNameFilter.length>0) {
-                      <i class="bi bi-funnel-fill" title="Filtro per nome job"></i>
-                      }
+                    @if(spoolManagerFilterParams.spoolNameFilter.length<=0) { <i class="bi bi-funnel"
+                      title="Filtro per nome"></i>}
+                      @else { <i class="bi bi-x-lg" title="Filtro per nome" (click)="clearSpoolNameFilter(); spoolNameFilterParam.value=''"></i> }
                   </span>
                 </div>
                 }
-                <button class="btn btn-sm border-0 p-0" type="button" (click)="sort('jobname')">
-                  <span class="me-2 text fw-bold">Lavoro</span>
-                  @if(isCurrentSortASC()) {
-                  <i class="bi bi-sort-alpha-down"></i>
+                <div class="text-center">
+                  <button class="btn btn-sm border-0 p-0" type="button" (click)="sort('nome')">
+                    <span class="me-2 text fw-bold">Nome</span>
+                    @if(isCurrentSortASC()) {
+                    <i class="bi bi-sort-alpha-down"></i>
+                    }
+                    @if(!isCurrentSortASC()) {
+                    <i class="bi bi-sort-alpha-down-alt"></i>
+                    }
+                  </button>
+                </div>
+
+              </th>
+              <th scope="col" class="p-0">
+                <p class="text-center m-0 me-2">#</p>
+              </th>
+              <th scope="col" class="p-0">
+                <p class="text-center m-0 me-2">Stato</p>
+              </th>
+              <th scope="col" class="p-0">
+                @if(m_spool_file_list_all().length>0) {
+                <div class="input-group input-group-sm">
+                  <input #spoolDateFilterParam id="spoolDateFilterParam" type="text" name="data_flt" id="data_flt"
+                    class="form-control form-control-sm border-end-0 border shadow-none text-center"
+                    placeholder="Data Creazione"
+                    (input)="onChangeSpoolDateFilter($event.target.value)">
+                  <span class="input-group-text bg-transparent">
+                    @if(spoolManagerFilterParams.spoolDateFilter.length<=0) { <i class="bi bi-funnel"
+                      title="Filtro per data"></i>}
+                      @else {<i class="bi bi-x-lg" title="Filtro per data" (click)="clearSpoolDateFilter(); spoolDateFilterParam.value=''"></i> }
+                  </span>
+                </div>
+                }
+                <div class="text-center">
+                  <button class="btn btn-sm border-0 p-0" type="button" (click)="sort('data')">
+                    <span class="me-2 text fw-bold">Data Creazione</span>
+                    @if(isCurrentSortASC()) {
+                    <i class="bi bi-sort-alpha-down"></i>
+                    }
+                    @if(!isCurrentSortASC()) {
+                    <i class="bi bi-sort-alpha-down-alt"></i>
+                    }
+                  </button>
+                </div>
+              </th>
+              <th scope="col" class="p-0">
+                <p class="m-0">Dati Utente</p>
+              </th>
+              <th scope="col" class="p-0">
+                <p class="m-0">Dim.</p>
+              </th>
+              <th scope="col" class="p-0">
+                <p class="m-0">Pag.</p>
+              </th>
+              <th scope="col" class="p-0">
+                <div class="ms-3">
+                  @if(m_spool_file_list_all().length>0) {
+                  <div class="input-group input-group-sm">
+                    <input #spoolJobNameFilterParam id="spoolJobNameFilterParam" type="text" name="jobname_flt" id="jobname_flt"
+                      class="form-control form-control-sm border-end-0 border shadow-none p-1" placeholder="Nome lavoro"
+                      (input)="onChangeSpoolJobNameFilter($event.target.value)">
+                    <span class="input-group-text bg-transparent">
+                      @if(spoolManagerFilterParams.spoolJobNameFilter.length<=0) { <i class="bi bi-funnel"
+                        title="Filtro per nome job"></i>}
+                        @else { <i class="bi bi-x-lg" title="Filtro per nome job" (click)="clearSpoolJobNameFilter(); spoolJobNameFilterParam.value=''"></i> }
+                    </span>
+                  </div>
                   }
-                  @if(!isCurrentSortASC()) {
-                  <i class="bi bi-sort-alpha-down-alt"></i>
-                  }
-                </button>
-              </div>
-            </th>
-            <th scope="col" class="p-0">
-              <p class="m-0">Coda</p>
-            </th>
-            <th scope="col" class="p-0">
-            </th>
-            <th scope="col" class="p-0">
-            </th>
-            <th scope="col" class="p-0">
-              @if(m_spool_file_list().length>0) {
-              <button class="btn btn-sm rounded-0" type="button" title="Cancella Spool" (click)="deleteAllSpool()">
-                <i class="bi bi-trash"></i>
-              </button>
-              }
-            </th>
-          </tr>
-
-        </thead>
-        <tbody>
-          @for (item of m_spool_file_list(); track $index; let i=$index) {
-          <tr>
-            <td class="p-0">{{item.jobUser}}</td>
-            <td class="p-0">
-              <p class="m-0 me-2">{{item.spoolfileName}}</p>
-            </td>
-            <td class="p-0">{{item.spoolNumber}}</td>
-            <td class="p-0">{{item.status}}</td>
-            <td class="p-0">
-              <p class="text-center m-0 me-2">{{item.creation_ts}}</p>
-            </td>
-            <td class="p-0">{{item.userData}}</td>
-            <td class="p-0">{{item.size}}</td>
-            <td class="p-0">{{item.pages}}</td>
-
-            <td class="p-0">
-              <p class="ms-3">{{item.jobName}}/{{item.jobUser}}/{{item.jobNumber}}</p>
-            </td>
-
-
-            <td class="p-0">{{item.outputQueueLibrary}}/{{item.outputQueueName}}</td>
-            <td class="p-0">
-              <button class="btn btn-sm rounded-0" type="button" title="Visualizza Spool" (click)="showSpool(item, i)"
-                data-bs-toggle="modal" data-bs-target="#showSpoolModal">
-                <i class="bi bi-eye"></i>
-              </button>
-            </td>
-            <td class="p-0">
-              <button class="btn btn-sm rounded-0" type="button" title="Download Spool" (click)="getSpool(item)">
-                <i class="bi bi-download"></i>
-              </button>
-            </td>
-            <td class="p-0">
-              <button class="btn btn-sm rounded-0" type="button" title="Cancella tutti gli Spool"
-                (click)="deleteSpool(item, i)">
-                <i class="bi bi-trash"></i>
-              </button>
-            </td>
-          </tr>
-          }
-        </tbody>
-      </table>
-
-      <!-- Show Spool in modal form -->
-      <div class="modal fade" id="showSpoolModal" tabindex="-1" role="dialog" aria-labelledby="showSpoolModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable modal-xl">
-          <div class="modal-content">
-            <div class="modal-header justify-content-center">
-              <h5 class="modal-title">{{ m_spool_file_item_selected().spoolfileName}} -
-                {{m_spool_file_item_selected().jobName}}/{{m_spool_file_item_selected().jobUser}}/{{m_spool_file_item_selected().jobNumber}}
-                [{{m_spool_file_item_selected().creation_ts}}]
-              </h5>
-              <div>
-                <button type="button" class="btn btn-sm btn-danger ms-5 me-2" data-bs-dismiss="modal"
-                  (click)="deleteSpool(m_spool_file_item_selected() , m_spool_file_item_selected_index())"
-                  title="Cancella spool">
+                  <button class="btn btn-sm border-0 p-0" type="button" (click)="sort('jobname')">
+                    <span class="me-2 text fw-bold">Nome Lavoro</span>
+                    @if(isCurrentSortASC()) {
+                    <i class="bi bi-sort-alpha-down"></i>
+                    }
+                    @if(!isCurrentSortASC()) {
+                    <i class="bi bi-sort-alpha-down-alt"></i>
+                    }
+                  </button>
+                </div>
+              </th>
+              <th scope="col" class="p-0">
+                <p class="m-0">Coda</p>
+              </th>
+              <th scope="col" class="p-0">
+              </th>
+              <th scope="col" class="p-0">
+              </th>
+              <th scope="col" class="p-0">
+                @if(m_spool_file_list().length>0) {
+                <button class="btn btn-sm rounded-0" type="button" title="Cancella Spool" (click)="deleteAllSpool()">
                   <i class="bi bi-trash"></i>
                 </button>
-                <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal" title="Chiudi">
-                  <i class="bi bi-x-lg"></i>
+                }
+              </th>
+            </tr>
+
+          </thead>
+          <tbody>
+            @for (item of m_spool_file_list(); track $index; let i=$index) {
+            <tr>
+              <td class="p-0">{{item.jobUser}}</td>
+              <td class="p-0">
+                <p class="text-center m-0 me-2">{{item.spoolfileName}}</p>
+              </td>
+              <td class="p-0">{{item.spoolNumber}}</td>
+              <td class="text-center m-0 me-2">{{item.status}}</td>
+              <td class="p-0">
+                <p class="text-center m-0 me-2">{{item.creation_ts}}</p>
+              </td>
+              <td class="p-0">{{item.userData}}</td>
+              <td class="p-0">{{item.size}}</td>
+              <td class="p-0">
+                <p class="text-center m-0 me-2">{{item.pages}}</p>
+              </td>
+              <td class="px-3 py-0">
+                <p class="m-0">{{item.jobName}}/{{item.jobUser}}/{{item.jobNumber}}</p>
+              </td>
+
+
+              <td class="p-0">{{item.outputQueueLibrary}}/{{item.outputQueueName}}</td>
+              <td class="p-0">
+                <button class="btn btn-sm rounded-0" type="button" title="Visualizza Spool" (click)="showSpool(item, i)"
+                  data-bs-toggle="modal" data-bs-target="#showSpoolModal">
+                  <i class="bi bi-eye"></i>
                 </button>
+              </td>
+              <td class="p-0">
+                <button class="btn btn-sm rounded-0" type="button" title="Download Spool" (click)="getSpool(item)">
+                  <i class="bi bi-download"></i>
+                </button>
+              </td>
+              <td class="p-0">
+                <button class="btn btn-sm rounded-0" type="button" title="Cancella tutti gli Spool"
+                  (click)="deleteSpool(item, i)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+
+        <!-- Show Spool in modal form -->
+        <div class="modal fade" id="showSpoolModal" tabindex="-1" role="dialog" aria-labelledby="showSpoolModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable modal-xl">
+            <div class="modal-content">
+              <div class="modal-header justify-content-center">
+                <h5 class="modal-title">{{ m_spool_file_item_selected().spoolfileName}} -
+                  {{m_spool_file_item_selected().jobName}}/{{m_spool_file_item_selected().jobUser}}/{{m_spool_file_item_selected().jobNumber}}
+                  [{{m_spool_file_item_selected().creation_ts}}]
+                </h5>
+                <div>
+                  <button type="button" class="btn btn-sm btn-danger ms-5 me-2" data-bs-dismiss="modal"
+                    (click)="deleteSpool(m_spool_file_item_selected() , m_spool_file_item_selected_index())"
+                    title="Cancella spool">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal" title="Chiudi">
+                    <i class="bi bi-x-lg"></i>
+                  </button>
+                </div>
               </div>
-            </div>
-            <div class="modal-body" tabindex="0">
-              @for (item of m_spool_file_item_content(); track $index; let i=$index) {
-              <pre class="m-0"><small>{{item}}</small></pre>
-              }
+              <div class="modal-body" tabindex="0">
+                @for (item of m_spool_file_item_content(); track $index; let i=$index) {
+                <pre class="m-0"><small>{{item}}</small></pre>
+                }
+              </div>
             </div>
           </div>
         </div>
+
+
       </div>
 
-
-    </div>
   </div>
 </div>

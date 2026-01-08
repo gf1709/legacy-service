@@ -21,7 +21,8 @@ enum SortMode {
   styleUrl: './spool-manager.css',
 })
 
-export class SpoolManager  {
+export class SpoolManager {
+
 
   m_sort_mode: SortMode = SortMode.undefined;
   protected readonly m_spool_file_list: WritableSignal<SpoolFileItem[]> = signal([]);
@@ -47,6 +48,9 @@ export class SpoolManager  {
         console.log(data);
         this.m_spool_file_list.set(data);
         this.m_spool_file_list_all.set(data);
+        this.spoolManagerFilterParams.spoolDateFilter = '';
+        this.spoolManagerFilterParams.spoolJobNameFilter = '';
+        this.spoolManagerFilterParams.spoolNameFilter = '';
       },
       error => {
         console.log('errore in fase di esecuzione della richiesta');
@@ -102,8 +106,7 @@ export class SpoolManager  {
     );
   }
 
-  getSpoolListLen():number
-  {
+  getSpoolListLen(): number {
     return this.m_spool_file_list().length;
   }
 
@@ -182,18 +185,13 @@ export class SpoolManager  {
     this.loadingService.setLoading(false);
   }
 
-  onKeydown(event: any) {
-    console.log('onKeydown', event);
-    if (event.code.indexOf('Enter') > -1) {
-      console.log('onKeydown-filterSpool', event, 'm_filter_nome is: ', this.spoolManagerFilterParams.spoolNameFilter);
-      console.log('onKeydown-filterSpool', event, 'm_filter_data is: ', this.spoolManagerFilterParams.spoolDateFilter);
-      console.log('onKeydown-filterSpool', event, 'm_filter_jobname is: ', this.spoolManagerFilterParams.spoolJobNameFilter);
-      this.filterSpool();
-    }
-  }
+
   filterSpool() {
+    console.log('filterSpool - spoolNameFilter is: ', this.spoolManagerFilterParams.spoolNameFilter);
+    console.log('filterSpool - spoolDateFilter is: ', this.spoolManagerFilterParams.spoolDateFilter);
+    console.log('filterSpool - spoolJobNameFilter is: ', this.spoolManagerFilterParams.spoolJobNameFilter);
     this.m_spool_file_list.set([...this.m_spool_file_list_all()]);
-    var i = this.m_spool_file_list.length;
+    var i = this.m_spool_file_list().length;
     while (i--) {
       var element: SpoolFileItem = this.m_spool_file_list()[i];
       if (this.spoolManagerFilterParams.spoolNameFilter.length > 0 && element.spoolfileName.indexOf(this.spoolManagerFilterParams.spoolNameFilter.toUpperCase()) < 0) {
@@ -211,6 +209,37 @@ export class SpoolManager  {
         continue;
       }
     }
+  }
+  clearSpoolNameFilter() {
+    this.spoolManagerFilterParams.spoolNameFilter = '';
+    this.filterSpool();
+  }
+  clearSpoolDateFilter() {
+    this.spoolManagerFilterParams.spoolDateFilter = '';
+    this.filterSpool();
+  }
+  clearSpoolJobNameFilter() {
+    this.spoolManagerFilterParams.spoolJobNameFilter = '';
+    this.filterSpool();
+  }
+
+
+  onChangeSpoolNameFilter(value: string) {
+    console.log('onChangeSpoolNameFilter', value);
+    this.spoolManagerFilterParams.spoolNameFilter = value;
+    this.filterSpool();
+  }
+  onChangeSpoolJobNameFilter(value: string) {
+    console.log('onChangeSpoolJobNameFilter', value);
+    this.spoolManagerFilterParams.spoolJobNameFilter = value;
+    this.filterSpool();
+
+  }
+  onChangeSpoolDateFilter(value: string) {
+    console.log('onChangeSpoolDateFilter', value);
+    this.spoolManagerFilterParams.spoolDateFilter = value;
+    this.filterSpool();
+
   }
 
 }
