@@ -288,6 +288,12 @@ export class JobManagerSearchParams {
   sortByJobStatus: boolean = false;
 }
 
+export class DspLogParams {
+  m_sql_dsplog: string = '';
+  m_sql_journal_auth: string = '';
+  m_sql_journal_file_changes: string = '';
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -302,7 +308,7 @@ export class BkService {
   public g_sourceManagerFilterParams: SourceManagerFilterParams = new SourceManagerFilterParams();
   public g_spoolManagerFilterParams: SpoolManagerFilterParams = new SpoolManagerFilterParams();
   public g_jobManagerFilterParams: JobManagerSearchParams = new JobManagerSearchParams();
-
+  public g_dspLogParams: DspLogParams = new DspLogParams();
 
   constructor() { }
 

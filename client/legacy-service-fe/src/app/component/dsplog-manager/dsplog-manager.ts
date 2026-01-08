@@ -1,7 +1,7 @@
 import { Component, signal, WritableSignal } from '@angular/core';
 import { MessageHelperService } from '../../services/message-helper.service';
-import { BkService } from '../../services/bk.service';
-import {CommonModule} from '@angular/common';
+import { BkService, DspLogParams } from '../../services/bk.service';
+import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 
 @Component({
@@ -11,11 +11,21 @@ import { FormsModule, NgForm } from '@angular/forms';
   styleUrl: './dsplog-manager.css',
 })
 export class DsplogManager {
-  m_sql: string = this.getDSPLOGSql();
 
+  m_selectedValue: string = "0";
+  get sqlText(): DspLogParams {
+    return this.bkService.g_dspLogParams;
+  }
   readonly m_result: WritableSignal<any[]> = signal([]);
 
   constructor(private bkService: BkService, private message_service: MessageHelperService) {
+    console.log("DsplogManager constructor...", this.sqlText);
+    if (this.sqlText.m_sql_dsplog.trim() === "")
+      this.sqlText.m_sql_dsplog = this.getDSPLOGSql();
+    if (this.sqlText.m_sql_journal_auth.trim() === "")
+      this.sqlText.m_sql_journal_auth = this.getJOURNALAuthorizationFailureSql();
+    if (this.sqlText.m_sql_journal_file_changes.trim() === "")
+      this.sqlText.m_sql_journal_file_changes = this.getJOURNALFileChangesSql();
   }
   getDSPLOGSql(): string {
     let start_date: Date = new Date();
@@ -71,16 +81,15 @@ export class DsplogManager {
     return `${formattedDate} ${hours}:${minutes}:${seconds}`;
   }
   dsplog() {
-    console.log("dsplog...", this.m_sql);
+    let sql = this.getSql();
+    console.log("dsplog...", sql);
     this.m_result.set([]);
     var startDate = new Date();
-    this.bkService.dsplog(this.m_sql).subscribe(
+    this.bkService.dsplog(sql).subscribe(
       data => {
         this.m_result.set(data);
         var endDate = new Date();
-        // this.m_seconds = (endDate.getTime() - startDate.getTime()) / 1000;
         console.log("dsplog result is ", this.m_result());
-        // this.addSqlToHistory(this.m_sql);
       },
       err => {
         console.log('errore in fase di esecuzione della richiesta', err);
@@ -96,17 +105,36 @@ export class DsplogManager {
       return [];
   }
   hasResult() {
-    return this.m_result.length > 0;
+    return this.m_result().length > 0;
+  }
+  getSql(): string {
+    if (this.m_selectedValue === "0") {
+      return this.sqlText.m_sql_dsplog;
+    }
+    else if (this.m_selectedValue === "1") {
+      return this.sqlText.m_sql_journal_auth;
+    }
+    else if (this.m_selectedValue === "2") {
+      return this.sqlText.m_sql_journal_file_changes;
+    } else {
+      return "";
+    }
   }
   sourceLogChanged(value: any) {
-    let selectedValue = value.target.value;
-    console.log('sourceLogChanged. this.m_source_log is ', selectedValue);
-    if (selectedValue === "0")
-      this.m_sql = this.getDSPLOGSql();
-    else if (selectedValue === "1")
-      this.m_sql = this.getJOURNALAuthorizationFailureSql();
-    else if (selectedValue === "2")
-      this.m_sql = this.getJOURNALFileChangesSql();
+    this.m_selectedValue = value.target.value;
+    console.log('sourceLogChanged. this.m_source_log is ', this.m_selectedValue);
+    if (this.m_selectedValue === "0") {
+      if (this.sqlText.m_sql_dsplog.trim() === "")
+        this.sqlText.m_sql_dsplog = this.getDSPLOGSql();
+    }
+    else if (this.m_selectedValue === "1") {
+      if (this.sqlText.m_sql_journal_auth.trim() === "")
+        this.sqlText.m_sql_journal_auth = this.getJOURNALAuthorizationFailureSql();
+    }
+    else if (this.m_selectedValue === "2") {
+      if (this.sqlText.m_sql_journal_file_changes.trim() === "")
+        this.sqlText.m_sql_journal_file_changes = this.getJOURNALFileChangesSql();
+    }
   }
 }
 

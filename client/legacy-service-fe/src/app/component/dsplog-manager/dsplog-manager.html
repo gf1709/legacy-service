@@ -2,7 +2,6 @@
 
 <form #sqlscript="ngForm" (ngSubmit)="dsplog()">
 
-
   <div class="row row-cols-auto justify-content-center mt-2">
 
     <div class="input-group mb-3">
@@ -21,9 +20,21 @@
   <div class="row row-cols-auto justify-content-center mt-2">
     <div class="col-12">
       <span class="gf_label">Parameters:</span>
+      @if(m_selectedValue==="0") {
       <textarea #sqllog_sql name="sqllog_sql" class="form-control form-control-sm" placeholder="Sql parameters"
-        style="height: 180px;" [(ngModel)]="m_sql">
+        style="height: 180px;" [(ngModel)]="sqlText.m_sql_dsplog">
+            </textarea>
+      }
+      @if(m_selectedValue==="1") {
+      <textarea #sqljournal_auth_sql name="sqljournal_auth_sql" class="form-control form-control-sm"
+        placeholder="Journal parameters" style="height: 180px;" [(ngModel)]="sqlText.m_sql_journal_auth">
       </textarea>
+      }
+      @if(m_selectedValue==="2") {
+      <textarea #sqljournal_file_changes_sql name="sqljournal_file_changes_sql" class="form-control form-control-sm"
+        placeholder="Journal parameters" style="height: 180px;" [(ngModel)]="sqlText.m_sql_journal_file_changes">
+      </textarea>
+      }
     </div>
   </div>
 
