@@ -1,5 +1,5 @@
 import { Component, signal, WritableSignal } from '@angular/core';
-import { BkService, JobListItemExtended } from '../../services/bk.service';
+import { BkService, JobListItemExtended, JobManagerSearchParams } from '../../services/bk.service';
 import { MessageHelperService } from '../../services/message-helper.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
@@ -14,9 +14,17 @@ import { JobListViewer } from '../job-list-viewer/job-list-viewer';
 })
 export class NetstatJobInfo {
 
-  m_job_filter_port: number = 0;
-  m_job_filter_userName: string = '';
-  m_job_filter_jobName: string = '';
+  // m_job_filter_port: number = 0;
+  // m_job_filter_userName: string = '';
+  // m_job_filter_jobName: string = '';
+
+  get jobListParams(): JobManagerSearchParams {
+    return this.bkService.g_jobManagerFilterParams
+  }
+  set jobListParams(value: JobManagerSearchParams) {
+    this.bkService.g_jobManagerFilterParams = value;
+  }
+
 
   constructor(private bkService: BkService, private message_service: MessageHelperService, private sanitizer: DomSanitizer, private route: ActivatedRoute) {
   }
@@ -29,7 +37,7 @@ export class NetstatJobInfo {
       (params: Params) => {
         let inputPort: number = params['port'];
         if (inputPort > 0) {
-          this.m_job_filter_port = inputPort;
+          this.jobListParams.port = inputPort;
           this.netstat_job_info();
         }
       }
@@ -39,7 +47,7 @@ export class NetstatJobInfo {
   netstat_job_info() {
     console.log('[0]-input_port', this.input_port);
     this.m_job_list.set([]);
-    this.bkService.netstat_job_info(this.m_job_filter_port, this.m_job_filter_userName, this.m_job_filter_jobName).subscribe(
+    this.bkService.netstat_job_info(this.jobListParams.port, this.jobListParams.jobUser, this.jobListParams.jobName).subscribe(
       data => {
         console.log('netstat_job_info data is', data);
         let newJobList: JobListItemExtended[] = [];

@@ -280,6 +280,14 @@ export class SpoolManagerFilterParams {
   spoolDateFilter: string = '';
 };
 
+export class JobManagerSearchParams {
+  jobUser: string = '';
+  port: number = 0;
+  jobName: string = '';
+  sortByJobName: boolean = false;
+  sortByJobStatus: boolean = false;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -293,6 +301,8 @@ export class BkService {
   public g_ifsManagerSearchParams: IfsManagerSearchParams = new IfsManagerSearchParams();
   public g_sourceManagerFilterParams: SourceManagerFilterParams = new SourceManagerFilterParams();
   public g_spoolManagerFilterParams: SpoolManagerFilterParams = new SpoolManagerFilterParams();
+  public g_jobManagerFilterParams: JobManagerSearchParams = new JobManagerSearchParams();
+
 
   constructor() { }
 

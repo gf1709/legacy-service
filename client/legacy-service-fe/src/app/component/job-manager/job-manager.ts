@@ -1,5 +1,5 @@
 import { Component, signal, WritableSignal } from '@angular/core';
-import { BkService, JobListItemExtended } from '../../services/bk.service';
+import { BkService, JobListItemExtended, JobManagerSearchParams } from '../../services/bk.service';
 import { MessageHelperService } from '../../services/message-helper.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -18,19 +18,21 @@ export class JobManager {
   }
 
   m_job_list: WritableSignal<JobListItemExtended[]> = signal([]);
-  m_job_filter_jobName: string = '';
-  m_job_filter_jobStatus: string = '';
-  m_job_filter_userName: string = '';
-  m_job_filter_sortByJobName: boolean = false;
-  m_job_filter_sortByJobStatus: boolean = false;
+
+  get jobListParams():JobManagerSearchParams {
+    return this.bkService.g_jobManagerFilterParams
+  }
+  set jobListParams(value:JobManagerSearchParams) {
+    this.bkService.g_jobManagerFilterParams = value;
+  }
 
   public get m_can_search(): boolean {
-    return (this.m_job_filter_userName + this.m_job_filter_jobName + this.m_job_filter_jobStatus).length > 1;
+    return (this.jobListParams.jobUser + this.jobListParams.jobName).length > 1;
   }
 
   getJobList() {
     this.m_job_list.set([]);
-    this.bkService.getJobList(this.m_job_filter_userName, this.m_job_filter_jobName, this.m_job_filter_sortByJobName, this.m_job_filter_sortByJobStatus).subscribe(
+    this.bkService.getJobList(this.jobListParams.jobUser, this.jobListParams.jobName, this.jobListParams.sortByJobName, this.jobListParams.sortByJobStatus).subscribe(
       data => {
         console.log(data);
         let jobItems: any = data;
