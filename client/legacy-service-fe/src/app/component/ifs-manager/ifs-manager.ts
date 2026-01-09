@@ -1,10 +1,9 @@
-import { Component, signal, WritableSignal } from '@angular/core';
+import { AfterContentChecked, ChangeDetectorRef, Component, signal, WritableSignal } from '@angular/core';
 import { IfsManagerSearchParams, ProgramCallRequest, ProgramCallResponse } from './../../services/bk.service';
 import { BkService, IfsFile, IfsFileListFileResult, JobListItem, JobListItemExtended } from '../../services/bk.service';
 import { MessageHelperService } from '../../services/message-helper.service';
-import { DomSanitizer } from '@angular/platform-browser';
 import { formatDate } from '@angular/common';
-import {CommonModule} from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 
 enum SortMode {
@@ -18,27 +17,81 @@ enum SortMode {
   Size_DESC,
   undefined
 }
-
+class IfsFileContent {
+  lineNumber: number = 0;
+  lineContent: string = '';
+  requests: ProgramCallRequest[] = [];
+  responses: ProgramCallResponse[] = [];
+}
 @Component({
   selector: 'app-ifs-manager',
   imports: [CommonModule, FormsModule],
   templateUrl: './ifs-manager.html',
   styleUrl: './ifs-manager.css',
 })
-export class IfsManager {
+export class IfsManager implements AfterContentChecked {
 
   m_fileList: WritableSignal<IfsFileListFileResult> = signal(new IfsFileListFileResult());
-
   m_current_file: { dir: string, file: string, idx: number } = { dir: '', file: '', idx: -1 };
-  m_file_content: WritableSignal<string[]> = signal([]);
-
+  m_file_content: WritableSignal<IfsFileContent[]> = signal([]);
   m_sort_mode: SortMode = SortMode.Date_ASC;
   SortMode = SortMode; // per usarlo nell'html
-  m_programCallRequests: WritableSignal<ProgramCallRequest[]> = signal([])  ;
-  m_programCallResponses: WritableSignal<ProgramCallResponse[]> = signal([]);
   m_allRowsSelected: boolean = false;
 
-  constructor(private bkService: BkService, private message_service: MessageHelperService, private sanitizer: DomSanitizer) {
+  m_isyDsInputLineNumberToShow: number = -1;
+  m_isyDsOutputLineNumberToShow: number = -1;
+
+  constructor(private bkService: BkService, private message_service: MessageHelperService, public cdRef: ChangeDetectorRef) {
+  }
+
+  ngAfterContentChecked(): void {
+    console.log('ngAfterContentChecked');
+    if (this.m_isyDsInputLineNumberToShow > 0) {
+      let lineNumber = this.m_isyDsInputLineNumberToShow;
+      this.m_isyDsInputLineNumberToShow = -1;
+      if (this.m_file_content()[lineNumber].requests.length === 0) {
+        let line: string = this.m_file_content()[lineNumber].lineContent;
+        this.bkService.showISYDsInput(line).subscribe(
+          data => {
+            this.m_file_content.update(
+              (values) => {
+                values[lineNumber].requests = data;
+                return values;
+              }
+            );
+            this.cdRef.detectChanges();
+          }
+          , err => {
+            console.log('errore in fase di esecuzione della richiesta');
+            this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta');
+          }
+        );
+      }
+    }
+
+    if (this.m_isyDsOutputLineNumberToShow > 0) {
+      let lineNumber = this.m_isyDsOutputLineNumberToShow;
+      this.m_isyDsOutputLineNumberToShow = -1;
+      if (this.m_file_content()[lineNumber].responses.length === 0) {
+        let line: string = this.m_file_content()[lineNumber].lineContent;
+        this.bkService.showISYDsOutput(line).subscribe(
+          data => {
+            this.m_file_content.update(
+              (values) => {
+                values[lineNumber].responses = data;
+                return values;
+              }
+            );
+            this.cdRef.detectChanges();
+          }
+          , err => {
+            console.log('errore in fase di esecuzione della richiesta');
+            this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta');
+          }
+        );
+      }
+    }
+
   }
 
   get ifsManagerSearchParams(): IfsManagerSearchParams {
@@ -68,7 +121,7 @@ export class IfsManager {
           parentdir.size = 0;
           this.m_fileList().files.unshift(parentdir);
         }
-        console.log('listFiles data is', this.m_fileList);
+        console.log('listFiles data is', this.m_fileList());
         this.m_allRowsSelected = false;
       }
       , err => {
@@ -95,13 +148,13 @@ export class IfsManager {
   //       console.log('showFileContent data is', blob);
   //       // const zip = new JSZip();
 
-/*
-this.getFile().subscribe((response)=>{
-const.byteArray=new Uint8Array(atob(response.data).split('').map(char)=>char.charCodeAt(0))
-this.pdfResult=new(Blob[byteArray],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
-let file=new File([this.pdfResult],"sample.xlsx")
-});
-*/
+  /*
+  this.getFile().subscribe((response)=>{
+  const.byteArray=new Uint8Array(atob(response.data).split('').map(char)=>char.charCodeAt(0))
+  this.pdfResult=new(Blob[byteArray],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+  let file=new File([this.pdfResult],"sample.xlsx")
+  });
+  */
 
   //     }
   //     , err => {
@@ -117,7 +170,18 @@ let file=new File([this.pdfResult],"sample.xlsx")
     this.m_current_file = { dir: dir, file: fileName, idx: idx };
     this.bkService.getIFSFileContent(aFullFileName).subscribe(
       data => {
-        this.m_file_content.set(data);
+
+        let fileContent: IfsFileContent[] = [];
+        data.forEach(
+          (line, index) => {
+            let ifsLine: IfsFileContent = new IfsFileContent();
+            ifsLine.lineNumber = index + 1;
+            ifsLine.lineContent = line;
+            fileContent.push(ifsLine);
+            console.log('showFileContent new ele is ', ifsLine);
+          }
+        );
+        this.m_file_content.set(fileContent);
         console.log('getFile data is', this.m_file_content);
       }
       , err => {
@@ -133,11 +197,21 @@ let file=new File([this.pdfResult],"sample.xlsx")
     this.bkService.getIFSFileContent(aFullFileName).subscribe(
       data => {
         let binaryData: BlobPart[] = [];
-        this.m_file_content.set(data);
+        let fileContent: IfsFileContent[] = [];
+        data.forEach(
+          (line, index) => {
+            let ifsLine: IfsFileContent = new IfsFileContent();
+            ifsLine.lineNumber = index + 1;
+            ifsLine.lineContent = line;
+            fileContent.push(ifsLine);
+            console.log('downloadFile new ele is ', ifsLine);
+          }
+        );
+        this.m_file_content.set(fileContent);
         console.log('downloadFile data is', this.m_file_content);
         this.m_file_content().forEach(
           (ele) => {
-            binaryData.push(ele + '\n');
+            binaryData.push(ele.lineContent + '\n');
           }
         );
         let downloadLink = document.createElement('a');
@@ -364,8 +438,8 @@ let file=new File([this.pdfResult],"sample.xlsx")
 
   isHighlighted(idx: number): boolean {
     if (idx)
-      if ((this.m_file_content()[idx].indexOf('XAM Call - Messaggio in') > 0)
-        || (this.m_file_content()[idx].indexOf('Protocollo - Messaggio XAM in') > 0))
+      if ((this.m_file_content()[idx].lineContent.indexOf('XAM Call - Messaggio in') > 0)
+        || (this.m_file_content()[idx].lineContent.indexOf('Protocollo - Messaggio XAM in') > 0))
         return true;
     return false;
 
@@ -373,8 +447,8 @@ let file=new File([this.pdfResult],"sample.xlsx")
 
   isISYCallInput(idx: number): boolean {
     if (idx > 1) {
-      if ((this.m_file_content()[idx - 1].indexOf('[5b] - Isy Call - Messaggio in ingresso') > 0)
-        || (this.m_file_content()[idx - 1].indexOf('[5b] - Protocollo - Messaggio ISY in ingresso') > 0))
+      if ((this.m_file_content()[idx - 1].lineContent.indexOf('[5b] - Isy Call - Messaggio in ingresso') > 0)
+        || (this.m_file_content()[idx - 1].lineContent.indexOf('[5b] - Protocollo - Messaggio ISY in ingresso') > 0))
         return true;
 
     }
@@ -382,46 +456,21 @@ let file=new File([this.pdfResult],"sample.xlsx")
   }
   isISYCallOutput(idx: number): boolean {
     if (idx) {
-      if ((this.m_file_content()[idx - 1].indexOf('[5d] - Isy Call - Messaggio in uscita:') > 0)
-        || (this.m_file_content()[idx - 1].indexOf('[5d] - Protocollo - Messaggio ISY in uscita:') > 0))
+      if ((this.m_file_content()[idx - 1].lineContent.indexOf('[5d] - Isy Call - Messaggio in uscita:') > 0)
+        || (this.m_file_content()[idx - 1].lineContent.indexOf('[5d] - Protocollo - Messaggio ISY in uscita:') > 0))
         return true;
     }
     return false;
   }
 
-  m_expandedJobLogLineIdx: number = -1;
-  isJobLogLineExpanded(idx: number): boolean {
-    return this.m_expandedJobLogLineIdx === idx;
-  }
-
   showISYDsInput(idx: number) {
     console.log('showISYDsInput', idx);
-    this.m_expandedJobLogLineIdx = idx;
-    this.bkService.showISYDsInput(this.m_file_content()[idx]).subscribe(
-      data => {
-        this.m_programCallRequests.set(data);
-        console.log('showISYDsInput this.m_programCallRequests is', this.m_programCallRequests());
-      }
-      , err => {
-        console.log('errore in fase di esecuzione della richiesta');
-        this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta');
-      }
-    );
+    this.m_isyDsInputLineNumberToShow = idx;
   }
 
   showISYDsOutput(idx: number) {
     console.log('showISYDsOutput', idx);
-    this.m_expandedJobLogLineIdx = idx;
-    this.bkService.showISYDsOutput(this.m_file_content()[idx]).subscribe(
-      data => {
-        this.m_programCallResponses.set(data);
-        console.log('showISYDsOutput this.m_programCallResponses is', this.m_programCallResponses());
-      }
-      , err => {
-        console.log('errore in fase di esecuzione della richiesta');
-        this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta');
-      }
-    );
+    this.m_isyDsOutputLineNumberToShow = idx;
   }
 
   selectRow(idx: number, event: any) {

@@ -259,7 +259,7 @@ export class IfsFileListFileResult {
 };
 
 export class IfsManagerSearchParams {
-  directory: string = '/tmp';
+  directory: string = '/tmp/jotcpworker4';
   filePattern: string = '*';
 };
 
