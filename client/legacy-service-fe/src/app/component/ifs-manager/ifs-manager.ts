@@ -5,7 +5,6 @@ import { MessageHelperService } from '../../services/message-helper.service';
 import { formatDate } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 
 enum SortMode {
   Name_ASC,
@@ -26,7 +25,7 @@ class IfsFileContent {
 }
 @Component({
   selector: 'app-ifs-manager',
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   templateUrl: './ifs-manager.html',
   styleUrl: './ifs-manager.css',
 })
