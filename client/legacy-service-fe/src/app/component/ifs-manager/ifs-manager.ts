@@ -5,6 +5,7 @@ import { MessageHelperService } from '../../services/message-helper.service';
 import { formatDate } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 enum SortMode {
   Name_ASC,
@@ -25,7 +26,7 @@ class IfsFileContent {
 }
 @Component({
   selector: 'app-ifs-manager',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './ifs-manager.html',
   styleUrl: './ifs-manager.css',
 })
@@ -40,6 +41,8 @@ export class IfsManager implements AfterContentChecked {
 
   m_isyDsInputLineNumberToShow: number = -1;
   m_isyDsOutputLineNumberToShow: number = -1;
+
+  locationName: string = '399';
 
   constructor(private bkService: BkService, private message_service: MessageHelperService, public cdRef: ChangeDetectorRef) {
   }
@@ -166,6 +169,8 @@ export class IfsManager implements AfterContentChecked {
 
   showFileContent(dir: string, fileName: string, idx: number) {
     console.log('getFile:', dir, fileName);
+    this.m_requestResponseRows = [];
+    this.m_currentRow = -1;
     let aFullFileName: string = this.getFullFileName(dir, fileName);
     this.m_current_file = { dir: dir, file: fileName, idx: idx };
     this.bkService.getIFSFileContent(aFullFileName).subscribe(
@@ -178,6 +183,8 @@ export class IfsManager implements AfterContentChecked {
             ifsLine.lineNumber = index + 1;
             ifsLine.lineContent = line;
             fileContent.push(ifsLine);
+            if (this.isISYCallInputLine(line) || this.isISYCallOutputLine(line))
+              this.m_requestResponseRows.push(index);
             console.log('showFileContent new ele is ', ifsLine);
           }
         );
@@ -447,22 +454,31 @@ export class IfsManager implements AfterContentChecked {
 
   isISYCallInput(idx: number): boolean {
     if (idx > 1) {
-      if ((this.m_file_content()[idx - 1].lineContent.indexOf('[5b] - Isy Call - Messaggio in ingresso') > 0)
-        || (this.m_file_content()[idx - 1].lineContent.indexOf('[5b] - Protocollo - Messaggio ISY in ingresso') > 0))
-        return true;
-
+      let line: string = this.m_file_content()[idx - 1].lineContent;
+      return this.isISYCallInputLine(line);
     }
     return false;
   }
+  isISYCallInputLine(line: string): boolean {
+    if ((line.indexOf('[5b] - Isy Call - Messaggio in ingresso') > 0)
+      || (line.indexOf('[5b] - Protocollo - Messaggio ISY in ingresso') > 0))
+      return true;
+    return false;
+  }
+
   isISYCallOutput(idx: number): boolean {
     if (idx) {
-      if ((this.m_file_content()[idx - 1].lineContent.indexOf('[5d] - Isy Call - Messaggio in uscita:') > 0)
-        || (this.m_file_content()[idx - 1].lineContent.indexOf('[5d] - Protocollo - Messaggio ISY in uscita:') > 0))
-        return true;
+      let line: string = this.m_file_content()[idx - 1].lineContent;
+      return this.isISYCallOutputLine(line)
     }
     return false;
   }
-
+  isISYCallOutputLine(line: string): boolean {
+    if ((line.indexOf('[5d] - Isy Call - Messaggio in uscita:') > 0)
+      || (line.indexOf('[5d] - Protocollo - Messaggio ISY in uscita:') > 0))
+      return true;
+    return false;
+  }
   showISYDsInput(idx: number) {
     console.log('showISYDsInput', idx);
     this.m_isyDsInputLineNumberToShow = idx;
@@ -527,6 +543,25 @@ export class IfsManager implements AfterContentChecked {
     if (req === null || req.dsin === null || req.values === null || req.values.length === 0)
       return false;
     return true;
+  }
+
+  m_currentRow: number = -1;
+  m_requestResponseRows: number[] = [];
+
+  gotoFirstCall() {
+    this.m_currentRow = 0;
+    let nextRowId: string = this.m_requestResponseRows[this.m_currentRow].toString();
+    const elmnt = document.getElementById(nextRowId);
+    elmnt?.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+
+  }
+  gotoNextCall() {
+    this.m_currentRow = this.m_currentRow + 1;
+    if (this.m_currentRow >= this.m_requestResponseRows.length)
+      this.m_currentRow = 0;
+    let nextRowId: string = this.m_requestResponseRows[this.m_currentRow].toString();
+    const elmnt = document.getElementById(nextRowId);
+    elmnt?.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
   }
 
 }

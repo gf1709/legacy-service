@@ -1,5 +1,5 @@
 import { ApplicationConfig, importProvidersFrom, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideRouter, withComponentInputBinding } from '@angular/router';
+import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from '@angular/router';
 import { HTTP_INTERCEPTORS, provideHttpClient, withFetch, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { routes } from './app.routes';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -11,9 +11,11 @@ import { BasicAuthHtppInterceptorService } from './services/basic-auth-intercept
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes),
+    provideRouter(routes,
+      withInMemoryScrolling({ anchorScrolling: 'enabled' })
+    ),
     provideHttpClient(withFetch(), withInterceptorsFromDi()),
-    {provide: HTTP_INTERCEPTORS, useClass: BasicAuthHtppInterceptorService, multi: true},
+    { provide: HTTP_INTERCEPTORS, useClass: BasicAuthHtppInterceptorService, multi: true },
     provideAnimations(), // required animations providers
     provideToastr()
   ]

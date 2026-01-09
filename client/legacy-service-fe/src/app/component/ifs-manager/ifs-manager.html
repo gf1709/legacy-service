@@ -1,4 +1,5 @@
 <div>
+
   <h2 style="text-align: center; padding: 5px;">Gestione file IFS</h2>
   <div class="container">
     <div class="row row-cols-auto justify-content-center">
@@ -188,7 +189,6 @@
 
   </div>
 
-
   <!-- Show file in modal form -->
   <div class="modal fade" id="showFileModal" tabindex="-1" role="dialog" aria-labelledby="showFileModalLabel">
     <div class="modal-dialog modal-dialog-scrollable modal-xl">
@@ -200,18 +200,26 @@
               (click)="deleteIFSFile(m_current_file.dir, m_current_file.file, m_current_file.idx)">
               <i class="bi bi-trash"></i>
             </button>
+            <button type="button" class="btn btn-sm btn-light" title="Goto first call" (click)="gotoFirstCall()">
+              <i class="bi bi-chevron-bar-up"></i>
+            </button>
+            <button type="button" class="btn btn-sm btn-light" title="Goto next call" (click)="gotoNextCall()">
+              <i class="bi bi-chevron-double-down"></i>
+            </button>
 
             <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal" title="Chiudi">
               <i class="bi bi-x-lg"></i>
             </button>
+
           </div>
         </div>
 
         <div class="modal-body" tabindex="0">
 
 
-          <div class="d-flex" *ngFor="let item of this.m_file_content(); let joblogLineIdx=index">
-            <div class="row">
+          @for (item of m_file_content(); track $index; let joblogLineIdx=$index) {
+          <div class="d-flex">
+            <div class="row" [id]="joblogLineIdx">
               <div class="col">
                 @if (isHighlighted(joblogLineIdx)) {
                 <pre
@@ -227,21 +235,20 @@
                 <div class="col-auto">
                   <button class="btn btn-sm border-0 ms-1 p-0 ps-1 pe-1 btn-primary" type="button"
                     (click)="showISYDsInput(joblogLineIdx)" title="Show ISY Call Input">
-                        @if(item.requests.length>0) {
+                    @if(item.requests.length>0) {
                     <i class="bi bi-dash"></i>
                     } @else {
                     <i class="bi bi-plus"></i>
                     }
-
                   </button>
                 </div>
 
                 @if(item.requests.length>0) {
                 <div class="col-auto border border-2 border-primary rounded px-4 ms-2 mt-2 mb-2">
                   @for (programCallRequest of item.requests; track $callIdx; let $callIdx = $index) {
-                    @if ($callIdx===0) {
-                        <h6 class="text-center mt-3">Messaggio di input</h6>
-                    }
+                  @if ($callIdx===0) {
+                  <h6 class="text-center mt-3">Messaggio di input</h6>
+                  }
                   <div class="row border rounded border-2 mb-1">
                     <div class="col-auto">
                       <table class="table table-sm mb-1 caption-top">
@@ -312,7 +319,7 @@
                   </div>
                   }
                 </div>
-              }
+                }
               </div>
               }
               <!-- Gestionde dell'input - fine -->
@@ -401,6 +408,8 @@
 
             </div>
           </div>
+          }
+
         </div>
 
 
