@@ -204,7 +204,7 @@
               @if(m_requestResponseRows().length>0)
               {
               <div class="d-flex justify-content-center border rounded border-info">
-                <p class="m-1 me-2 p-0">Nr. Calls: {{m_requestResponseRows().length}}</p>
+                <p class="m-1 me-2 p-0">Request+Response no: {{m_requestResponseRows().length}}</p>
                 <div class="btn-group btn-group-sm me-2" role="group">
                   <button type="button" class="btn p-1 m-0" title="Prossima call" (click)="gotoNextCall()">
                     <i class="bi bi-chevron-double-down"></i>
@@ -243,8 +243,9 @@
         <div class="modal-body" tabindex="0">
 
           @for (item of m_file_content(); track $index; let joblogLineIdx=$index) {
-          <div class="d-flex">
-            <!-- <div class="row" [id]="joblogLineIdx"> -->
+            <!-- [class.border]="isHighlighted(joblogLineIdx)" -->
+          <!-- <div class="d-flex border border-1 border-secondary mb-1 rounded"> -->
+          <div class="d-flex border-1 border-success mb-1 rounded" [class.border]="isISYCallInput(joblogLineIdx) || isISYCallOutput(joblogLineIdx)">
             <div class="row">
               <div class="col">
                 @if (isHighlighted(joblogLineIdx)) {
@@ -259,7 +260,7 @@
               @if (isISYCallInput(joblogLineIdx)) {
               <div class="row" [id]="joblogLineIdx-1">
                 <div class="col-auto">
-                  <button class="btn btn-sm border-0 ms-1 p-0 ps-1 pe-1 btn-primary" type="button"
+                  <button class="btn btn-sm border-0 ms-1 mb-1 p-0 ps-1 pe-1 btn-primary" type="button"
                     (click)="showISYDsInput(joblogLineIdx)" title="Show ISY Call Input">
                     Request id: {{joblogLineIdx-1}}
                     @if(item.requests.length>0) {
@@ -271,14 +272,14 @@
                 </div>
 
                 @if(item.requests.length>0) {
-                <div class="col-auto border border-2 border-primary rounded px-4 ms-2 mt-2 mb-2">
+                <div class="col-auto border border-2 border-primary rounded px-4 m-4">
                   @for (programCallRequest of item.requests; track $callIdx; let $callIdx = $index) {
                   @if ($callIdx===0) {
-                  <h6 class="text-center mt-3">Messaggio di input</h6>
+                  <h6 class="text-center mt-3">Messaggio di input [Nr. call: {{item.requests.length}}]</h6>
                   }
                   <div class="row border rounded border-2 mb-1">
                     <div class="col-auto">
-                      <table class="table table-sm mb-1 caption-top">
+                      <table class="table table-sm mt-1 mb-1 caption-top">
                         <tr>
                           <td>
                             <span class="fw-bold small me-1">Call nr:</span>
@@ -354,7 +355,7 @@
               @if (isISYCallOutput(joblogLineIdx)) {
               <div class="row" [id]="joblogLineIdx-1">
                 <div class="col-auto">
-                  <button class="btn btn-sm border-0 ms-1 p-0 ps-1 pe-1 btn-info" type="button"
+                  <button class="btn btn-sm border-0 ms-1 mb-1 p-0 ps-1 pe-1 btn-info" type="button"
                     (click)="showISYDsOutput(joblogLineIdx)" title="Show ISY Call Output">
                     Response id: {{joblogLineIdx-1}}
                     @if(item.responses.length>0) {
@@ -366,12 +367,12 @@
                 </div>
 
                 @if(item.responses.length>0) {
-                <div class="col-auto border border-2 border-info rounded px-4 ms-2 mt-2 mb-2">
-                  <h6 class="text-center">Messaggio di output</h6>
+                <div class="col-auto border border-2 border-info rounded px-4 m-4">
+                  <h6 class="text-center">Messaggio di output [Nr. call: {{item.responses.length}}]</h6>
                   @for (programCallResponse of item.responses; track $index; let $callIdx= $index) {
                   <div class="row border rounded border-2 mb-1">
                     <div class="col-auto">
-                      <table class="table table-sm">
+                      <table class="table table-sm mt-1">
 
                         <tr>
                           <td>

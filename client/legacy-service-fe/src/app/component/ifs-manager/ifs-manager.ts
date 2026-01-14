@@ -452,7 +452,6 @@ export class IfsManager implements AfterContentChecked {
         || (this.m_file_content()[idx].lineContent.indexOf('Protocollo - Messaggio XAM in') > 0))
         return true;
     return false;
-
   }
 
   isISYCallInput(idx: number): boolean {
