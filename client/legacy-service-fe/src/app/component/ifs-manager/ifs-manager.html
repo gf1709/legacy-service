@@ -194,32 +194,58 @@
     <div class="modal-dialog modal-dialog-scrollable modal-xl">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title"> File [{{m_current_file.dir}}/{{m_current_file.file}} ]</h5>
-          <div>
-            <button type="button" class="btn btn-sm btn-light me-2" data-bs-dismiss="modal" title="Cancella file"
-              (click)="deleteIFSFile(m_current_file.dir, m_current_file.file, m_current_file.idx)">
-              <i class="bi bi-trash"></i>
-            </button>
-            <button type="button" class="btn btn-sm btn-light" title="Goto first call" (click)="gotoFirstCall()">
-              <i class="bi bi-chevron-bar-up"></i>
-            </button>
-            <button type="button" class="btn btn-sm btn-light" title="Goto next call" (click)="gotoNextCall()">
-              <i class="bi bi-chevron-double-down"></i>
-            </button>
+          <h6 class="modal-title">
+            {{m_current_file.dir}}/{{m_current_file.file}}
+          </h6>
 
-            <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal" title="Chiudi">
-              <i class="bi bi-x-lg"></i>
-            </button>
+          <div class="container">
+            <div class="btn-toolbar justify-content-end" role="toolbar">
 
+              @if(m_requestResponseRows().length>0)
+              {
+              <div class="d-flex justify-content-center border rounded border-info">
+                <p class="m-1 me-2 p-0">Nr. Calls: {{m_requestResponseRows().length}}</p>
+                <div class="btn-group btn-group-sm me-2" role="group">
+                  <button type="button" class="btn p-1 m-0" title="Prossima call" (click)="gotoNextCall()">
+                    <i class="bi bi-chevron-double-down"></i>
+                  </button>
+                  <button type="button" class="btn p-1 me-2" title="Call precedente" (click)="gotoPreviousCall()">
+                    <i class="bi bi-chevron-double-up"></i>
+                  </button>
+
+                  <button type="button" class="btn p-1 m-0" title="Prima call" (click)="gotoFirstCall()">
+                    <i class="bi bi-chevron-bar-up"></i>
+                  </button>
+                  <button type="button" class="btn p-1 me-2" title="Ultima call" (click)="gotoLastCall()">
+                    <i class="bi bi-chevron-bar-down"></i>
+                  </button>
+                </div>
+              </div>
+              }
+
+              <div class="btn-group btn-group-sm ms-2" role="group">
+                <button type="button" class="btn" data-bs-dismiss="modal" title="Cancella file"
+                  (click)="deleteIFSFile(m_current_file.dir, m_current_file.file, m_current_file.idx)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+              <div class="btn-group btn-group-sm ms-2" role="group">
+                <button type="button" class="btn " data-bs-dismiss="modal" title="Chiudi">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              </div>
+            </div>
           </div>
+
+
         </div>
 
         <div class="modal-body" tabindex="0">
 
-
           @for (item of m_file_content(); track $index; let joblogLineIdx=$index) {
           <div class="d-flex">
-            <div class="row" [id]="joblogLineIdx">
+            <!-- <div class="row" [id]="joblogLineIdx"> -->
+            <div class="row">
               <div class="col">
                 @if (isHighlighted(joblogLineIdx)) {
                 <pre
@@ -231,12 +257,13 @@
 
               <!-- Gestionde dell'input - inizio -->
               @if (isISYCallInput(joblogLineIdx)) {
-              <div class="row">
+              <div class="row" [id]="joblogLineIdx-1">
                 <div class="col-auto">
                   <button class="btn btn-sm border-0 ms-1 p-0 ps-1 pe-1 btn-primary" type="button"
                     (click)="showISYDsInput(joblogLineIdx)" title="Show ISY Call Input">
+                    Request id: {{joblogLineIdx-1}}
                     @if(item.requests.length>0) {
-                    <i class="bi bi-dash"></i>
+                    <i class="bi bi-dot"></i>
                     } @else {
                     <i class="bi bi-plus"></i>
                     }
@@ -325,17 +352,19 @@
               <!-- Gestionde dell'input - fine -->
               <!-- Gestionde dell'output - inizio -->
               @if (isISYCallOutput(joblogLineIdx)) {
-              <div class="row">
+              <div class="row" [id]="joblogLineIdx-1">
                 <div class="col-auto">
                   <button class="btn btn-sm border-0 ms-1 p-0 ps-1 pe-1 btn-info" type="button"
                     (click)="showISYDsOutput(joblogLineIdx)" title="Show ISY Call Output">
+                    Response id: {{joblogLineIdx-1}}
                     @if(item.responses.length>0) {
-                    <i class="bi bi-dash"></i>
+                    <i class="bi bi-dot"></i>
                     } @else {
                     <i class="bi bi-plus"></i>
                     }
                   </button>
                 </div>
+
                 @if(item.responses.length>0) {
                 <div class="col-auto border border-2 border-info rounded px-4 ms-2 mt-2 mb-2">
                   <h6 class="text-center">Messaggio di output</h6>

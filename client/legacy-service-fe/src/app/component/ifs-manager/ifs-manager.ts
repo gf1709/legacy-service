@@ -41,6 +41,9 @@ export class IfsManager implements AfterContentChecked {
   m_isyDsInputLineNumberToShow: number = -1;
   m_isyDsOutputLineNumberToShow: number = -1;
 
+  m_currentRow: number = -1;
+  m_requestResponseRows: WritableSignal<number[]> = signal([]);
+
   locationName: string = '399';
 
   constructor(private bkService: BkService, private message_service: MessageHelperService, public cdRef: ChangeDetectorRef) {
@@ -168,14 +171,14 @@ export class IfsManager implements AfterContentChecked {
 
   showFileContent(dir: string, fileName: string, idx: number) {
     console.log('getFile:', dir, fileName);
-    this.m_requestResponseRows = [];
+    this.m_requestResponseRows.set([]);
     this.m_currentRow = -1;
     let aFullFileName: string = this.getFullFileName(dir, fileName);
     this.m_current_file = { dir: dir, file: fileName, idx: idx };
     this.bkService.getIFSFileContent(aFullFileName).subscribe(
       data => {
-
         let fileContent: IfsFileContent[] = [];
+        let responseRows: number[] = [];
         data.forEach(
           (line, index) => {
             let ifsLine: IfsFileContent = new IfsFileContent();
@@ -183,12 +186,13 @@ export class IfsManager implements AfterContentChecked {
             ifsLine.lineContent = line;
             fileContent.push(ifsLine);
             if (this.isISYCallInputLine(line) || this.isISYCallOutputLine(line))
-              this.m_requestResponseRows.push(index);
+              responseRows.push(index)
             console.log('showFileContent new ele is ', ifsLine);
           }
         );
+        this.m_requestResponseRows.set(responseRows);
         this.m_file_content.set(fileContent);
-        console.log('getFile data is', this.m_file_content);
+        console.log('getFile data is', this.m_file_content());
       }
       , err => {
         console.log('errore in fase di esecuzione della richiesta');
@@ -544,23 +548,38 @@ export class IfsManager implements AfterContentChecked {
     return true;
   }
 
-  m_currentRow: number = -1;
-  m_requestResponseRows: number[] = [];
-
   gotoFirstCall() {
-    this.m_currentRow = 0;
-    let nextRowId: string = this.m_requestResponseRows[this.m_currentRow].toString();
-    const elmnt = document.getElementById(nextRowId);
-    elmnt?.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
-
+    if (this.m_requestResponseRows().length > 0) {
+      this.m_currentRow = 0;
+      this.gotoRow();
+    }
+  }
+  gotoLastCall() {
+    if (this.m_requestResponseRows().length > 0) {
+      this.m_currentRow = this.m_requestResponseRows().length - 1;
+      this.gotoRow();
+    }
   }
   gotoNextCall() {
-    this.m_currentRow = this.m_currentRow + 1;
-    if (this.m_currentRow >= this.m_requestResponseRows.length)
-      this.m_currentRow = 0;
-    let nextRowId: string = this.m_requestResponseRows[this.m_currentRow].toString();
+    if (this.m_requestResponseRows().length > 0) {
+      this.m_currentRow = this.m_currentRow + 1;
+      if (this.m_currentRow >= this.m_requestResponseRows().length || this.m_currentRow < 0)
+        this.m_currentRow = 0;
+      this.gotoRow();
+    }
+  }
+  gotoPreviousCall() {
+    if (this.m_requestResponseRows().length > 0) {
+      this.m_currentRow = this.m_currentRow - 1;
+      if (this.m_currentRow >= this.m_requestResponseRows().length || this.m_currentRow < 0)
+        this.m_currentRow = 0;
+      this.gotoRow();
+    }
+  }
+    private gotoRow() {
+    let nextRowId: string = this.m_requestResponseRows()[this.m_currentRow].toString();
     const elmnt = document.getElementById(nextRowId);
-    elmnt?.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+    elmnt?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
   }
 
 }
