@@ -59,7 +59,8 @@
 
     </form>
 
-    <app-job-list-viewer [joblist]="m_job_list()" (updateList)="getJobList()"></app-job-list-viewer>
+    <app-job-list-viewer [joblist]="m_job_list()" (updateList)="getJobList()" [m_is_netstat_list]="is_netstat_list()">
+    </app-job-list-viewer>
 
   </div>
 </div>

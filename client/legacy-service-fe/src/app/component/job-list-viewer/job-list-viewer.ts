@@ -1,4 +1,4 @@
-import { Component, computed, effect, input, output, signal, Signal, WritableSignal } from '@angular/core';
+import { Component, computed, effect, input, InputSignal, output, signal, Signal, WritableSignal } from '@angular/core';
 import { BkService, JobListItemExtended } from '../../services/bk.service';
 import { MessageHelperService } from '../../services/message-helper.service';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -14,18 +14,20 @@ import { tap } from 'rxjs';
 })
 
 export class JobListViewer {
-  // @Input('joblist') m_input_job_list: JobListItemExtended[] = []; old model
+  // valore passato come input dal componente padre
+  public readonly joblist = input<JobListItemExtended[]>([]);
+  // valore passato come input dal componente padre: è la funziona da lanciare per eseguire l'aggiornamento dell'elenco
+  updateList = output<void>();
+  public readonly m_is_netstat_list = input<boolean>(false);
 
   m_curr_JobLogContent:WritableSignal<string[]> = signal([]);
 
   m_curr_JobLogUser: string = '';
   m_curr_JobLogName: string = '';
   m_curr_JobLogNumber: string = '';
-  m_is_netstat_list: boolean = false;
 
-  // valore passato come input dal componente padre
-  public readonly joblist = input<JobListItemExtended[]>([]);
-  updateList = output<void>();
+  // m_is_netstat_list: boolean = false;
+
 
   m_filter_jobname: WritableSignal<string> = signal(''); // filtro sul nome del job. I filtri possono essere molti separatati da virgola
   m_filter_username: WritableSignal<string> = signal(''); // filtro sul nome utente. I filtri possono essere molti separatati da virgola

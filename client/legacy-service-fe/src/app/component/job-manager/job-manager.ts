@@ -18,6 +18,7 @@ export class JobManager {
   }
 
   m_job_list: WritableSignal<JobListItemExtended[]> = signal([]);
+  is_netstat_list: WritableSignal<boolean> = signal(false);
 
   get jobListParams():JobManagerSearchParams {
     return this.bkService.g_jobManagerFilterParams

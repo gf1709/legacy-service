@@ -73,7 +73,7 @@
           </th>
           <th style="width: 120px;">
             <ng-container>
-              @if (!m_is_netstat_list) {
+              @if (!m_is_netstat_list()) {
               <p class="m-0 me-1">Funzione</p>
               }
               @else {
@@ -83,7 +83,7 @@
           </th>
 
           <th style="width: 100px;">
-            @if (!m_is_netstat_list) {
+            @if (!m_is_netstat_list()) {
             <ng-container>
               <div class="input-group input-group-sm mb-2">
                 <input type="text" name="status_flt" id="status_flt"
@@ -138,17 +138,17 @@
             <p class="text-center m-0 me-1 small">{{item.job.number()}}</p>
           </td>
           <td class="p-0">
-            @if (!m_is_netstat_list) {
+            @if (!m_is_netstat_list()) {
             <p class="m-0 me-1 small">{{item.job.function()}}</p>
             }
-            @if (m_is_netstat_list) {
+            @if (m_is_netstat_list()) {
             @for (remAddrs of item.job.remoteAddresses(); track $index) {
             <p class="m-0 small text-nowrap"> - {{remAddrs}}</p>
             }
             }
           </td>
           <td>
-            @if (!m_is_netstat_list) {
+            @if (!m_is_netstat_list()) {
             <p class="m-0 me-1 small">{{item.job.status()}}</p>
             }
           </td>

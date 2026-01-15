@@ -14,9 +14,7 @@ import { JobListViewer } from '../job-list-viewer/job-list-viewer';
 })
 export class NetstatJobInfo {
 
-  // m_job_filter_port: number = 0;
-  // m_job_filter_userName: string = '';
-  // m_job_filter_jobName: string = '';
+  is_netstat_list: WritableSignal<boolean> = signal(true);
 
   get jobListParams(): JobManagerSearchParams {
     return this.bkService.g_jobManagerFilterParams
