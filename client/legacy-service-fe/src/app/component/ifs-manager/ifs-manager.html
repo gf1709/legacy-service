@@ -243,18 +243,25 @@
         <div class="modal-body" tabindex="0">
 
           @for (item of m_file_content(); track $index; let joblogLineIdx=$index) {
-            <!-- [class.border]="isHighlighted(joblogLineIdx)" -->
+          <!-- [class.border]="isHighlighted(joblogLineIdx)" -->
           <!-- <div class="d-flex border border-1 border-secondary mb-1 rounded"> -->
-          <div class="d-flex border-1 border-success mb-1 rounded" [class.border]="isISYCallInput(joblogLineIdx) || isISYCallOutput(joblogLineIdx)">
+          <div class="d-flex border-1 border-success mb-1 rounded"
+            [class.border]="isISYCallInput(joblogLineIdx) || isISYCallOutput(joblogLineIdx)">
             <div class="row">
-              <div class="col">
-                @if (isHighlighted(joblogLineIdx)) {
+              @if (isXamMessage(joblogLineIdx)) {
+              <div class="col border border-2 border-primary rounded px-1 ms-2" [id]="joblogLineIdx">
+                <button class="btn btn-sm border-0 ms-1 mb-1 p-0 ps-1 pe-1 btn-primary" type="button">
+                  XAM Message
+                </button>
                 <pre
                   class="m-0 text-wrap"><small class="fw-bold text-primary">[{{joblogLineIdx}}] {{item.lineContent}}</small></pre>
-                } @else {
-                <pre class="m-0 text-wrap"><small>[{{joblogLineIdx}}] {{item.lineContent}}</small></pre>
-                }
               </div>
+              } @else {
+              <div class="col">
+                <pre class="m-0 text-wrap"><small>[{{joblogLineIdx}}] {{item.lineContent}}</small></pre>
+              </div>
+              }
+
 
               <!-- Gestionde dell'input - inizio -->
               @if (isISYCallInput(joblogLineIdx)) {

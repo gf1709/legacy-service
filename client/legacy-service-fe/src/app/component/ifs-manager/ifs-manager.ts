@@ -185,7 +185,7 @@ export class IfsManager implements AfterContentChecked {
             ifsLine.lineNumber = index + 1;
             ifsLine.lineContent = line;
             fileContent.push(ifsLine);
-            if (this.isISYCallInputLine(line) || this.isISYCallOutputLine(line))
+            if (this.isISYCallInputLine(line) || this.isISYCallOutputLine(line) || this.isXamMessageLine(line))
               responseRows.push(index)
             console.log('showFileContent new ele is ', ifsLine);
           }
@@ -446,14 +446,19 @@ export class IfsManager implements AfterContentChecked {
     return res;
   }
 
-  isHighlighted(idx: number): boolean {
+  isXamMessage(idx: number): boolean {
     if (idx)
-      if ((this.m_file_content()[idx].lineContent.indexOf('XAM Call - Messaggio in') > 0)
-        || (this.m_file_content()[idx].lineContent.indexOf('Protocollo - Messaggio XAM in') > 0))
+    {
+      let line: string = this.m_file_content()[idx].lineContent;
+      return this.isXamMessageLine(line);
+    }
+    return false;
+  }
+  isXamMessageLine(line: string): boolean {
+    if ((line.indexOf('XAM Call - Messaggio in') > 0) || (line.indexOf('Protocollo - Messaggio XAM in') > 0))
         return true;
     return false;
   }
-
   isISYCallInput(idx: number): boolean {
     if (idx > 1) {
       let line: string = this.m_file_content()[idx - 1].lineContent;
