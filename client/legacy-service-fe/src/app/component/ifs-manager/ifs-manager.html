@@ -193,18 +193,29 @@
   <div class="modal fade" id="showFileModal" tabindex="-1" role="dialog" aria-labelledby="showFileModalLabel">
     <div class="modal-dialog modal-dialog-scrollable modal-xl">
       <div class="modal-content">
-        <div class="modal-header">
-          <h6 class="modal-title">
-            {{m_current_file.dir}}/{{m_current_file.file}}
-          </h6>
+        <div class="container">
 
-          <div class="container">
-            <div class="btn-toolbar justify-content-end" role="toolbar">
+          <div class="row align-items-center mt-3">
+            <div class="col col-6 offset-3">
+              <span>{{m_current_file.dir}}/{{m_current_file.file}} </span>
+            </div>
+            <div class="col col-2 offset-1 d-flex justify-content-end">
+              <button type="button" class="btn" data-bs-dismiss="modal" title="Cancella file"
+                (click)="deleteIFSFile(m_current_file.dir, m_current_file.file, m_current_file.idx)">
+                <i class="bi bi-trash"></i>
+              </button>
+              <button type="button" class="btn " data-bs-dismiss="modal" title="Chiudi">
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </div>
+          </div>
 
+          <div class="row border-bottom border-1">
+            <div class="col d-flex justify-content-end mb-1">
               @if(m_requestResponseRows().length>0)
               {
               <div class="d-flex justify-content-center border rounded border-info">
-                <p class="m-1 me-2 p-0">Request+Response no: {{m_requestResponseRows().length}}</p>
+                <p class="m-1 me-2 p-0"><small>Request+Response nr: {{m_requestResponseRows().length}}</small></p>
                 <div class="btn-group btn-group-sm me-2" role="group">
                   <button type="button" class="btn p-1 m-0" title="Prossima call" (click)="gotoNextCall()">
                     <i class="bi bi-chevron-double-down"></i>
@@ -219,22 +230,33 @@
                   <button type="button" class="btn p-1 me-2" title="Ultima call" (click)="gotoLastCall()">
                     <i class="bi bi-chevron-bar-down"></i>
                   </button>
+
+                  <!-- dropdown menu -->
+                  <div class="dropdown-center">
+                    <button class="btn btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                      aria-expanded="false">
+                      Jump to
+                    </button>
+                    <ul class="dropdown-menu overflow-auto" style="height: 500px;">
+                      @for (reqRes of m_requestResponseRows(); track $index; let reqResIdx=$index) {
+                      <li><a class="dropdown-item"
+                          (click)="gotoRowNr(reqResIdx)"><span><small>{{m_requestResponseRows()[reqResIdx]}}-Isy
+                              Req</small></span></a></li>
+                      <li><a class="dropdown-item"
+                          (click)="gotoRowNr(reqResIdx)"><span><small>{{m_requestResponseRows()[reqResIdx]}}-Isy
+                              Res</small></span></a></li>
+                      <li><a class="dropdown-item"
+                          (click)="gotoRowNr(reqResIdx)"><span><small>{{m_requestResponseRows()[reqResIdx]}}-Xam</small></span></a>
+                      </li>
+                      }
+                    </ul>
+                  </div>
+
                 </div>
               </div>
               }
-
-              <div class="btn-group btn-group-sm ms-2" role="group">
-                <button type="button" class="btn" data-bs-dismiss="modal" title="Cancella file"
-                  (click)="deleteIFSFile(m_current_file.dir, m_current_file.file, m_current_file.idx)">
-                  <i class="bi bi-trash"></i>
-                </button>
-              </div>
-              <div class="btn-group btn-group-sm ms-2" role="group">
-                <button type="button" class="btn " data-bs-dismiss="modal" title="Chiudi">
-                  <i class="bi bi-x-lg"></i>
-                </button>
-              </div>
             </div>
+
           </div>
 
 

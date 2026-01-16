@@ -585,6 +585,12 @@ export class IfsManager implements AfterContentChecked {
     const elmnt = document.getElementById(nextRowId);
     elmnt?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
   }
+    public gotoRowNr(idx:number) {
+    this.m_currentRow = idx;
+    let nextRowId: string = this.m_requestResponseRows()[idx].toString();
+    const elmnt = document.getElementById(nextRowId);
+    elmnt?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+  }
 
 }
 
