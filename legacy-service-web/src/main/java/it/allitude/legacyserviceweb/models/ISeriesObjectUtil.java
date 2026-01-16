@@ -74,6 +74,8 @@ public class ISeriesObjectUtil {
     }
     private static final Integer MAX_CACHE_SIZE = 4000;
     private static final HashMap<String, FFDResponseDTO> _ffdCache = new HashMap<>();
+    private static final HashMap<String, DSPOBJDResponseDTO> _objectDescriptionCache = new HashMap<>();
+
     public FFDResponseDTO getFFD(String library, String ddsName) throws Exception {
         String key = library.trim() + "." + ddsName.trim() + JSession.getCurrentSession().getJwt();
         // Una volta raggiunti i MAX_CACHE_SIZE elementi nella cache la ripulisco
@@ -188,7 +190,11 @@ public class ISeriesObjectUtil {
         return res;
     }
 
+    
     public DSPOBJDResponseDTO dspobjd(DSPOBJDRequestDTO dspobjdInfo) throws Exception {
+        String key = dspobjdInfo.getLibrary() + dspobjdInfo.getObjectName() + dspobjdInfo.getObjectType();
+        if (_objectDescriptionCache.containsKey(key))
+            return _objectDescriptionCache.get(key);
 
         DSPOBJDResponseDTO res = new DSPOBJDResponseDTO(dspobjdInfo.getLibrary(), dspobjdInfo.getObjectName(),
                 dspobjdInfo.getObjectType());
@@ -210,6 +216,7 @@ public class ISeriesObjectUtil {
             res.setOwner(objDes.getValueAsString(ObjectDescription.OWNER));
             res.setSize(objDes.getValueAsString(ObjectDescription.OBJECT_SIZE));
         }                
+        _objectDescriptionCache.put(key, res);
         return res;
     }
 }

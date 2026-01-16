@@ -8,9 +8,9 @@ public class DSPOBJDResponseDTO implements Serializable {
 
 	private static final long serialVersionUID = 5926468583005150707L;
 
-	private String library;
-	private String name;
-	private String type;
+	private final String library;
+	private final String name;
+	private final String type;
 	private String description;
 	private String creationDate;
 	private String creationUser;
@@ -22,7 +22,7 @@ public class DSPOBJDResponseDTO implements Serializable {
 
 
 	public String getDescription() {
-		return description;
+		return description.trim();
 	}
 
 	public void setDescription(String description) {

@@ -39,6 +39,8 @@ import com.ibm.as400.access.RecordFormat;
 import com.ibm.as400.access.ZonedDecimalFieldDescription;
 
 import io.jsonwebtoken.io.IOException;
+import it.allitude.legacyserviceweb.DTOs.DSPOBJDRequestDTO;
+import it.allitude.legacyserviceweb.DTOs.DSPOBJDResponseDTO;
 import it.allitude.legacyserviceweb.DTOs.FFDResponseDTO;
 import it.allitude.legacyserviceweb.DTOs.ProgramCallRequestDTO;
 import it.allitude.legacyserviceweb.DTOs.ProgramCallResponseDTO;
@@ -50,10 +52,11 @@ public class ISeriesProgramCallUtil {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ConnectionService _connectionService;
-
+    ISeriesObjectUtil _objectUtil;
     public ISeriesProgramCallUtil(ConnectionService iseriesConnectionService) {
 
         this._connectionService = iseriesConnectionService;
+        _objectUtil = new ISeriesObjectUtil(this._connectionService);
     }
 
     static final String g_uploadDirectory = "run_time_resources/static/call_history";
@@ -225,9 +228,8 @@ public class ISeriesProgramCallUtil {
             } else {
                 String dsOutName = aCall.getDsout();
 
-                RecordFormat datOutRecFormat = getRecordFormat(dsOutName);
-                ISeriesObjectUtil util = new ISeriesObjectUtil(_connectionService);
-                FFDResponseDTO ffd = util.getFFD("", dsOutName);
+                RecordFormat datOutRecFormat = getRecordFormat(dsOutName);                
+                FFDResponseDTO ffd = _objectUtil.getFFD("", dsOutName);
                 byte[] prmOutBytes = parmList[0].getOutputData();
                 Record prmOut = prmRecordFormat.getNewRecord(prmOutBytes);
                 res.setResult(prmOut.getField(ZZdPRM.ZZPRTC).toString());
@@ -394,9 +396,8 @@ public class ISeriesProgramCallUtil {
     }
 
     // // Torna un RecordFormat dato il nome della struttura DS
-    RecordFormat getRecordFormat(String aDsName) throws Exception {
-        ISeriesObjectUtil util = new ISeriesObjectUtil(_connectionService);
-        FFDResponseDTO ffd = util.getFFD("", aDsName);
+    RecordFormat getRecordFormat(String aDsName) throws Exception {        
+        FFDResponseDTO ffd = _objectUtil.getFFD("", aDsName);
         RecordFormat fmt = new RecordFormat();
         fmt.setName(aDsName);
         for (ISeriesFieldDescription fld : ffd.getFields()) {
@@ -464,10 +465,9 @@ public class ISeriesProgramCallUtil {
 
     ArrayList<ISeriesFieldValue> getFieldValuesFromRecord(Record aRec) throws Exception {
         RecordFormat aRecFormat = aRec.getRecordFormat();
-        ArrayList<ISeriesFieldValue> values = new ArrayList<>();
-        ISeriesObjectUtil util = new ISeriesObjectUtil(_connectionService);
+        ArrayList<ISeriesFieldValue> values = new ArrayList<>();        
         // Serve per prendere le descrizioni dei campi
-        FFDResponseDTO ffd = util.getFFD("", aRecFormat.getName());
+        FFDResponseDTO ffd = _objectUtil.getFFD("", aRecFormat.getName());
 
         for (int idx = 0; idx < aRecFormat.getNumberOfFields(); idx++) {
             FieldDescription f = aRecFormat.getFieldDescription(idx);
@@ -476,7 +476,7 @@ public class ISeriesProgramCallUtil {
             newVal.setName(f.getFieldName());
             newVal.setLength(dType.getByteLength());
             newVal.setScale(0);
-            newVal.setDescription(util.getFiedDescription(aRecFormat.getName(), f.getFieldName()));
+            newVal.setDescription(_objectUtil.getFiedDescription(aRecFormat.getName(), f.getFieldName()));
             if (dType instanceof AS400PackedDecimal) {
                 PackedDecimalFieldDescription pdFld = (PackedDecimalFieldDescription) f;
                 newVal.setScale(pdFld.getDecimalPositions());
@@ -523,10 +523,10 @@ public class ISeriesProgramCallUtil {
             int times = (256 * aRequest[bI]) + (aRequest[bI + 1]);
             bI += 2;
             if (aMessageType == 1) {
-                logger.info("pgm         : " + pgm.trim());
+                logger.info("pgm         : " + pgm);
             }
             if (aMessageType == 2) {
-                logger.info("file        : " + pgm.trim() + ". pgm:ZZDOG");
+                logger.info("file        : " + pgm + ". pgm:ZZDOG");
             }
             logger.info("cmd         : " + cmd);
             logger.info("fio         : " + fio);
@@ -535,7 +535,10 @@ public class ISeriesProgramCallUtil {
             logger.info("cid         : " + cid);
             logger.info("times       : " + times);
             pgmCallReq = new ProgramCallRequestDTO();
-            pgmCallReq.setProgram(pgm);
+            DSPOBJDRequestDTO pgmInfoReq = new DSPOBJDRequestDTO("*LIBL", pgm, "*PGM");
+            DSPOBJDResponseDTO pgmInfoRes = _objectUtil.dspobjd(pgmInfoReq);
+
+            pgmCallReq.setProgram(pgm + " [" + pgmInfoRes.getDescription() + "]");
             pgmCallReq.setCommand(cmd);
             pgmCallReq.setDsin(dsi);
             pgmCallReq.setDsout(dso);

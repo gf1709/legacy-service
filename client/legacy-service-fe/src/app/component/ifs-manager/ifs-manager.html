@@ -307,31 +307,46 @@
                   <h6 class="text-center mt-3">Messaggio di input [Nr. call: {{item.requests.length}}]</h6>
                   }
                   <div class="row border rounded border-2 mb-1">
-                    <div class="col-auto">
+                    <div  class="col-auto">
                       <table class="table table-sm mt-1 mb-1 caption-top">
-                        <tr>
+                        <tr class="text-center">
                           <td>
-                            <span class="fw-bold small me-1">Call nr:</span>
+                            <span class="fw-bold small me-1">Call nr</span>
+                          </td>
+                          <td>
+                            <span class="fw-bold small me-1">Program</span>
+                          </td>
+                          <td>
+                            <span class="fw-bold small me-1">Command</span>
+                          </td>
+                          <td>
+                            <span class="fw-bold small me-1">Ds Input</span>
+                          </td>
+                          <td>
+                            <span class="fw-bold small me-1">Ds Output</span>
+                          </td>
+                          <td>
+                            <span class="fw-bold small me-1">Times</span>
+                          </td>
+                        </tr>
+
+                        <tr class="text-center">
+                          <td>
                             <span class="me-4 small text-primary fw-bold"> {{$callIdx}} </span>
                           </td>
                           <td>
-                            <span class="fw-bold small me-1">Program:</span>
                             <span class="me-4 small"> {{programCallRequest.program}} </span>
                           </td>
                           <td>
-                            <span class="fw-bold small me-1">Command:</span>
                             <span class="me-4 small"> {{programCallRequest.command}} </span>
                           </td>
                           <td>
-                            <span class="fw-bold small me-1">Ds Input:</span>
                             <span class="me-4 small"> {{programCallRequest.dsin}} </span>
                           </td>
                           <td>
-                            <span class="fw-bold small me-1">Ds Output:</span>
                             <span class="me-4 small"> {{programCallRequest.dsout}} </span>
                           </td>
                           <td>
-                            <span class="fw-bold small me-1">Times:</span>
                             <span class="me-4 small"> {{programCallRequest.times}} </span>
                           </td>
 
