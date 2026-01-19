@@ -153,8 +153,12 @@ public class ISeriesIFSUtil {
 
 class MyDirectoryFilter implements IFSFileFilter {
 
+    @Override
     public boolean accept(IFSFile file) {
         try {
+            if ( (file.getName().contains(".sock")) && (!JSession.getCurrentSession().isAdminUser()) ) {
+                return false;
+            }
             // Keep this entry.  Returning true tells the IFSList object  to return this file in the list of entries returned to the  .list() method.
             return true;
         } catch (Exception e) {

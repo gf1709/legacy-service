@@ -21,9 +21,12 @@ public class DSPOBJDResponseDTO implements Serializable {
 	private String size;
 
 
-	public String getDescription() {
-		return description.trim();
-	}
+    public String getDescription() {
+        if (description == null) {
+            return "";
+        }
+        return description.trim();
+    }
 
 	public void setDescription(String description) {
 		this.description = description;

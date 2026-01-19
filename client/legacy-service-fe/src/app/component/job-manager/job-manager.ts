@@ -28,7 +28,7 @@ export class JobManager {
   }
 
   public get m_can_search(): boolean {
-    return (this.jobListParams.jobUser + this.jobListParams.jobName).length > 1;
+    return (this.jobListParams.jobUser + this.jobListParams.jobName).length > 0;
   }
 
   getJobList() {

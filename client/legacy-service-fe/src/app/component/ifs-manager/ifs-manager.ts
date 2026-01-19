@@ -367,6 +367,7 @@ export class IfsManager implements AfterContentChecked {
           directory: this.m_fileList().directory,
           files: tmpFiles
         });
+        this.message_service.messageShow(this.message_service.msg_type.Info, 'File cancellati');
       },
       err => {
         console.log('errore in fase di esecuzione della richiesta');
@@ -390,6 +391,7 @@ export class IfsManager implements AfterContentChecked {
           directory: this.m_fileList().directory,
           files: tmpFiles
         });
+        this.message_service.messageShow(this.message_service.msg_type.Info, 'File ' + bFullFileName + " cancellato");
       },
       err => {
         console.log('errore in fase di esecuzione della richiesta');
