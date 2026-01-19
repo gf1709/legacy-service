@@ -51,6 +51,7 @@ export class IfsManager implements AfterContentChecked {
 
   ngAfterContentChecked(): void {
     console.log('ngAfterContentChecked');
+
     if (this.m_isyDsInputLineNumberToShow > 0) {
       let lineNumber = this.m_isyDsInputLineNumberToShow;
       this.m_isyDsInputLineNumberToShow = -1;
@@ -136,39 +137,6 @@ export class IfsManager implements AfterContentChecked {
     );
   }
 
-  // showFileContent(dir: string, fileName: string, idx: number) {
-
-  //   var reader = new FileReader();
-
-  //   console.log('showFileContent:', dir, fileName);
-  //   let aFullFileName: string = this.getFullFileName(dir, fileName);
-  //   this.m_current_file = { dir: dir, file: fileName, idx: idx };
-  //   this.bkService.getIFSFileContentZipped(aFullFileName).subscribe(
-  //     data => {
-  //       let zipContent:number[] = data;
-  //       console.log('showFileContent data is', zipContent);
-  //       const u: Uint8Array = new Uint8Array(data);
-  //       var blob: Blob = new Blob([new Uint8Array(data).buffer], { type: 'application/zip' });
-  //       // var blob: Blob = new Blob([new Uint8Array(data).buffer]);
-  //       console.log('showFileContent data is', blob);
-  //       // const zip = new JSZip();
-
-  /*
-  this.getFile().subscribe((response)=>{
-  const.byteArray=new Uint8Array(atob(response.data).split('').map(char)=>char.charCodeAt(0))
-  this.pdfResult=new(Blob[byteArray],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
-  let file=new File([this.pdfResult],"sample.xlsx")
-  });
-  */
-
-  //     }
-  //     , err => {
-  //       console.log('errore in fase di esecuzione della richiesta', err);
-  //       this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta:');
-  //     }
-  //   );
-  // }
-
   showFileContent(dir: string, fileName: string, idx: number) {
     console.log('getFile:', dir, fileName);
     this.m_requestResponseRows.set([]);
@@ -185,8 +153,12 @@ export class IfsManager implements AfterContentChecked {
             ifsLine.lineNumber = index + 1;
             ifsLine.lineContent = line;
             fileContent.push(ifsLine);
-            if (this.isISYCallInputLine(line) || this.isISYCallOutputLine(line) || this.isXamMessageLine(line))
-              responseRows.push(index)
+            if (this.isISYCallInputLine(line)
+              || this.isISYCallOutputLine(line)
+              || this.isXamMessageLine(line)
+            ) {
+              responseRows.push(index);
+            }
             console.log('showFileContent new ele is ', ifsLine);
           }
         );
@@ -447,8 +419,7 @@ export class IfsManager implements AfterContentChecked {
   }
 
   isXamMessage(idx: number): boolean {
-    if (idx)
-    {
+    if (idx) {
       let line: string = this.m_file_content()[idx].lineContent;
       return this.isXamMessageLine(line);
     }
@@ -456,7 +427,7 @@ export class IfsManager implements AfterContentChecked {
   }
   isXamMessageLine(line: string): boolean {
     if ((line.indexOf('XAM Call - Messaggio in') > 0) || (line.indexOf('Protocollo - Messaggio XAM in') > 0))
-        return true;
+      return true;
     return false;
   }
   isISYCallInput(idx: number): boolean {
@@ -580,12 +551,12 @@ export class IfsManager implements AfterContentChecked {
       this.gotoRow();
     }
   }
-    private gotoRow() {
+  private gotoRow() {
     let nextRowId: string = this.m_requestResponseRows()[this.m_currentRow].toString();
     const elmnt = document.getElementById(nextRowId);
     elmnt?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
   }
-    public gotoRowNr(idx:number) {
+  public gotoRowNr(idx: number) {
     this.m_currentRow = idx;
     let nextRowId: string = this.m_requestResponseRows()[idx].toString();
     const elmnt = document.getElementById(nextRowId);

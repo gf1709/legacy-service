@@ -383,7 +383,12 @@ public class ISeriesProgramCallUtil {
             byte[] digits = new byte[digitStrings.length];
             for (int i = 0; i < digitStrings.length; i++) {
                 String d = digitStrings[i].replace("0x", "").trim();
-                byte c = (byte) Integer.parseInt(d, 16);
+                byte c=0;
+                try{
+                c = (byte) Integer.parseInt(d, 16);
+                } catch (NumberFormatException e) {
+                    logger.error("getDigits error: " + d + " in not a number");
+                }
                 digits[i] = c;
             }
             return digits;

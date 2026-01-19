@@ -235,20 +235,14 @@
                   <div class="dropdown-center">
                     <button class="btn btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
                       aria-expanded="false">
-                      Jump to
+                      Jump to Request/Response nr.
                     </button>
                     <ul class="dropdown-menu overflow-auto" style="height: 500px;">
                       @for (reqRes of m_requestResponseRows(); track $index; let reqResIdx=$index) {
                       <li><a class="dropdown-item"
-                          (click)="gotoRowNr(reqResIdx)"><span><small>{{m_requestResponseRows()[reqResIdx]}}-Isy
-                              Req</small></span></a></li>
-                      <li><a class="dropdown-item"
-                          (click)="gotoRowNr(reqResIdx)"><span><small>{{m_requestResponseRows()[reqResIdx]}}-Isy
-                              Res</small></span></a></li>
-                      <li><a class="dropdown-item"
-                          (click)="gotoRowNr(reqResIdx)"><span><small>{{m_requestResponseRows()[reqResIdx]}}-Xam</small></span></a>
+                          (click)="gotoRowNr(reqResIdx)"><span><small>{{m_requestResponseRows()[reqResIdx]}}</small></span></a>
                       </li>
-                      }
+                    }
                     </ul>
                   </div>
 
@@ -304,10 +298,11 @@
                 <div class="col-auto border border-2 border-primary rounded px-4 m-4">
                   @for (programCallRequest of item.requests; track $callIdx; let $callIdx = $index) {
                   @if ($callIdx===0) {
-                  <h6 class="text-center mt-3">Messaggio di input [Nr. call: {{item.requests.length}}]</h6>
+                  <h6 class="text-center mt-3">Messaggio di input [Message Size=~{{(item.lineContent.length/5)-50}} -
+                    Nr. call={{item.requests.length}}]</h6>
                   }
                   <div class="row border rounded border-2 mb-1">
-                    <div  class="col-auto">
+                    <div class="col-auto">
                       <table class="table table-sm mt-1 mb-1 caption-top">
                         <tr class="text-center">
                           <td>
@@ -412,7 +407,8 @@
 
                 @if(item.responses.length>0) {
                 <div class="col-auto border border-2 border-info rounded px-4 m-4">
-                  <h6 class="text-center">Messaggio di output [Nr. call: {{item.responses.length}}]</h6>
+                  <h6 class="text-center">Messaggio di output [Message Size=~{{(item.lineContent.length/5)-50}} - Nr.
+                    call={{item.responses.length}}]</h6>
                   @for (programCallResponse of item.responses; track $index; let $callIdx= $index) {
                   <div class="row border rounded border-2 mb-1">
                     <div class="col-auto">
