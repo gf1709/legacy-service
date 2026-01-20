@@ -21,7 +21,9 @@ class IfsFileContent {
   lineNumber: number = 0;
   lineContent: string = '';
   requests: ProgramCallRequest[] = [];
+  requestsShowDetails: boolean = false;
   responses: ProgramCallResponse[] = [];
+  responsesShowDetails: boolean = false;
 }
 @Component({
   selector: 'app-ifs-manager',
@@ -127,7 +129,7 @@ export class IfsManager implements AfterContentChecked {
           parentdir.size = 0;
           this.m_fileList().files.unshift(parentdir);
         }
-        console.log('listFiles data is', this.m_fileList());
+        // console.log('listFiles data is', this.m_fileList());
         this.m_allRowsSelected = false;
       }
       , err => {
@@ -152,6 +154,8 @@ export class IfsManager implements AfterContentChecked {
             let ifsLine: IfsFileContent = new IfsFileContent();
             ifsLine.lineNumber = index + 1;
             ifsLine.lineContent = line;
+            ifsLine.requestsShowDetails=false;
+            ifsLine.responsesShowDetails=false;
             fileContent.push(ifsLine);
             if (this.isISYCallInputLine(line)
               || this.isISYCallOutputLine(line)
@@ -159,12 +163,12 @@ export class IfsManager implements AfterContentChecked {
             ) {
               responseRows.push(index);
             }
-            console.log('showFileContent new ele is ', ifsLine);
+            // console.log('showFileContent new ele is ', ifsLine);
           }
         );
         this.m_requestResponseRows.set(responseRows);
         this.m_file_content.set(fileContent);
-        console.log('getFile data is', this.m_file_content());
+        // console.log('getFile data is', this.m_file_content());
       }
       , err => {
         console.log('errore in fase di esecuzione della richiesta');
@@ -186,11 +190,11 @@ export class IfsManager implements AfterContentChecked {
             ifsLine.lineNumber = index + 1;
             ifsLine.lineContent = line;
             fileContent.push(ifsLine);
-            console.log('downloadFile new ele is ', ifsLine);
+            // console.log('downloadFile new ele is ', ifsLine);
           }
         );
         this.m_file_content.set(fileContent);
-        console.log('downloadFile data is', this.m_file_content);
+        // console.log('downloadFile data is', this.m_file_content);
         this.m_file_content().forEach(
           (ele) => {
             binaryData.push(ele.lineContent + '\n');
@@ -222,7 +226,7 @@ export class IfsManager implements AfterContentChecked {
     this.bkService.getIFSFilesContent(fNames).subscribe(
       data => {
         let binaryData: BlobPart[] = [];
-        console.log('downloadFile data is', data);
+        // console.log('downloadFile data is', data);
         data.forEach(
           (line) => {
             binaryData.push(line + '\n');
@@ -523,6 +527,19 @@ export class IfsManager implements AfterContentChecked {
     if (req === null || req.dsin === null || req.values === null || req.values.length === 0)
       return false;
     return true;
+  }
+  toggleShowInputDetails(line: IfsFileContent) {
+    line.requestsShowDetails = !line.requestsShowDetails;
+  }
+  showInputDetails(line: IfsFileContent): boolean {
+    return line.requestsShowDetails;
+  }
+
+  toggleShowOutputDetails(line: IfsFileContent) {
+    line.responsesShowDetails = !line.responsesShowDetails;
+  }
+  showOutputDetails(line: IfsFileContent): boolean {
+    return line.responsesShowDetails;
   }
 
   gotoFirstCall() {

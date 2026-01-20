@@ -190,7 +190,7 @@ export class ProgramCallRequest {
   dsout: string = '';
   cid: string = '';
   when: string = ProgramCallRequest.getCurrentDateTimeAsString();
-  times:string=''
+  times:string='';
   values: {
     name: string,
     type: string,

@@ -242,7 +242,7 @@
                       <li><a class="dropdown-item"
                           (click)="gotoRowNr(reqResIdx)"><span><small>{{m_requestResponseRows()[reqResIdx]}}</small></span></a>
                       </li>
-                    }
+                      }
                     </ul>
                   </div>
 
@@ -300,7 +300,17 @@
                   @if ($callIdx===0) {
                   <h6 class="text-center mt-3">Messaggio di input [Message Size=~{{(item.lineContent.length/5)-50}} -
                     Nr. call={{item.requests.length}}]</h6>
+                  <button class="btn btn-sm border-0 ms-1 mb-1 p-0 ps-1 pe-1 btn-primary" type="button"
+                    (click)="toggleShowInputDetails(item)" title="Show/Hide input details">
+                    @if(showInputDetails(item)) {
+                    <i class="bi bi-dash"></i>
+                    }
+                    @else {
+                    <i class="bi bi-plus"></i>
+                    }
+                  </button>
                   }
+
                   <div class="row border rounded border-2 mb-1">
                     <div class="col-auto">
                       <table class="table table-sm mt-1 mb-1 caption-top">
@@ -344,14 +354,15 @@
                           <td>
                             <span class="me-4 small"> {{programCallRequest.times}} </span>
                           </td>
-
                         </tr>
 
-                        <tr *ngIf="hasInput(programCallRequest)">
+                        @if(hasInput(programCallRequest)) {
+                        @if(showInputDetails(item)) {
+                        <tr>
                           <td colspan="6" class="text-center mb-2"> <span class="fw-bold small me-1">Ds Input</span>
                           </td>
                         </tr>
-                        <tr *ngIf="hasInput(programCallRequest)">
+                        <tr>
                           <td colspan="6">
                             <table class="table table-sm">
                               <thead>
@@ -380,16 +391,22 @@
                             </table>
                           </td>
                         </tr>
+                        }
+                        }
                       </table>
 
                     </div>
                   </div>
+
                   }
                 </div>
                 }
               </div>
               }
               <!-- Gestionde dell'input - fine -->
+
+
+
               <!-- Gestionde dell'output - inizio -->
               @if (isISYCallOutput(joblogLineIdx)) {
               <div class="row" [id]="joblogLineIdx-1">
@@ -409,6 +426,18 @@
                 <div class="col-auto border border-2 border-info rounded px-4 m-4">
                   <h6 class="text-center">Messaggio di output [Message Size=~{{(item.lineContent.length/5)-50}} - Nr.
                     call={{item.responses.length}}]</h6>
+
+      <button class="btn btn-sm border-0 ms-1 mb-1 p-0 ps-1 pe-1 btn-primary" type="button"
+        (click)="toggleShowOutputDetails(item)" title="Show/Hide output details">
+        @if(showOutputDetails(item)) {
+        <i class="bi bi-dash"></i>
+        }
+        @else {
+        <i class="bi bi-plus"></i>
+        }
+      </button>
+
+
                   @for (programCallResponse of item.responses; track $index; let $callIdx= $index) {
                   <div class="row border rounded border-2 mb-1">
                     <div class="col-auto">
@@ -430,6 +459,7 @@
                         </tr>
 
                         @if(programCallResponse.dsout.length>0 && programCallResponse.values.length>0) {
+                          @if(showOutputDetails(item)) {
                         <tr>
                           <td colspan="3" class="text-center mb-2"> <span class="fw-bold small me-1">Ds Output</span>
                           </td>
@@ -465,6 +495,8 @@
                           </td>
                         </tr>
                         }
+                      }
+
                       </table>
                     </div>
                   </div>
