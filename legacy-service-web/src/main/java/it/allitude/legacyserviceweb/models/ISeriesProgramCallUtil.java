@@ -284,19 +284,19 @@ public class ISeriesProgramCallUtil {
             int bMessageType = aRequest[bI];
             bI += 1;
             if (bMessageType != 3 && bMessageType != 4) {
-                logger.info("Tipo messaggio non valido per showISYOutput: " + bMessageType);
+                logger.error("Tipo messaggio non valido per showISYOutput: " + bMessageType);
                 break;
             }
             int bMessageID = (256 * 256 * 256 * Byte.toUnsignedInt(aRequest[bI])) + (256 * 256 * Byte.toUnsignedInt(aRequest[bI + 1])) + (256 * Byte.toUnsignedInt(aRequest[bI + 2])) + Byte.toUnsignedInt(aRequest[bI + 3]);
             bI += 4;
             if (bMessageID < 0) {
-                logger.info("Messagge ID non valido per showISYOutput: " + bMessageID);
+                logger.error("Messagge ID non valido per showISYOutput: " + bMessageID);
                 break;
             }
             int bMessageLen = (256 * 256 * 256 * Byte.toUnsignedInt(aRequest[bI])) + (256 * 256 * Byte.toUnsignedInt(aRequest[bI + 1])) + (256 * Byte.toUnsignedInt(aRequest[bI + 2])) + Byte.toUnsignedInt(aRequest[bI + 3]);
             bI += 4;
            if (bMessageLen < 0) {
-                logger.info("Messagge Len non valida per showISYOutput: " + bMessageLen);
+                logger.error("Messagge Len non valida per showISYOutput: " + bMessageLen);
                 break;
             }
             // Leggo l'header
@@ -309,22 +309,22 @@ public class ISeriesProgramCallUtil {
             String cid = ebcdic2asciiDecoder.decode(java.nio.ByteBuffer.wrap(aRequest, bI, 8)).toString().trim();
             bI += 8;
 
-            logger.info("====================================================================>\n");
-            logger.info("messageType : " + bMessageType);
-            logger.info("messageID   : " + bMessageID);
-            logger.info("messageLen  : " + bMessageLen);
-            logger.info("times       : " + times);
-            logger.info("returnCode  : " + returnCode);
-            logger.info("dso         : " + dso);
-            logger.info("cid         : " + cid);
-            logger.info("====================================================================>\n");
+            logger.debug("====================================================================>\n");
+            logger.debug("messageType : " + bMessageType);
+            logger.debug("messageID   : " + bMessageID);
+            logger.debug("messageLen  : " + bMessageLen);
+            logger.debug("times       : " + times);
+            logger.debug("returnCode  : " + returnCode);
+            logger.debug("dso         : " + dso);
+            logger.debug("cid         : " + cid);
+            logger.debug("====================================================================>\n");
             ProgramCallResponseDTO pgmCallRes = new ProgramCallResponseDTO();
             if (bMessageType == 3) {
                 pgmCallRes.setDsout(dso);
                 pgmCallRes.setResult(returnCode);
                 if (dso.length() > 0) {
                     RecordFormat dsoutRecFormat = getRecordFormat(dso);
-                    logger.info("dsoutRecFormat name : " + dsoutRecFormat.getName());
+                    logger.debug("dsoutRecFormat name : " + dsoutRecFormat.getName());
                     Record newRec = getRecord(dsoutRecFormat, aRequest, bI);
                     if (newRec != null) {
                         pgmCallRes.setSerializationSize(newRec.getRecordLength());
@@ -344,12 +344,11 @@ public class ISeriesProgramCallUtil {
     public ArrayList<ProgramCallRequestDTO> showISYInput(String aVal) throws Exception {
         ArrayList<ProgramCallRequestDTO> res = new ArrayList<>();
         byte[] aRequest = getDigits(aVal);
-        logger.info("aVal is: " + aVal);
         int bI = 0;
         while (bI < aRequest.length) {
             int bMessageType = aRequest[bI];
             if (bMessageType != 1 && bMessageType != 2) {
-                logger.info("Tipo messaggio non valido per showISYInput: " + bMessageType);
+                logger.error("Tipo messaggio non valido per showISYInput: " + bMessageType);
                 break;
             }
             bI += 1;
@@ -357,14 +356,14 @@ public class ISeriesProgramCallUtil {
             bI += 4;
             int bMessageLen = (256 * 256 * 256 * Byte.toUnsignedInt(aRequest[bI])) + (256 * 256 * Byte.toUnsignedInt(aRequest[bI + 1])) + (256 * Byte.toUnsignedInt(aRequest[bI + 2])) + Byte.toUnsignedInt(aRequest[bI + 3]);
             if (bMessageLen > aRequest.length || bMessageLen < 0) {
-                logger.info("Messagge Len non valida per showISYInput: " + bMessageLen);
+                logger.error("Messagge Len non valida per showISYInput: " + bMessageLen);
                 break;
             }
             bI += 4;
-            logger.info("====================================================================>\n");
-            logger.info("messageType : " + bMessageType);
-            logger.info("messageID   : " + bMessageID);
-            logger.info("messageLen  : " + bMessageLen);
+            logger.debug("====================================================================>\n");
+            logger.debug("messageType : " + bMessageType);
+            logger.debug("messageID   : " + bMessageID);
+            logger.debug("messageLen  : " + bMessageLen);
             ProgramCallRequestDTO callreq = getCallRequest(bMessageType, aRequest, bI, bMessageLen, bMessageID);
             res.add(callreq);
             bI += bMessageLen;
@@ -457,11 +456,11 @@ public class ISeriesProgramCallUtil {
                     String fieldValue = textType.toObject(bFieldValuesBytes).toString();
                     newRec.setField(idx, fieldValue);
                 } else {
-                    logger.info("Tipo non gestito: " + dType.getClass().getName());
+                    logger.error("Tipo non gestito: " + dType.getClass().getName());
                 }
-                logger.info("Field " + idx + " name: " + f.getFieldName() + " value: " + newRec.getField(idx).toString());
+                logger.debug("Field " + idx + " name: " + f.getFieldName() + " value: " + newRec.getField(idx).toString());
             } catch (Exception ex) {
-                logger.info("Errore nella conversione del campo " + f.getFieldName() + ": " + ex.getMessage());
+                logger.error("Errore nella conversione del campo " + f.getFieldName() + ": " + ex.getMessage());
             }
             bytePos += dType.getByteLength();
         }
@@ -501,7 +500,7 @@ public class ISeriesProgramCallUtil {
             if (fieldObj != null) {
                 newVal.setValue(fieldObj.toString());
             } else {
-                logger.info("Impossibile impostare il valore del campo " + f.getFieldName());
+                logger.error("Impossibile impostare il valore del campo " + f.getFieldName());
             }
             values.add(newVal);
         }
@@ -528,17 +527,17 @@ public class ISeriesProgramCallUtil {
             int times = (256 * aRequest[bI]) + (aRequest[bI + 1]);
             bI += 2;
             if (aMessageType == 1) {
-                logger.info("pgm         : " + pgm);
+                logger.debug("pgm         : " + pgm);
             }
             if (aMessageType == 2) {
-                logger.info("file        : " + pgm + ". pgm:ZZDOG");
+                logger.debug("file        : " + pgm + ". pgm:ZZDOG");
             }
-            logger.info("cmd         : " + cmd);
-            logger.info("fio         : " + fio);
-            logger.info("dsi         : " + dsi);
-            logger.info("dso         : " + dso);
-            logger.info("cid         : " + cid);
-            logger.info("times       : " + times);
+            logger.debug("cmd         : " + cmd);
+            logger.debug("fio         : " + fio);
+            logger.debug("dsi         : " + dsi);
+            logger.debug("dso         : " + dso);
+            logger.debug("cid         : " + cid);
+            logger.debug("times       : " + times);
             pgmCallReq = new ProgramCallRequestDTO();
             DSPOBJDRequestDTO pgmInfoReq = new DSPOBJDRequestDTO("*LIBL", pgm, "*PGM");
             DSPOBJDResponseDTO pgmInfoRes = _objectUtil.dspobjd(pgmInfoReq);
@@ -552,7 +551,7 @@ public class ISeriesProgramCallUtil {
             if (dsi.length() > 0) {
                 RecordFormat dsinRecFormat = getRecordFormat(dsi);
                 if (dsinRecFormat != null) {
-                    logger.info("dsinRecFormat name : " + dsinRecFormat.getName());
+                    logger.debug("dsinRecFormat name : " + dsinRecFormat.getName());
                     Record newRec = getRecord(dsinRecFormat, aRequest, bI);
                     if (newRec != null) {
                         ArrayList<ISeriesFieldValue> values = getFieldValuesFromRecord(newRec);                
