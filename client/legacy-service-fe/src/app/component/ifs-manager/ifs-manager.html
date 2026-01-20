@@ -298,18 +298,26 @@
                 <div class="col-auto border border-2 border-primary rounded px-4 m-4">
                   @for (programCallRequest of item.requests; track $callIdx; let $callIdx = $index) {
                   @if ($callIdx===0) {
-                  <h6 class="text-center mt-3">Messaggio di input [Message Size=~{{(item.lineContent.length/5)-50}} -
-                    Nr. call={{item.requests.length}}]</h6>
-                  <button class="btn btn-sm border-0 ms-1 mb-1 p-0 ps-1 pe-1 btn-primary" type="button"
-                    (click)="toggleShowInputDetails(item)" title="Show/Hide input details">
-                    @if(showInputDetails(item)) {
-                    <i class="bi bi-dash"></i>
-                    }
-                    @else {
-                    <i class="bi bi-plus"></i>
-                    }
-                  </button>
+                  <div class="row align-items-center mt-3">
+                    <div class="col col-6 offset-3">
+                      <h6 class="text-center mt-3">Messaggio di input [Message Size=~{{
+                        getRealMessageSize(item.lineContent.length)}} -
+                        Nr. call={{item.requests.length}}]</h6>
+                    </div>
+                    <div class="col col-2 offset-1 d-flex justify-content-end">
+                      <button class="btn btn-sm border-0 ms-1 mb-1 p-0 ps-1 pe-1 btn-primary" type="button"
+                        (click)="toggleShowInputDetails(item)" title="Show/Hide input details">
+                        @if(showInputDetails(item)) {
+                        <i class="bi bi-chevron-double-up"></i>
+                        }
+                        @else {
+                        <i class="bi bi-chevron-double-down"></i>
+                        }
+                      </button>
+                    </div>
+                  </div>
                   }
+
 
                   <div class="row border rounded border-2 mb-1">
                     <div class="col-auto">
@@ -424,19 +432,26 @@
 
                 @if(item.responses.length>0) {
                 <div class="col-auto border border-2 border-info rounded px-4 m-4">
-                  <h6 class="text-center">Messaggio di output [Message Size=~{{(item.lineContent.length/5)-50}} - Nr.
-                    call={{item.responses.length}}]</h6>
+                  <div class="row align-items-center mt-3">
+                    <div class="col col-6 offset-3">
 
-      <button class="btn btn-sm border-0 ms-1 mb-1 p-0 ps-1 pe-1 btn-primary" type="button"
-        (click)="toggleShowOutputDetails(item)" title="Show/Hide output details">
-        @if(showOutputDetails(item)) {
-        <i class="bi bi-dash"></i>
-        }
-        @else {
-        <i class="bi bi-plus"></i>
-        }
-      </button>
+                      <h6 class="text-center">Messaggio di output [Message Size=~{{
+                        getRealMessageSize(item.lineContent.length)}} - Nr.
+                        call={{item.responses.length}}]</h6>
+                    </div>
+                    <div class="col col-2 offset-1 d-flex justify-content-end">
 
+                      <button class="btn btn-sm border-0 ms-1 mb-1 p-0 ps-1 pe-1 btn-primary" type="button"
+                        (click)="toggleShowOutputDetails(item)" title="Show/Hide output details">
+                        @if(showOutputDetails(item)) {
+                        <i class="bi bi-chevron-double-up"></i>
+                        }
+                        @else {
+                        <i class="bi bi-chevron-double-down"></i>
+                        }
+                      </button>
+                    </div>
+                  </div>
 
                   @for (programCallResponse of item.responses; track $index; let $callIdx= $index) {
                   <div class="row border rounded border-2 mb-1">
@@ -459,7 +474,7 @@
                         </tr>
 
                         @if(programCallResponse.dsout.length>0 && programCallResponse.values.length>0) {
-                          @if(showOutputDetails(item)) {
+                        @if(showOutputDetails(item)) {
                         <tr>
                           <td colspan="3" class="text-center mb-2"> <span class="fw-bold small me-1">Ds Output</span>
                           </td>
@@ -495,7 +510,7 @@
                           </td>
                         </tr>
                         }
-                      }
+                        }
 
                       </table>
                     </div>

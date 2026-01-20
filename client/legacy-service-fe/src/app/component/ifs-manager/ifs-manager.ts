@@ -541,6 +541,10 @@ export class IfsManager implements AfterContentChecked {
   showOutputDetails(line: IfsFileContent): boolean {
     return line.responsesShowDetails;
   }
+  getRealMessageSize(size:number):string
+  {
+    return ((size/5)-50).toFixed(0);
+  }
 
   gotoFirstCall() {
     if (this.m_requestResponseRows().length > 0) {
