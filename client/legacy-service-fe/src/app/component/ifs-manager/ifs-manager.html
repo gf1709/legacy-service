@@ -211,45 +211,37 @@
           </div>
 
           <div class="row border-bottom border-1">
-            <div class="col d-flex justify-content-end mb-1">
-              @if(m_requestResponseRows().length>0)
-              {
-              <div class="d-flex justify-content-center border rounded border-info">
-                <p class="m-1 me-2 p-0"><small>Request+Response nr: {{m_requestResponseRows().length}}</small></p>
-                <div class="btn-group btn-group-sm me-2" role="group">
-                  <button type="button" class="btn p-1 m-0" title="Prossima call" (click)="gotoNextCall()">
-                    <i class="bi bi-chevron-double-down"></i>
-                  </button>
-                  <button type="button" class="btn p-1 me-2" title="Call precedente" (click)="gotoPreviousCall()">
-                    <i class="bi bi-chevron-double-up"></i>
-                  </button>
+            @if(m_requestResponseRows().length>0)
+            {
+            <div class="col col-6 offset-3 d-flex justify-content-center border rounded border-info mb-1">
+              <p class="m-1 me-2 p-0"><small>Request+Response nr: {{m_requestResponseRows().length}}</small></p>
+              <button type="button" class="btn p-1 m-0" title="Prossima call" (click)="gotoNextCall()">
+                <i class="bi bi-chevron-double-down"></i>
+              </button>
+              <button type="button" class="btn p-1 me-2" title="Call precedente" (click)="gotoPreviousCall()">
+                <i class="bi bi-chevron-double-up"></i>
+              </button>
 
-                  <button type="button" class="btn p-1 m-0" title="Prima call" (click)="gotoFirstCall()">
-                    <i class="bi bi-chevron-bar-up"></i>
-                  </button>
-                  <button type="button" class="btn p-1 me-2" title="Ultima call" (click)="gotoLastCall()">
-                    <i class="bi bi-chevron-bar-down"></i>
-                  </button>
+              <button type="button" class="btn p-1 m-0" title="Prima call" (click)="gotoFirstCall()">
+                <i class="bi bi-chevron-bar-up"></i>
+              </button>
+              <button type="button" class="btn p-1 me-2" title="Ultima call" (click)="gotoLastCall()">
+                <i class="bi bi-chevron-bar-down"></i>
+              </button>
 
-                  <!-- dropdown menu -->
-                  <div class="dropdown-center">
-                    <button class="btn btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                      aria-expanded="false">
-                      Jump to Request/Response nr.
-                    </button>
-                    <ul class="dropdown-menu overflow-auto" style="height: 500px;">
-                      @for (reqRes of m_requestResponseRows(); track $index; let reqResIdx=$index) {
-                      <li><a class="dropdown-item"
-                          (click)="gotoRowNr(reqResIdx)"><span><small>{{m_requestResponseRows()[reqResIdx]}}</small></span></a>
-                      </li>
-                      }
-                    </ul>
-                  </div>
-
-                </div>
-              </div>
-              }
+              <!-- dropdown menu -->
+              <button class="btn btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Jump to Request/Response nr.
+              </button>
+              <ul class="dropdown-menu overflow-auto" style="height: 500px;">
+                @for (reqRes of m_requestResponseRows(); track $index; let reqResIdx=$index) {
+                <li><a class="dropdown-item"
+                    (click)="gotoRowNr(reqResIdx)"><span><small>{{m_requestResponseRows()[reqResIdx]}}</small></span></a>
+                </li>
+                }
+              </ul>
             </div>
+            }
 
           </div>
 
@@ -259,8 +251,6 @@
         <div class="modal-body" tabindex="0">
 
           @for (item of m_file_content(); track $index; let joblogLineIdx=$index) {
-          <!-- [class.border]="isHighlighted(joblogLineIdx)" -->
-          <!-- <div class="d-flex border border-1 border-secondary mb-1 rounded"> -->
           <div class="d-flex border-1 border-success mb-1 rounded"
             [class.border]="isISYCallInput(joblogLineIdx) || isISYCallOutput(joblogLineIdx)">
             <div class="row">
@@ -282,7 +272,7 @@
               <!-- Gestionde dell'input - inizio -->
               @if (isISYCallInput(joblogLineIdx)) {
               <div class="row" [id]="joblogLineIdx-1">
-                <div class="col-auto">
+                <div class="col-2">
                   <button class="btn btn-sm border-0 ms-1 mb-1 p-0 ps-1 pe-1 btn-primary" type="button"
                     (click)="showISYDsInput(joblogLineIdx)" title="Show ISY Call Input">
                     Request id: {{joblogLineIdx-1}}
@@ -295,7 +285,7 @@
                 </div>
 
                 @if(item.requests.length>0) {
-                <div class="col-auto border border-2 border-primary rounded px-4 m-4">
+                <div class="col-10  border border-2 border-primary rounded mb-1">
                   @for (programCallRequest of item.requests; track $callIdx; let $callIdx = $index) {
                   @if ($callIdx===0) {
                   <div class="row align-items-center mt-3">
@@ -319,48 +309,48 @@
                   }
 
 
-                  <div class="row border rounded border-2 mb-1">
-                    <div class="col-auto">
+                  <div class="row border rounded border-2 m-1">
+                    <div class="col-12">
                       <table class="table table-sm mt-1 mb-1 caption-top">
-                        <tr class="text-center">
+                        <tr>
                           <td>
-                            <span class="fw-bold small me-1">Call nr</span>
+                            <span class="fw-bold small">Call nr</span>
                           </td>
                           <td>
-                            <span class="fw-bold small me-1">Program</span>
+                            <span class="fw-bold small">Program</span>
                           </td>
                           <td>
-                            <span class="fw-bold small me-1">Command</span>
+                            <span class="fw-bold small">Command</span>
                           </td>
                           <td>
-                            <span class="fw-bold small me-1">Ds Input</span>
+                            <span class="fw-bold small">Ds Input</span>
                           </td>
                           <td>
-                            <span class="fw-bold small me-1">Ds Output</span>
+                            <span class="fw-bold small">Ds Output</span>
                           </td>
                           <td>
-                            <span class="fw-bold small me-1">Times</span>
+                            <span class="fw-bold small">Times</span>
                           </td>
                         </tr>
 
-                        <tr class="text-center">
+                        <tr>
                           <td>
-                            <span class="me-4 small text-primary fw-bold"> {{$callIdx}} </span>
+                            <span class="small text-primary fw-bold"> {{$callIdx}} </span>
                           </td>
                           <td>
-                            <span class="me-4 small"> {{programCallRequest.program}} </span>
+                            <span class="small"> {{programCallRequest.program}} </span>
                           </td>
                           <td>
-                            <span class="me-4 small"> {{programCallRequest.command}} </span>
+                            <span class="small"> {{programCallRequest.command}} </span>
                           </td>
                           <td>
-                            <span class="me-4 small"> {{programCallRequest.dsin}} </span>
+                            <span class="small"> {{programCallRequest.dsin}} </span>
                           </td>
                           <td>
-                            <span class="me-4 small"> {{programCallRequest.dsout}} </span>
+                            <span class="small"> {{programCallRequest.dsout}} </span>
                           </td>
                           <td>
-                            <span class="me-4 small"> {{programCallRequest.times}} </span>
+                            <span class="small"> {{programCallRequest.times}} </span>
                           </td>
                         </tr>
 
@@ -413,12 +403,10 @@
               }
               <!-- Gestionde dell'input - fine -->
 
-
-
               <!-- Gestionde dell'output - inizio -->
               @if (isISYCallOutput(joblogLineIdx)) {
               <div class="row" [id]="joblogLineIdx-1">
-                <div class="col-auto">
+                <div class="col-2">
                   <button class="btn btn-sm border-0 ms-1 mb-1 p-0 ps-1 pe-1 btn-info" type="button"
                     (click)="showISYDsOutput(joblogLineIdx)" title="Show ISY Call Output">
                     Response id: {{joblogLineIdx-1}}
@@ -431,7 +419,7 @@
                 </div>
 
                 @if(item.responses.length>0) {
-                <div class="col-auto border border-2 border-info rounded px-4 m-4">
+                <div class="col-10 border border-2 border-info rounded mb-1">
                   <div class="row align-items-center mt-3">
                     <div class="col col-6 offset-3">
 
@@ -441,7 +429,7 @@
                     </div>
                     <div class="col col-2 offset-1 d-flex justify-content-end">
 
-                      <button class="btn btn-sm border-0 ms-1 mb-1 p-0 ps-1 pe-1 btn-primary" type="button"
+                      <button class="btn btn-sm border-0 ms-1 mb-1 btn-primary" type="button"
                         (click)="toggleShowOutputDetails(item)" title="Show/Hide output details">
                         @if(showOutputDetails(item)) {
                         <i class="bi bi-chevron-double-up"></i>
@@ -454,23 +442,30 @@
                   </div>
 
                   @for (programCallResponse of item.responses; track $index; let $callIdx= $index) {
-                  <div class="row border rounded border-2 mb-1">
-                    <div class="col-auto">
-                      <table class="table table-sm mt-1">
-
+                  <div class="row border rounded border-2 m-1">
+                    <div class="col-12">
+                      <table class="table table-sm mt-1 mb-0">
                         <tr>
-                          <td>
-                            <span class="text-primary fw-bold small me-1">Call nr:</span>
-                            <span class="small text-primary fw-bold"> {{$callIdx}} </span>
+                          <td colspan="3">
+                            <div class="row row-cols-3">
+                              <div class="col">
+                                <p class="fw-bold small">
+                                  Call nr: <span class="text-primary"> {{$callIdx}} </span>
+                                </p>
+                              </div>
+                              <div class="col">
+                                <p class="fw-bold small">
+                                  Return Code: <span class="fw-normal"> {{programCallResponse.result}} </span>
+                                </p>
+                              </div>
+                              <div class="col">
+                                <p class="fw-bold small">
+                                  Ds Output: <span class="fw-normal"> {{programCallResponse.dsout}} </span>
+                                </p>
+                              </div>
+                            </div>
                           </td>
-                          <td>
-                            <span class="fw-bold small me-1">Return Code:</span>
-                            <span class="small"> {{programCallResponse.result}} </span>
-                          </td>
-                          <td>
-                            <span class="fw-bold small me-1">Ds Output:</span>
-                            <span class="small"> {{programCallResponse.dsout}} </span>
-                          </td>
+
                         </tr>
 
                         @if(programCallResponse.dsout.length>0 && programCallResponse.values.length>0) {
