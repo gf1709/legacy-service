@@ -13,7 +13,7 @@ export class User {
 })
 export class AuthenticationService {
 
-  isUserLoggedIn:WritableSignal<boolean> = signal(true); // todo greg: da ripristinare
+  isUserLoggedIn:WritableSignal<boolean> = signal(false); // todo greg: da ripristinare
 
   httpClient: HttpClient = inject(HttpClient);
   constructor(private bkservice: BkService) { }
