@@ -24,8 +24,8 @@
           <span class="gf_label">File sorgente</span>
           <div class="input-group input-group-sm mb-2 max_width_200">
             <input #filter_file type="text" name="filter_file" class="form-control border-end-0 border shadow-none mt-0"
-              placeholder="File sorgente" [(ngModel)]="sourceFilterParams.file" data-toggle="tooltip" data-placement="top"
-              required minlength="3">
+              placeholder="File sorgente" [(ngModel)]="sourceFilterParams.file" data-toggle="tooltip"
+              data-placement="top" required minlength="3">
             <span class="input-group-text bg-transparent">
               <i class="bi bi-files" title="Specificare il file sorgente (es. QRPGSRC)"></i>
             </span>
@@ -120,11 +120,8 @@
               <div class="modal-header">
                 <h5 class="modal-title">{{ m_source_result().library}}.{{ m_source_result().sourceFile}}.{{
                   m_source_result().sourceMember}}</h5>
-                <div>
-                  <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal" title="Chiudi">
-                    <i class="bi bi-x-lg"></i>
-                  </button>
-                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" title="Chiudi">
+                </button>
               </div>
               <div class="modal-body" tabindex="0">
                 <div class="justify-content-center">
