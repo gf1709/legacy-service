@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, WritableSignal, inject, signal } from '@angular/core';
 import { map } from "rxjs/operators";
 import { environment } from '../environment';
 import { BkService } from './bk.service';
@@ -12,6 +12,9 @@ export class User {
   providedIn: "root"
 })
 export class AuthenticationService {
+
+  isUserLoggedIn:WritableSignal<boolean> = signal(false);
+
   httpClient: HttpClient = inject(HttpClient);
   constructor(private bkservice: BkService) { }
 
@@ -26,15 +29,16 @@ export class AuthenticationService {
           sessionStorage.setItem("session", session);
           let tokenStr = "Bearer " + userData.token;
           sessionStorage.setItem("token", tokenStr);
+          this.isUserLoggedIn.set(true);
           return userData;
         })
       );
   }
 
-  isUserLoggedIn() {
-    let user = sessionStorage.getItem("username");
-    return !(user === null);
-  }
+  // isUserLoggedIn() {
+  //   let user = sessionStorage.getItem("username");
+  //   return !(user === null);
+  // }
 
   logOut() {
     return this.httpClient.get(environment.apiUrl + "/logout")
@@ -43,6 +47,7 @@ export class AuthenticationService {
           sessionStorage.removeItem("username");
           sessionStorage.removeItem("session");
           sessionStorage.removeItem("token");
+          this.isUserLoggedIn.set(false);
           return userData;
         })
       );

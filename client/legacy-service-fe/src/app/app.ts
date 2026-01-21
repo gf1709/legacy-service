@@ -20,7 +20,7 @@ export class App {
   private TOAST_TIMEOUT: number = 5000;
   private timeoutID: number = -1;
 
-  constructor(private router: Router, private authService: AuthenticationService,
+  constructor(private router: Router, public authService: AuthenticationService,
     private bkService: BkService, public message_service: MessageHelperService) {
 
     message_service.toasts$.subscribe(
@@ -67,13 +67,10 @@ export class App {
     );
     this.router.navigate(['/login']);
   }
-  isUserLoggedIn() {
-    return this.authService.isUserLoggedIn();
-  }
 
   loginInfo() {
     let loginInfo = '';
-    if (this.isUserLoggedIn())
+    if (this.authService.isUserLoggedIn())
       loginInfo = sessionStorage.getItem("username")?.toUpperCase() + ' - ' + sessionStorage.getItem("session")?.toUpperCase();
     return loginInfo;
   }

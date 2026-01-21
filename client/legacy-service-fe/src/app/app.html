@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg sticky-top gf_back_color_green">
   <div class="container-fluid  gf_back_color_green">
     <a class="navbar-brand">
-      @if (isUserLoggedIn()) {
+      @if (authService.isUserLoggedIn()) {
       <span class="navbar-brand bi bi-person-circle text-white">
         {{loginInfo()}}
       </span>
@@ -9,7 +9,7 @@
     </a>
     <div class="collapse navbar-collapse  gf_back_color_green" id="navbarNavDropdown">
       <ul class="navbar-nav">
-        @if (isUserLoggedIn()) {
+        @if (authService.isUserLoggedIn()) {
         <li class="nav-item"><a class="nav-link text-white" routerLink="object-manager">Oggetti</a></li>
         <li class="nav-item"><a class="nav-link text-white" routerLink="source-manager">Sorgenti</a></li>
         <li class="nav-item"><a class="nav-link text-white" routerLink="spool-manager">Spool</a></li>
@@ -59,10 +59,6 @@
         }
       </ul>
 
-
-      @if (isUserLoggedIn()) {
-
-      }
     </div>
   </div>
 </nav>
