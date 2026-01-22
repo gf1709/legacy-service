@@ -68,6 +68,16 @@ export class JobListItemExtended {
     this.showJobOpenFileInfo = false;
     this.showJobCallStackInfo = false;
   };
+  public showJobInfo(): boolean {
+    return this.showJobStatusInfo || this.showJobLibraryListInfo || this.showJobOpenFileInfo || this.showJobCallStackInfo;
+  }
+  public hideJobInfo()  {
+    this.showJobStatusInfo = false;
+    this.showJobLibraryListInfo = false;
+    this.showJobOpenFileInfo = false;
+    this.showJobCallStackInfo = false;
+  }
+
 };
 
 export class ObjectDescription {

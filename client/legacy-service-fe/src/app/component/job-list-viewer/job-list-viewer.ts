@@ -20,13 +20,11 @@ export class JobListViewer {
   updateList = output<void>();
   public readonly m_is_netstat_list = input<boolean>(false);
 
-  m_curr_JobLogContent:WritableSignal<string[]> = signal([]);
+  m_curr_JobLogContent: WritableSignal<string[]> = signal([]);
 
   m_curr_JobLogUser: string = '';
   m_curr_JobLogName: string = '';
   m_curr_JobLogNumber: string = '';
-
-  // m_is_netstat_list: boolean = false;
 
 
   m_filter_jobname: WritableSignal<string> = signal(''); // filtro sul nome del job. I filtri possono essere molti separatati da virgola
@@ -283,32 +281,34 @@ export class JobListViewer {
       this.loadDetailInfo(aListIem);
     }
   }
-  public toggleShowJobLibraryListInfo(aListIem: JobListItemExtended) {
-    aListIem.showJobLibraryListInfo = !aListIem.showJobLibraryListInfo;
-    if (aListIem.showJobLibraryListInfo) {
-      aListIem.showJobStatusInfo = false;
-      aListIem.showJobOpenFileInfo = false;
-      aListIem.showJobCallStackInfo = false;
-      this.loadDetailInfo(aListIem);
-    }
+  public showJobStatusInfo(aListIem: JobListItemExtended) {
+    aListIem.showJobStatusInfo = true;
+    aListIem.showJobLibraryListInfo = false;
+    aListIem.showJobOpenFileInfo = false;
+    aListIem.showJobCallStackInfo = false;
+    this.loadDetailInfo(aListIem);
   }
-  public toggleShowJobOpenFileInfo(aListIem: JobListItemExtended) {
-    aListIem.showJobOpenFileInfo = !aListIem.showJobOpenFileInfo;
-    if (aListIem.showJobOpenFileInfo) {
-      aListIem.showJobStatusInfo = false;
-      aListIem.showJobLibraryListInfo = false;
-      aListIem.showJobCallStackInfo = false;
-      this.loadDetailInfo(aListIem);
-    }
+  public showJobLibraryListInfo(aListIem: JobListItemExtended) {
+    aListIem.showJobLibraryListInfo = true;
+    aListIem.showJobStatusInfo = false;
+    aListIem.showJobOpenFileInfo = false;
+    aListIem.showJobCallStackInfo = false;
+    this.loadDetailInfo(aListIem);
   }
-  public toggleShowJobCallStackInfo(aListIem: JobListItemExtended) {
-    aListIem.showJobCallStackInfo = !aListIem.showJobCallStackInfo;
-    if (aListIem.showJobCallStackInfo) {
-      aListIem.showJobStatusInfo = false;
-      aListIem.showJobLibraryListInfo = false;
-      aListIem.showJobOpenFileInfo = false;
-      this.loadDetailInfo(aListIem);
-    }
+  public showJobOpenFileInfo(aListIem: JobListItemExtended) {
+    aListIem.showJobOpenFileInfo = true;
+    aListIem.showJobStatusInfo = false;
+    aListIem.showJobLibraryListInfo = false;
+    aListIem.showJobCallStackInfo = false;
+    this.loadDetailInfo(aListIem);
+  }
+
+  public showJobCallStackInfo(aListIem: JobListItemExtended) {
+    aListIem.showJobCallStackInfo = true;
+    aListIem.showJobStatusInfo = false;
+    aListIem.showJobLibraryListInfo = false;
+    aListIem.showJobOpenFileInfo = false;
+    this.loadDetailInfo(aListIem);
   }
   public refreshDetails(aListIem: JobListItemExtended) {
     aListIem.jobDate.update(() => '');
