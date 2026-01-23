@@ -122,22 +122,22 @@
 
 @for (item of m_job_list(); track $index; let i = $index) {
 <div class="row small border-1 border-bottom  mt-1 g-1">
-  <div class="col-1 small mb-1">
+  <div class="col-1 small mb-1" [ngClass]="{'fw-bold text-success' : item.showJobInfo()}">
     {{i}}
   </div>
-  <div class="col-1 small">
+  <div class="col-1 small" [ngClass]="{'fw-bold' : item.showJobInfo()}">
     {{item.job.name()}}
   </div>
-  <div class="col-1 small">
+  <div class="col-1 small" [ngClass]="{'fw-bold' : item.showJobInfo()}">
     {{item.job.user()}}
   </div>
-  <div class="col-3 small">
+  <div class="col-3 small" [ngClass]="{'fw-bold' : item.showJobInfo()}">
     {{item.job.currentUser()}}-{{item.job.currentUserDescription()}}
   </div>
-  <div class="col-1 small">
+  <div class="col-1 small" [ngClass]="{'fw-bold' : item.showJobInfo()}">
     {{item.job.number()}}
   </div>
-  <div class="col-1 small">
+  <div class="col-1 small" [ngClass]="{'fw-bold' : item.showJobInfo()}">
     @if (!m_is_netstat_list()) {
     {{item.job.function()}}
     }
@@ -147,7 +147,7 @@
     }
     }
   </div>
-  <div class="col-1 small">
+  <div class="col-1 small" [ngClass]="{'fw-bold' : item.showJobInfo()}">
     @if (!m_is_netstat_list()) {
     {{item.job.status()}}
     }
@@ -175,11 +175,6 @@
         </button>
       </div>
       <div class="col">
-        <button class="btn btn-sm" type="button" title="Refresh dati del lavoro" (click)="refreshDetails(item)">
-          <i class="bi bi-arrow-clockwise"></i>
-        </button>
-      </div>
-      <div class="col">
         <button class="btn btn-sm" type="button" title="Set joblog verbose"
           (click)="setJobLogVerbose(item.job.user(), item.job.name(), item.job.number())">
           <i class="bi bi-chat-left-text"></i>
@@ -196,35 +191,42 @@
 
   @if (item.showJobInfo()) {
   <div class="row border border-2 border-secondary rounded g-0">
+    <div class="col btn-group-sm text-center mb-2" role="group">
 
+      <button type="button" class="btn btn-sm m-2" (click)="showJobStatusInfo(item)"
+        [ngClass]="{'btn-primary' : item.showJobStatusInfo, 'btn-outline-primary': !item.showJobStatusInfo}">
+        <i class="bi bi-info-circle"></i>
+        Dettagli Job
+      </button>
 
-    <div class="col btn-group-sm text-center mb-2 border-bottom" role="group"
-      aria-label="Basic radio toggle button group">
-      <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off"
-        (click)="showJobStatusInfo(item)" checked>
-      <label class="btn btn-outline-primary m-2" for="btnradio1">
-        <i class="bi bi-info-circle"></i> Dettagli Job</label>
-
-      <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off"
-        (click)="showJobLibraryListInfo(item)">
-      <label class="btn btn-outline-primary mx-2" for="btnradio2">
+      <button type="button" class="btn btn-sm m-2" (click)="showJobLibraryListInfo(item)"
+        [ngClass]="{'btn-primary' : item.showJobLibraryListInfo, 'btn-outline-primary': !item.showJobLibraryListInfo}">
         <i class="bi bi-list-ol"></i>
         Lista libreria
-      </label>
+      </button>
 
-      <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off"
-        (click)="showJobOpenFileInfo(item)">
-      <label class="btn btn-outline-primary m-2" for="btnradio3">
+      <button type="button" class="btn btn-sm m-2" (click)="showJobOpenFileInfo(item)"
+        [ngClass]="{'btn-primary' : item.showJobOpenFileInfo, 'btn-outline-primary': !item.showJobOpenFileInfo}">
         <i class="bi bi-file-earmark"></i>
         File aperti
-      </label>
+      </button>
 
-      <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off"
-        (click)="showJobCallStackInfo(item)">
-      <label class="btn btn-outline-primary m-2" for="btnradio4">
+      <button type="button" class="btn btn-sm m-2" (click)="showJobCallStackInfo(item)"
+        [ngClass]="{'btn-primary' : item.showJobCallStackInfo, 'btn-outline-primary': !item.showJobCallStackInfo}">
         <i class="bi bi-stack-overflow"></i>
         Elenco richiami
-      </label>
+      </button>
+
+      <button type="button" class="btn btn-sm btn-primary m-2" (click)="refreshDetails(item)">
+        <i class="bi bi-arrow-clockwise"></i>
+        Aggiorna
+      </button>
+
+
+      <button type="button" class="btn btn-sm btn-primary m-2" (click)="item.hideJobInfo()">
+        Nascondi dettagli
+      </button>
+
     </div>
 
     <div class="col-1 d-flex justify-content-end ">
@@ -232,7 +234,7 @@
       </button>
     </div>
 
-    <!-- <hr> -->
+    <hr>
     <div class="row row-cols-auto justify-content-center text-align-center mb-3">
 
       @if (item.showJobStatusInfo) {
