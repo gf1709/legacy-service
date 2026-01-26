@@ -522,6 +522,10 @@ export class BkService {
     console.log('[0] getIFSFilesContent. aFileNames:', aFileNames);
     return this.httpClient.post<string[]>(environment.apiUrl + "/utility/getIFSFilesContent", aFileNames);
   }
+  findSibankCall(aFileNames: string[]) {
+    console.log('[0] findSibankCall. aFileNames:', aFileNames);
+    return this.httpClient.post<string[]>(environment.apiUrl + "/utility/findSibankCall", aFileNames);
+  }
   deleteIFSFile(aFileName: string) {
     console.log('[0] deleteIFSFile. aFileNames:', aFileName);
     return this.httpClient.post<boolean>(environment.apiUrl + "/utility/deleteIFSFile", aFileName);

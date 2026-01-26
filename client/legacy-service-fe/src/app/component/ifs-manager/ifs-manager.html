@@ -52,14 +52,14 @@
       <table class="table table-sm small table-hover" style="width:80%">
         <thead>
           <tr>
-            <th style="width:5%">
+            <th>
               <label>
                 <input type="checkbox" title="select" (click)="toggleSelectDeselectAllRows()"
                   [value]="m_allRowsSelected">
               </label>
             </th>
 
-            <th style="width:5%">
+            <th>
               <button class="btn btn-sm border-0 p-0" type="button" (click)="sort('type')">
                 <span class="me-2 text fw-bold text-center">Type</span>
                 @if (m_sort_mode===SortMode.Type_ASC) {<i class="bi bi-sort-alpha-down"></i>}
@@ -67,7 +67,7 @@
                 @else { <i class="bi bi-arrow-down-up"></i> }
               </button>
             </th>
-            <th style="width:50%">
+            <th>
               <button class="btn btn-sm border-0 p-0" type="button" (click)="sort('name')">
                 <span class="me-2 text fw-bold">Name</span>
                 @if (m_sort_mode===SortMode.Name_ASC) {<i class="bi bi-sort-alpha-down"></i>}
@@ -75,7 +75,7 @@
                 @else { <i class="bi bi-arrow-down-up"></i> }
               </button>
             </th>
-            <th style="width:18%">
+            <th>
               <button class="btn btn-sm border-0 p-0" type="button" (click)="sort('date')">
                 <span class="me-2 text fw-bold">Date</span>
                 @if (m_sort_mode===SortMode.Date_ASC) {<i class="bi bi-sort-alpha-down"></i>}
@@ -83,7 +83,7 @@
                 @else { <i class="bi bi-arrow-down-up"></i> }
               </button>
             </th>
-            <th style="width: 7%;">
+            <th>
               <button class="btn btn-sm border-0 p-0" type="button" (click)="sort('size')">
                 <span class="me-2 text fw-bold">Size</span>
                 @if (m_sort_mode===SortMode.Size_ASC) {<i class="bi bi-sort-alpha-down"></i>}
@@ -91,19 +91,26 @@
                 @else { <i class="bi bi-arrow-down-up"></i> }
               </button>
             </th>
-            <th style="width: 0%;">
-            </th>
-            <th style="width: 5%;" class="p-0">
+            <th class="p-0">
               @if (isAlmostOneFileSelected) {
-              <button class="btn btn-sm" type="button" title="Download all listed file content"
+              <button class="btn btn-sm" type="button" title="Find Sibank call in selected file"
+                (click)="findSibankCall()">
+                <i class="bi bi-binoculars"></i>
+              </button>
+              }
+
+            </th>
+            <th class="p-0">
+              @if (isAlmostOneFileSelected) {
+              <button class="btn btn-sm" type="button" title="Download selected file content"
                 (click)="downloadFileListedFileContent()">
                 <i class="bi bi-download"></i>
               </button>
               }
             </th>
-            <th style="width: 5%; " class="p-0">
+            <th class="p-0">
               @if (isAlmostOneFileSelected) {
-              <button class="btn btn-sm" type="button" title="Delete all listed file"
+              <button class="btn btn-sm" type="button" title="Delete selected file"
                 (click)="deleteAllSelectedFiles()">
                 <i class="bi bi-trash"></i>
               </button>

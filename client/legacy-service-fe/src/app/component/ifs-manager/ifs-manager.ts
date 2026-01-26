@@ -249,6 +249,29 @@ export class IfsManager implements AfterContentChecked {
     );
 
   }
+
+  findSibankCall() {
+    console.log('findSibankCall:');
+    let fNames: string[] = [];
+    this.m_fileList().files.forEach(
+      (ele) => {
+        if (ele.type === 'f' && ele.isSelected)
+          fNames.push(this.ifsManagerSearchParams.directory + "/" + ele.name);
+      }
+    );
+
+    this.bkService.findSibankCall(fNames).subscribe(
+      data => {
+        alert(data);
+      }
+      , err => {
+        console.log('errore in fase di esecuzione della richiesta');
+        this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta');
+      }
+    );
+
+  }
+
   sort(sortCol: string) {
     console.log('[1] sort, this.m_sort_mode', sortCol, this.m_sort_mode);
     if (sortCol === 'name') {
