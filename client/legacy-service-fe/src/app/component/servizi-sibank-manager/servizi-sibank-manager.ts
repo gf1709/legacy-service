@@ -5,6 +5,7 @@ import { MessageHelperService } from '../../services/message-helper.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 enum SortMode {
   Abi_ASC,
@@ -80,7 +81,7 @@ export class ServiziSibankManager {
     return filteredList;
   });
 
-  constructor(private bkService: BkService, private message_service: MessageHelperService, private sanitizer: DomSanitizer) {
+  constructor(private router: Router, private bkService: BkService, private message_service: MessageHelperService, private sanitizer: DomSanitizer) {
     this.getServiziSibank();
   }
 
@@ -166,6 +167,11 @@ export class ServiziSibankManager {
 
     }
     this.m_servizi_list_all.set(this.m_servizi_list_all().slice()); // forza il ricalcolo della lista
+  }
+
+  netstatJobOnPort(port: string) {
+    this.bkService.g_jobManagerFilterParams.port = parseInt(port);
+    this.router.navigate(['netstat-job-info']);
   }
 
 }

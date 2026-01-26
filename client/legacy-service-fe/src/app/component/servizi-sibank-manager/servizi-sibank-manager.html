@@ -181,8 +181,7 @@
               <p class="text-center m-0 me-2">{{item.name}}</p>
             </td>
             <td>
-              <p class="text-center m-0 me-2"><a class="link-opacity-90"
-                  href="/netstat-job-info/?port={{item.port}}">{{item.port}}</a></p>
+              <p class="text-center m-0 me-2"><a class="link-opacity-90" onmouseover="" style="cursor: pointer;" (click)="netstatJobOnPort(item.port)">{{item.port}}</a></p>
             </td>
             <td>
               <p class="text-center m-0 me-2">{{item.program}}</p>
