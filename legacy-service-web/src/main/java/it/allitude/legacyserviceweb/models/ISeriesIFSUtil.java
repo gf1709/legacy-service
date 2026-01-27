@@ -20,6 +20,7 @@ import com.ibm.as400.access.IFSTextFileOutputStream;
 
 import it.allitude.legacyserviceweb.DTOs.IFSListFileResponseDTO;
 import it.allitude.legacyserviceweb.db.ConnectionService;
+
 @Component
 public class ISeriesIFSUtil {
 
@@ -82,7 +83,7 @@ public class ISeriesIFSUtil {
     // Comprimo LINESxCHUNCK righe per volta
     public ArrayList<String> getIFSFileContentZipped(String aFileName) throws Exception {
         final String SEPARATOR = "\r\r\t\n\nGREG\r\r\t\n\n";
-        final int LINESxCHUNCK = 100;
+        final int LINESxCHUNCK = 200;
         ArrayList<String> result = new ArrayList<>();
         String line, linesToCompress = "";
         int lineNr = 0;
@@ -103,9 +104,9 @@ public class ISeriesIFSUtil {
                             outputStream.write(buffer, 0, compressedSize);
                         }
                         result.add(Base64.getEncoder().encodeToString(outputStream.toByteArray()));
-                        linesToCompress="";
-                    } 
-                    linesToCompress += line + SEPARATOR;                    
+                        linesToCompress = "";
+                    }
+                    linesToCompress += line + SEPARATOR;
                     lineNr += 1;
                 }
             }
@@ -126,9 +127,6 @@ public class ISeriesIFSUtil {
         return result;
     }
 
-
-
-
     public ArrayList<String> findSibankCall(ArrayList<String> aFileNames) throws Exception {
         ArrayList<String> res = new ArrayList<>();
         if (aFileNames.size() < 1) {
@@ -145,10 +143,9 @@ public class ISeriesIFSUtil {
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    findSibankCallAsync(as400, aFileNames, outFile);
+                    findSibankCallAsyncConcise(as400, aFileNames, outFile);
                 } catch (Exception e) {
                     log.error("Error executing findSibankCallAsync. " + e.getMessage());
-                    e.printStackTrace();
                 }
             }
         }).start();
@@ -156,7 +153,37 @@ public class ISeriesIFSUtil {
         return res;
     }
 
-    private void findSibankCallAsync(AS400 as400, ArrayList<String> aFileNames, String outFileName) throws Exception {
+    private void findSibankCallAsyncConcise(AS400 as400, ArrayList<String> aFileNames, String outFileName) throws Exception {
+        IFSFile f = new IFSFile(as400, aFileNames.get(0));
+        IFSTextFileOutputStream outFile = new IFSTextFileOutputStream(as400, outFileName);
+        outFile.write("========================================================================================================" + "\n");
+        outFile.write("Scan for SIbank call. File scanned: " + "\n");
+        for (String fName : aFileNames) {
+            IFSFile file = new IFSFile(as400, fName);
+            outFile.write(file.getAbsolutePath() + "\n");
+        }
+        outFile.write("========================================================================================================" + "\n");
+        String line, msg = "";
+
+        for (String fName : aFileNames) {
+            int lineNr = 0;
+            IFSFile file = new IFSFile(as400, fName);
+            try (BufferedReader reader = new BufferedReader(new IFSFileReader(file))) {
+                while ((line = reader.readLine()) != null) {
+                    {
+                        if (line.contains("[5c] - - XAM Call - Service program chiamato :") || line.contains("[5c] - Isy Call - Programmi chiamati :")) {
+                            msg = "[" + file.getName() + "-Line nr: " + lineNr + "]" + line + "\n";
+                            outFile.write(msg);
+                        }
+                        lineNr += 1;
+                    }
+                }
+            }
+        }
+        outFile.close();
+    }
+
+    private void findSibankCallAsyncVerbose(AS400 as400, ArrayList<String> aFileNames, String outFileName) throws Exception {
         IFSFile f = new IFSFile(as400, aFileNames.get(0));
 
         IFSTextFileOutputStream outFile = new IFSTextFileOutputStream(as400, outFileName);
