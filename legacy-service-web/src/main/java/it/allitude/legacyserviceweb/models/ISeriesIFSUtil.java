@@ -155,7 +155,7 @@ public class ISeriesIFSUtil {
 
     private void findSibankCallAsyncConcise(AS400 as400, ArrayList<String> aFileNames, String outFileName) throws Exception {
         IFSFile f = new IFSFile(as400, aFileNames.get(0));
-        IFSTextFileOutputStream outFile = new IFSTextFileOutputStream(as400, outFileName);
+        IFSTextFileOutputStream outFile = new IFSTextFileOutputStream(as400, outFileName + ".csv.working"); // lo faccio diventare un csv
         outFile.write("========================================================================================================" + "\n");
         outFile.write("Scan for SIbank call. File scanned: " + "\n");
         for (String fName : aFileNames) {
@@ -165,14 +165,24 @@ public class ISeriesIFSUtil {
         outFile.write("========================================================================================================" + "\n");
         String line, msg = "";
 
+        final String ISY_TAG = "[5c] - Isy Call - Programmi chiamati :";
+        final String XAM_TAG = "[5c] - - XAM Call - Service program chiamato :";
+        // Intestazioni di colonna
+        msg = "Nome File; Numero riga;Riga;Tipo Call;Programma/Service Program" + "\n";
+        outFile.write(msg);
+        msg="";
         for (String fName : aFileNames) {
             int lineNr = 0;
             IFSFile file = new IFSFile(as400, fName);
             try (BufferedReader reader = new BufferedReader(new IFSFileReader(file))) {
                 while ((line = reader.readLine()) != null) {
                     {
-                        if (line.contains("[5c] - - XAM Call - Service program chiamato :") || line.contains("[5c] - Isy Call - Programmi chiamati :")) {
-                            msg = "[" + file.getName() + "-Line nr: " + lineNr + "]" + line + "\n";
+                        if (line.contains(XAM_TAG)) {
+                            msg = file.getName() + ";Line nr: " + lineNr + ";" + line.replace(XAM_TAG, ";XAM Call-SrvPgm;") + "\n";
+                            outFile.write(msg);
+                        }
+                        if (line.contains(ISY_TAG)) {
+                            msg = file.getName() + ";Line nr: " + lineNr + ";" + line.replace(ISY_TAG, ";Isy Call-Programma;") + "\n";
                             outFile.write(msg);
                         }
                         lineNr += 1;
@@ -181,6 +191,10 @@ public class ISeriesIFSUtil {
             }
         }
         outFile.close();
+
+        IFSFile fileNameFrom = new IFSFile(as400, outFileName + ".csv.working");
+        IFSFile fileNameTo = new IFSFile(as400, outFileName + ".csv");
+        fileNameFrom.renameTo(fileNameTo);
     }
 
     private void findSibankCallAsyncVerbose(AS400 as400, ArrayList<String> aFileNames, String outFileName) throws Exception {
