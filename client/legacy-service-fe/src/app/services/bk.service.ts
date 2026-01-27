@@ -516,7 +516,7 @@ export class BkService {
   }
   getIFSFileContentZipped(aFileName: string) {
     console.log('[0] getIFSFileContentZipped. aFileName:', aFileName);
-    return this.httpClient.post<number[]>(environment.apiUrl + "/utility/getIFSFileContentZipped", aFileName);
+    return this.httpClient.post<string[]>(environment.apiUrl + "/utility/getIFSFileContentZipped", aFileName);
   }
   getIFSFilesContent(aFileNames: string[]) {
     console.log('[0] getIFSFilesContent. aFileNames:', aFileNames);
@@ -539,11 +539,11 @@ export class BkService {
     return this.httpClient.get<void>(environment.apiUrl + "/update_legacy_terminal_abi_mapper");
   }
   showISYDsInput(aInputString: string) {
-    console.log('[0] showISYDsInput. aInputString:', aInputString);
+    // console.log('[0] showISYDsInput. aInputString:', aInputString);
     return this.httpClient.post<ProgramCallRequest[]>(environment.apiUrl + "/show-ISY-input", aInputString);
   }
   showISYDsOutput(aInputString: string) {
-    console.log('[0] showISYDsOutput. aInputString:', aInputString);
+    // console.log('[0] showISYDsOutput. aInputString:', aInputString);
     return this.httpClient.post<ProgramCallResponse[]>(environment.apiUrl + "/show-ISY-output", aInputString);
   }
 

@@ -5,6 +5,7 @@ import { MessageHelperService } from '../../services/message-helper.service';
 import { formatDate } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
+import * as fflate from 'fflate';
 
 enum SortMode {
   Name_ASC,
@@ -141,6 +142,75 @@ export class IfsManager implements AfterContentChecked {
 
   showFileContent(dir: string, fileName: string, idx: number) {
     console.log('getFile:', dir, fileName);
+    let fileContent: IfsFileContent[] = [];
+    let responseRows: number[] = [];
+
+    this.m_requestResponseRows.set([]);
+    this.m_currentRow = -1;
+    let aFullFileName: string = this.getFullFileName(dir, fileName);
+    this.m_current_file = { dir: dir, file: fileName, idx: idx };
+    let index: number = 0;
+
+    this.bkService.getIFSFileContentZipped(aFullFileName).subscribe(
+      data => {
+        // console.log('swhoFileConntent compressed message is ', data);
+        data.forEach(
+          (b64LineCompressed) => {
+            let lines: string[] = this.decompressLines(b64LineCompressed);
+            // console.log('swhoFileConntent decompressed line are [2]', lines);
+
+            lines.forEach(
+              (line) => {
+                let ifsLine: IfsFileContent = new IfsFileContent();
+                ifsLine.lineNumber = index + 1;
+                ifsLine.lineContent = line;
+                ifsLine.requestsShowDetails = false;
+                ifsLine.responsesShowDetails = false;
+                fileContent.push(ifsLine);
+                if (this.isISYCallInputLine(line)
+                  || this.isISYCallOutputLine(line)
+                  || this.isXamMessageLine(line)
+                ) {
+                  responseRows.push(index);
+                }
+                // console.log('showFileContent new ele is ', ifsLine);
+                index+=1;
+              });
+          })
+
+        this.m_requestResponseRows.set(responseRows);
+        this.m_file_content.set(fileContent);
+        // console.log('getFile data is', this.m_file_content());
+      }
+      , err => {
+        console.log('errore in fase di esecuzione della richiesta');
+        this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta');
+      }
+    );
+  }
+
+  decompressLines(b64LineCompressed: string): string[] {
+    var lines: string[] = [];
+    var binaryString = atob(b64LineCompressed);
+    var bytes = new Uint8Array(binaryString.length);
+    for (var i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    const decompressedStringBytes = fflate.decompressSync(bytes);
+    const b64LineDecompressed = fflate.strFromU8(decompressedStringBytes);
+    if (b64LineDecompressed.length > 0) {
+      var tmpLines = b64LineDecompressed.split('\r\r\t\n\nGREG\r\r\t\n\n');
+      tmpLines.forEach((value) => {
+        if (value.length > 0)  // Non torno le rihe vuote
+          lines.push(value);
+      })
+      // console.log('swhoFileConntent decompressed line are [1]', lines);
+    }
+    return lines;
+  }
+
+showFileContentWorking(dir: string, fileName: string, idx: number) {
+    console.log('getFile:', dir, fileName);
     this.m_requestResponseRows.set([]);
     this.m_currentRow = -1;
     let aFullFileName: string = this.getFullFileName(dir, fileName);
@@ -176,6 +246,7 @@ export class IfsManager implements AfterContentChecked {
       }
     );
   }
+
   downloadFile(dir: string, fileName: string, idx: number) {
     console.log('downloadFile:', dir, fileName);
     let aFullFileName: string = this.getFullFileName(dir, fileName);

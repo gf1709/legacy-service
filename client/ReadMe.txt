@@ -1,6 +1,7 @@
 cd C:\Users\fc0382\Documents\Apps\ProgettiJava\legacy-service
 mkdir client
 
+cd client
 **Angular 21**
 - npm install @angular/cli @angular/core 
 - npm install @angular-devkit/build-angular
@@ -9,7 +10,6 @@ mkdir client
 - npm install @angular/router @angular/forms
 - npm install bootstrap-icons
 
-cd client
 node_modules\.bin\ng new legacy-service-fe
 npm install ngx-toastr --save
 npm install @angular/animations --save

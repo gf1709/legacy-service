@@ -53,7 +53,7 @@ public class ISeriesUtilityController {
         return _iSeriesIFSUtil.getIFSFileContent(aFileName);
     }
     @PostMapping(value="/utility/getIFSFileContentZipped")
-    public ArrayList<Byte> getIFSFileContentZipped(@RequestBody String aFileName) throws Exception {
+    public ArrayList<String> getIFSFileContentZipped(@RequestBody String aFileName) throws Exception {
         return _iSeriesIFSUtil.getIFSFileContentZipped(aFileName);
     }
 

@@ -1,25 +1,25 @@
 package it.allitude.legacyserviceweb.models;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.zip.Deflater;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.ibm.as400.access.AS400;
-import com.ibm.as400.access.AS400Message;
-import com.ibm.as400.access.CommandCall;
 import com.ibm.as400.access.IFSFile;
 import com.ibm.as400.access.IFSFileFilter;
-import com.ibm.as400.access.IFSFileOutputStream;
 import com.ibm.as400.access.IFSFileReader;
 import com.ibm.as400.access.IFSTextFileOutputStream;
 
 import it.allitude.legacyserviceweb.DTOs.IFSListFileResponseDTO;
 import it.allitude.legacyserviceweb.db.ConnectionService;
-
 @Component
 public class ISeriesIFSUtil {
 
@@ -79,40 +79,55 @@ public class ISeriesIFSUtil {
         return res;
     }
 
-    public ArrayList<Byte> getIFSFileContentZipped(String aFileName) throws Exception {
-        return zipFile(aFileName);
-    }
-
-    public ArrayList<Byte> zipFile(String aFileName) throws Exception {
+    // Comprimo LINESxCHUNCK righe per volta
+    public ArrayList<String> getIFSFileContentZipped(String aFileName) throws Exception {
+        final String SEPARATOR = "\r\r\t\n\nGREG\r\r\t\n\n";
+        final int LINESxCHUNCK = 100;
+        ArrayList<String> result = new ArrayList<>();
+        String line, linesToCompress = "";
+        int lineNr = 0;
+        byte[] buffer = new byte[262144];
         AS400 as400 = _connectionService.getAS400Connection();
-        IFSFile sourceFile = new IFSFile(as400, aFileName);
-        String compressedFileName = sourceFile.getAbsolutePath() + ".zip";
-        CommandCall cmd = new CommandCall(as400);
-        String cmdString = "jar  -cMf " + compressedFileName + " -C " + sourceFile.getParent() + " " + sourceFile.getName();
-        boolean isOk = cmd.run("QSH CMD('" + cmdString + "')");
-        AS400Message[] messageList = cmd.getMessageList();
-        if (!isOk) {
-            if (messageList.length > 0) {
-                throw new Exception("zipFile error: " + messageList[0].getText());
+        IFSFile file = new IFSFile(as400, aFileName);
+        try (BufferedReader reader = new BufferedReader(new IFSFileReader(file))) {
+            while ((line = reader.readLine()) != null) {
+                {
+                    if (lineNr % LINESxCHUNCK == 0) {
+                        Deflater deflater = new Deflater();
+                        deflater.setInput(linesToCompress.getBytes());
+                        deflater.finish();
+
+                        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                        while (!deflater.finished()) {
+                            int compressedSize = deflater.deflate(buffer);
+                            outputStream.write(buffer, 0, compressedSize);
+                        }
+                        result.add(Base64.getEncoder().encodeToString(outputStream.toByteArray()));
+                        linesToCompress="";
+                    } 
+                    linesToCompress += line + SEPARATOR;                    
+                    lineNr += 1;
+                }
+            }
+            // comprimo le rimanenti righe            
+            if (linesToCompress.length() > 0) {
+                Deflater deflater = new Deflater();
+                deflater.setInput(linesToCompress.getBytes());
+                deflater.finish();
+
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                while (!deflater.finished()) {
+                    int compressedSize = deflater.deflate(buffer);
+                    outputStream.write(buffer, 0, compressedSize);
+                }
+                result.add(Base64.getEncoder().encodeToString(outputStream.toByteArray()));
             }
         }
-
-        IFSFile f = new IFSFile(as400, compressedFileName);
-        ArrayList<Byte> result;
-        try (IFSFileReader res = new IFSFileReader(f)) {
-            int fLen = (int) f.length();        
-            int data;
-            int i = 0;
-            result = new ArrayList<>(fLen);
-            while ((data = res.read()) != -1) {
-                byte b = (byte)data;                
-                result.add(new Byte(b));
-                i++;
-
-            }
-        }
-        return result;        
+        return result;
     }
+
+
+
 
     public ArrayList<String> findSibankCall(ArrayList<String> aFileNames) throws Exception {
         ArrayList<String> res = new ArrayList<>();
@@ -129,21 +144,22 @@ public class ISeriesIFSUtil {
         String outFile = f.getParent() + "/sibank_call_list_" + nowString + ".log";
         new Thread(new Runnable() {
             public void run() {
-            try {
-                findSibankCallAsync(as400, aFileNames, outFile);
-            } catch (Exception e) {
-                log.error("Error executing findSibankCallAsync. " + e.getMessage());
-                e.printStackTrace();
+                try {
+                    findSibankCallAsync(as400, aFileNames, outFile);
+                } catch (Exception e) {
+                    log.error("Error executing findSibankCallAsync. " + e.getMessage());
+                    e.printStackTrace();
+                }
             }
-        }
         }).start();
-        res.add("Source scan is executing. Result file is "+ outFile);
+        res.add("Source scan is executing. Result file is " + outFile);
         return res;
     }
+
     private void findSibankCallAsync(AS400 as400, ArrayList<String> aFileNames, String outFileName) throws Exception {
         IFSFile f = new IFSFile(as400, aFileNames.get(0));
 
-        IFSTextFileOutputStream outFile = new IFSTextFileOutputStream(as400, outFileName); 
+        IFSTextFileOutputStream outFile = new IFSTextFileOutputStream(as400, outFileName);
         outFile.write("========================================================================================================" + "\n");
         outFile.write("Scan for SIbank call. File scanned: " + "\n");
         for (String fName : aFileNames) {
@@ -151,70 +167,62 @@ public class ISeriesIFSUtil {
             outFile.write(file.getAbsolutePath() + "\n");
         }
         outFile.write("========================================================================================================" + "\n");
-        String line, msg="";
+        String line, msg = "";
 
         for (String fName : aFileNames) {
             int lineNr = 0;
             IFSFile file = new IFSFile(as400, fName);
             try (BufferedReader reader = new BufferedReader(new IFSFileReader(file))) {
                 while ((line = reader.readLine()) != null) {
-                    {                        
-                        if (line.contains("XAM Call") || line.contains("Protocollo - Messaggio XAM") )
-                        {
+                    {
+                        if (line.contains("XAM Call") || line.contains("Protocollo - Messaggio XAM")) {
                             msg = "[" + file.getName() + "-Line nr: " + lineNr + "]" + line + "\n";
                             outFile.write(msg);
-                            lineNr+=1;
-                        }
-                        else if (line.contains("[5b] - Isy Call - Messaggio in ingresso"))
-                        {
+                            lineNr += 1;
+                        } else if (line.contains("[5b] - Isy Call - Messaggio in ingresso")) {
                             msg = "[" + file.getName() + "-Line nr: " + lineNr + "]" + line + "\n";
                             outFile.write(msg);
-                            lineNr+=1;
+                            lineNr += 1;
                             line = reader.readLine();
-                            if (line !=null)
-                            {
-                                msg = "[" + file.getName() + "-Line nr: " + lineNr + "]" + line + "\n";                            
+                            if (line != null) {
+                                msg = "[" + file.getName() + "-Line nr: " + lineNr + "]" + line + "\n";
                                 outFile.write(msg);
-                                lineNr+=1;
+                                lineNr += 1;
                                 line = reader.readLine();
-                                if (line !=null) {
+                                if (line != null) {
                                     msg = "[" + file.getName() + "-Line nr: " + lineNr + "]" + line + "\n";
                                     outFile.write(msg);
-                                    lineNr+=1;
+                                    lineNr += 1;
                                 }
                             }
-                        }
-                        else if (line.contains("[5c] - Isy Call - Programmi chiamati"))
-                        {
+                        } else if (line.contains("[5c] - Isy Call - Programmi chiamati")) {
                             msg = "[" + file.getName() + "-Line nr: " + lineNr + "]" + line + "\n";
                             outFile.write(msg);
-                            lineNr+=1;
+                            lineNr += 1;
                             line = reader.readLine();
-                            if (line !=null) {
+                            if (line != null) {
                                 msg = "[" + file.getName() + "-Line nr: " + lineNr + "]" + line + "\n";
                                 outFile.write(msg);
-                                lineNr+=1;
+                                lineNr += 1;
                             }
-                        }
-                        else if (line.contains("[5d] - Isy Call - Messaggio in uscita"))
-                        {
+                        } else if (line.contains("[5d] - Isy Call - Messaggio in uscita")) {
                             msg = "[" + file.getName() + "-Line nr: " + lineNr + "]" + line + "\n";
                             outFile.write(msg);
-                            lineNr+=1;
+                            lineNr += 1;
                             line = reader.readLine();
-                            if (line !=null) {
+                            if (line != null) {
                                 msg = "[" + file.getName() + "-Line nr: " + lineNr + "]" + line + "\n";
                                 outFile.write(msg);
-                                lineNr+=1;
+                                lineNr += 1;
                             }
+                        } else {
+                            lineNr += 1;
                         }
-                        else
-                            lineNr+=1;
                     }
                 }
             }
         }
-        outFile.close();        
+        outFile.close();
     }
 
     public ArrayList<String> getIFSFilesContent(ArrayList<String> aFileNames) throws Exception {
@@ -261,7 +269,7 @@ class MyDirectoryFilter implements IFSFileFilter {
     @Override
     public boolean accept(IFSFile file) {
         try {
-            if ( (file.getName().contains(".sock")) && (!JSession.getCurrentSession().isAdminUser()) ) {
+            if ((file.getName().contains(".sock")) && (!JSession.getCurrentSession().isAdminUser())) {
                 return false;
             }
             // Keep this entry.  Returning true tells the IFSList object  to return this file in the list of entries returned to the  .list() method.
