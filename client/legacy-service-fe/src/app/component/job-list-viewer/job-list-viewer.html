@@ -414,17 +414,25 @@
   <div class="modal-dialog modal-dialog-scrollable modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title"> JobLog [ {{m_curr_JobLogUser}}-{{m_curr_JobLogName}}-{{m_curr_JobLogNumber}} ]</h5>
-        <div>
-          <button type="button" class="btn btn-sm btn-light me-2" data-bs-dismiss="modal" title="Salva"
-            (click)="getCurrentJobLogFile()">
-            <i class="bi bi-download"></i>
-          </button>
-          <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal" title="Chiudi">
-            <i class="bi bi-x-lg"></i>
-          </button>
+        <div class="container text-center">
+          <div class="row">
+            <div class="col-10">
+              <h5 class="modal-title"> JobLog [ {{m_curr_JobLogUser}}-{{m_curr_JobLogName}}-{{m_curr_JobLogNumber}} ]
+              </h5>
+            </div>
+            <div class="col-2 text-end">
+              <button type="button" class="btn btn-sm btn-light me-2" data-bs-dismiss="modal" title="Salva"
+                (click)="getCurrentJobLogFile()">
+                <i class="bi bi-download"></i>
+              </button>
+              <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal" title="Chiudi">
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
+
       <div class="modal-body" tabindex="0">
         @for (item of this.m_curr_JobLogContent(); track $index; let i = $index) {
         <div class="d-flex">

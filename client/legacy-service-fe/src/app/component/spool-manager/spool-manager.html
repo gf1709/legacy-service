@@ -205,23 +205,23 @@
             <div class="modal-header">
 
               <div class="container text-center">
-              <div class="row">
-                <div class="col-10">
-                  <h5 class="modal-title">{{ m_spool_file_item_selected().spoolfileName}} -
-                    {{m_spool_file_item_selected().jobName}}/{{m_spool_file_item_selected().jobUser}}/{{m_spool_file_item_selected().jobNumber}}
-                    [{{m_spool_file_item_selected().creation_ts}}]
-                  </h5>
+                <div class="row">
+                  <div class="col-10">
+                    <h5 class="modal-title">{{ m_spool_file_item_selected().spoolfileName}} -
+                      {{m_spool_file_item_selected().jobName}}/{{m_spool_file_item_selected().jobUser}}/{{m_spool_file_item_selected().jobNumber}}
+                      [{{m_spool_file_item_selected().creation_ts}}]
+                    </h5>
+                  </div>
+                  <div class="col-2 text-end">
+                    <button type="button" class="btn btn-sm btn-danger ms-5 me-2" data-bs-dismiss="modal"
+                      (click)="deleteSpool(m_spool_file_item_selected() , m_spool_file_item_selected_index())"
+                      title="Cancella spool">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" title="Chiudi">
+                    </button>
+                  </div>
                 </div>
-                <div class="col-2 text-end">
-                  <button type="button" class="btn btn-sm btn-danger ms-5 me-2" data-bs-dismiss="modal"
-                    (click)="deleteSpool(m_spool_file_item_selected() , m_spool_file_item_selected_index())"
-                    title="Cancella spool">
-                    <i class="bi bi-trash"></i>
-                  </button>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" title="Chiudi">
-                  </button>
-                </div>
-              </div>
               </div>
 
 
