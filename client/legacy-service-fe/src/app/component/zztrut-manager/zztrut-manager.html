@@ -37,20 +37,17 @@
         <div class="col-sm-2">
           <span class="gf_label">Ds Output</span>
           <input #dsout type="text" id="dsout" name="dsout" class="form-control form-control-sm text-uppercase"
-            formControlName="m_dsout" data-toggle="tooltip" data-placement="top"
-            title="Nome Ds Output">
+            formControlName="m_dsout" data-toggle="tooltip" data-placement="top" title="Nome Ds Output">
         </div>
         <div class="col-sm-1">
           <span class="gf_label">Tipo</span>
           <input #tipo type="text" id="tipo" name="tipo" class="form-control form-control-sm text-uppercase"
-            formControlName="m_tipo" data-toggle="tooltip" data-placement="top"
-            title="Tipo Programma">
+            formControlName="m_tipo" data-toggle="tooltip" data-placement="top" title="Tipo Programma">
         </div>
         <div class="col-sm-1">
           <span class="gf_label">Flag IO</span>
           <input #flag_io type="text" id="flag_io" name="flag_io" class="form-control form-control-sm"
-            formControlName="m_flag_io" data-toggle="tooltip" data-placement="top"
-            title="Flag IO">
+            formControlName="m_flag_io" data-toggle="tooltip" data-placement="top" title="Flag IO">
         </div>
         <div class="col-sm-1 mt-4">
           <button type="submit" class="btn btn-sm btn-primary" [disabled]="!main_form.valid">Call</button>
@@ -85,16 +82,25 @@
                 <h6 class="text-center bg-light p-1">Input DS</h6>
                 <div formArrayName="m_dsinput_field_controls">
                   <div class="card-body p-2">
-                    <ng-container *ngFor="let fldin of dsinput_field_controls.controls; let i=index">
-                      <div class="form-group input-group-sm row small mb-1">
-                        <small class="col-sm-4 card-text p-1 ms-1">
-                          {{m_dsinput_fields[i].getFullDescription()}}</small>
-                        <div class="col-sm-6 p-0 m-0">
-                          <input class="form-control form-control-sm" id="fldin-{{ i }}" type="text"
-                            [formControlName]="i" placeholder="{{m_dsinput_fields[i].name}}">
-                        </div>
-                      </div>
-                    </ng-container>
+
+                    <table class="table table-sm table-borderless small">
+                      <tbody>
+                        @for (fldin of dsinput_field_controls.controls; track $index; let i = $index) {
+                        <tr>
+                          <td class="small">
+                            <p class="border-bottom pb-2">
+                              {{m_dsinput_fields()[i].name}}-{{m_dsinput_fields()[i].getFullDescription()}}
+                            </p>
+                          </td>
+                          <td class="mb-3 pt-0 pb-1">
+                            <input class="form-control form-control-sm text-primary" id="fldin-{{ i }}" type="text"
+                              [formControlName]="i" placeholder="{{m_dsinput_fields()[i].name}}"
+                              value="{{m_dsinput_fields()[i].value}}">
+                          </td>
+                        </tr>
+                        }
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>

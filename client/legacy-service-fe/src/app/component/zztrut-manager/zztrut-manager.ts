@@ -34,7 +34,7 @@ export class dds_field {
 
 export class ZztrutManager {
 
-  m_dsinput_fields: dds_field[] = [];
+  m_dsinput_fields: WritableSignal<dds_field[]> = signal([]);
   m_dsouput_fields: dds_field[] = [];
   m_call_result: WritableSignal<string> = signal('');
 
@@ -84,7 +84,7 @@ export class ZztrutManager {
     return this.m_call_result().length > 0 && this.m_call_result().substring(0, 1) !== '0';
   }
   showDsInput() {
-    return this.dsin().length > 0 && this.m_dsinput_fields.length > 0;
+    return this.dsin().length > 0 && this.m_dsinput_fields().length > 0;
   }
   showDsOutput() {
     return this.dsout().length > 0 && !this.callHasError();
@@ -96,11 +96,11 @@ export class ZztrutManager {
     this.m_call_result.set('');
 
     console.log('m_program is', this.main_form.get('m_program')?.value);
-    console.log('[1] - m_dsinput_fields is', this.m_dsinput_fields);
-    this.m_dsinput_fields.forEach((element) => {
+    console.log('[1] - m_dsinput_fields is', this.m_dsinput_fields());
+    this.m_dsinput_fields().forEach((element) => {
       element.value = element.control?.value;
     });
-    console.log('[2] - m_dsinput_fields is', this.m_dsinput_fields);
+    console.log('[2] - m_dsinput_fields is', this.m_dsinput_fields());
 
     let callReq: ProgramCallRequest = new ProgramCallRequest();
     callReq.program = this.main_form.get('m_program')?.value?.toUpperCase() || 'pgm?????';
@@ -111,7 +111,7 @@ export class ZztrutManager {
     callReq.dsout = this.main_form.get('m_dsout')?.value?.toUpperCase() || '        ';
 
 
-    this.m_dsinput_fields.forEach((ele) => {
+    this.m_dsinput_fields().forEach((ele) => {
 
       let newFld: { name: string, type: string, length: number, scale: number, value: string, description: string } =
         { name: ele.name.toUpperCase(), type: ele.type.toUpperCase(), length: ele.len, scale: ele.scale, value: ele.value, description: ele.description };
@@ -168,8 +168,6 @@ export class ZztrutManager {
   }
 
   showDDSIn() {
-    // this.m_dsinput_fields = [];
-    // this.dsinput_field_controls.clear();
     this.bkService.getFFD('', this.dsin()).subscribe(
       data => {
         let ffd_result: FFDResult = data;
@@ -177,13 +175,12 @@ export class ZztrutManager {
           return;
         // Aggiungo i campi della dds di input solo se non c'è già la stessa dds visualizzata
         // Per verificare se e' la stessa dds confronto i nome del primo campo
-        if (this.m_dsinput_fields === null
-          || this.m_dsinput_fields === undefined
-          || this.m_dsinput_fields.length < 1
-          || this.m_dsinput_fields[0].name !== ffd_result.fields[0].fieldName) {
-          this.m_dsinput_fields = [];
+        if ( this.m_dsinput_fields().length < 1
+          || this.m_dsinput_fields()[0].name !== ffd_result.fields[0].fieldName) {
+          // this.m_dsinput_fields.set([]);
           this.dsinput_field_controls.clear();
 
+          let fields: dds_field[]=[];
           console.log(ffd_result);
           ffd_result.fields?.forEach((element, index) => {
             let newField: dds_field = new dds_field();
@@ -194,10 +191,11 @@ export class ZztrutManager {
             newField.len = element.fieldLength;
             newField.scale = element.fieldScale;
             newField.control = this.formBuilder.control('');
-            this.m_dsinput_fields.push(newField);
+            fields.push(newField);
             this.dsinput_field_controls.push(newField.control)
             // console.log('newField is', newField);
           })
+          this.m_dsinput_fields.set(fields);
         }
       },
       err => {
@@ -210,8 +208,8 @@ export class ZztrutManager {
 
 
   showDDSInFromHistory(aCall: ProgramCallRequest) {
-    this.m_dsinput_fields = [];
-    this.dsinput_field_controls.clear();
+    // this.m_dsinput_fields = [];
+    let fields: dds_field[]=[];
     aCall.values.forEach((element, index) => {
       let newField: dds_field = new dds_field();
       newField.name = element.name;
@@ -219,11 +217,20 @@ export class ZztrutManager {
       newField.type = element.type;
       newField.len = element.length;
       newField.scale = element.scale;
+      newField.value = element.value;
       newField.control = this.formBuilder.control(element.value);
-      this.m_dsinput_fields.push(newField);
-      this.dsinput_field_controls.push(newField.control)
-    }
-    );
+      fields.push(newField);
+    });
+    this.dsinput_field_controls.clear();
+
+    fields.forEach((val)=>{
+      this.dsinput_field_controls.push(val.control)
+      console.log('showDDSInFromHistory adding field', val);
+    })
+    console.log('dsinput_field_controls', this.dsinput_field_controls);
+    this.m_dsinput_fields.set(fields);
+    // this.dsinput_field_controls.push(newField.control)
+
   }
 
   getCallFromHistory(aCall: ProgramCallRequest) {
