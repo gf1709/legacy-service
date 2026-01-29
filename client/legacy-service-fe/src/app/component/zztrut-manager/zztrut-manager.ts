@@ -39,7 +39,7 @@ export class ZztrutManager {
   m_call_result: WritableSignal<string> = signal('');
 
   m_show_additional_parameters: boolean = false;
-  m_historyCall: ProgramCallRequest[] = [];
+  m_historyCall:WritableSignal<ProgramCallRequest[]> = signal([]);
   m_seconds: number = 0;
   main_form: FormGroup;
 
@@ -56,7 +56,7 @@ export class ZztrutManager {
 
     this.bkService.retrieveHistoryCall().subscribe(
       data => {
-        this.m_historyCall = data;
+        this.m_historyCall.set(data);
       },
       err => {
         console.log('errore in fase di esecuzione della richiesta ffd');
@@ -148,18 +148,22 @@ export class ZztrutManager {
   }
 
   addCallToHistory(aCall: ProgramCallRequest) {
-    const copy: ProgramCallRequest[] = this.m_historyCall.slice();
     if (!aCall.program.includes('???')) {
-      this.m_historyCall = [];
-      this.m_historyCall.push(aCall);
-      for (let i = 0; i < copy.length; i++) {
-        let reqCall: ProgramCallRequest = new ProgramCallRequest();
-        Object.assign(reqCall, copy[i]);
-        console.log('reqCall', reqCall)
-        console.log('aCall', aCall)
-        if (reqCall.toString() !== aCall.toString())
-          this.m_historyCall.push(reqCall);
-      }
+      var copy : ProgramCallRequest[] = this.m_historyCall().slice();
+
+      this.m_historyCall.update((val) => {
+        // Controllo che la chiamata non sia già presente nell'elenco
+        var existingCallIndex = -1;
+        for (let i = 0; i < copy.length; i++) {
+          let curCall: ProgramCallRequest = new ProgramCallRequest();
+          Object.assign(curCall, copy[i]);
+          // rimuovo gli elemti uguali esistenti
+          if (curCall.toString() === aCall.toString())
+            val.splice(i, 1);
+        }
+        val.unshift(aCall);
+        return val;
+      })
     }
   }
 
@@ -259,10 +263,13 @@ export class ZztrutManager {
   }
   deleteCallFromHistory(aCall: ProgramCallRequest) {
     console.log('[0] deleteCallFromHistory', this.m_historyCall);
-    // this.m_historyCall=this.m_historyCall.slice(i,i);
-    this.m_historyCall = this.m_historyCall.filter(item => item !== aCall)
+    // this.m_historyCall = this.m_historyCall.filter(item => item !== aCall)
+    this.m_historyCall.update((val) => {
+      val = val.filter(item => item !== aCall);
+      return val;
+    })
     console.log('[1] deleteCallFromHistory', this.m_historyCall);
-    this.bkService.saveHistoryCall(this.m_historyCall).subscribe(
+    this.bkService.saveHistoryCall(this.m_historyCall()).subscribe(
       data => {
         console.log('deleteCallFromHistory. Saving history call');
       },

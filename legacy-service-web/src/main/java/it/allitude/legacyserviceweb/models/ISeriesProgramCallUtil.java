@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.file.Files;
@@ -203,9 +204,13 @@ public class ISeriesProgramCallUtil {
                     || fld.getType().equals("T")) {
                 datInRec.setField(fld.getName(), fld.getValue());
             } else if (fld.getType().equals("S")) {
-                datInRec.setField(fld.getName(), fld.getValue());
+                {
+                    BigDecimal bd = new BigDecimal(fld.getValue());
+                    datInRec.setField(fld.getName(), bd);
+                }
             } else if (fld.getType().equals("P")) {
-                datInRec.setField(fld.getName(), fld.getValue());
+                BigDecimal bd = new BigDecimal(fld.getValue());
+                datInRec.setField(fld.getName(), bd);
             }
         }
         // datInRec.setField("PIPE", "|");
