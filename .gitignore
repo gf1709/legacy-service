@@ -6,3 +6,4 @@ private*.key
 hs_err_pid*
 client/package-lock.json
 client/legacy-service-fe/.angular/cache/21.0.4/legacy-service-fe/.tsbuildinfo
+
