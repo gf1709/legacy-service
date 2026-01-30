@@ -22,12 +22,13 @@
         <li class="nav-item"><a class="nav-link text-white" routerLink="/ifs-manager">Ifs Manager</a></li>
 
         <!-- <div class="vr border border-1 m-1"></div> -->
-
+        @if (authService.canBeVisibile('dsplog-manager')) {
         <li class="nav-item"><a class="nav-link text-white" routerLink="/dsplog-manager">Display Log - Journal
             entries</a></li>
+        }
 
         <!-- <div class="vr border border-1 m-1"></div> -->
-
+        @if (authService.canBeVisibile('utilities')) {
         <li class="nav-item dropdown">
           <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
             id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -44,7 +45,7 @@
                 Abi Mapper</a></li>
           </ul>
         </li>
-
+        }
         <!-- <div class="vr border border-1 m-1"></div> -->
 
         <li class="nav-item">

@@ -31,6 +31,7 @@ import it.allitude.legacyserviceweb.DTOs.JwtResponseDTO;
 import it.allitude.legacyserviceweb.authentication.JwtTokenUtil;
 import it.allitude.legacyserviceweb.db.ConnectionService;
 import it.allitude.legacyserviceweb.models.AppConfig;
+import it.allitude.legacyserviceweb.models.Roles;
 
 @RestController
 @CrossOrigin(origins = { "*" })
@@ -240,11 +241,14 @@ public class JwtAuthenticationController {
 			claims.put("cab", rs.getString("A10CCA").substring(0, 5));
 			claims.put("cab_senza_cin", rs.getString("A10CCA"));
 			rs.close();
-
 		}
 		con.close();
-		final String token = _jwtTokenUtil.generateToken(userDetails, claims);		
-		return ResponseEntity.ok(new JwtResponseDTO(token));
+		
+		ArrayList<String> roles = Roles.getRoles(authenticationRequest.getUsername());
+		claims.put("roles", roles);
+
+		final String token = _jwtTokenUtil.generateToken(userDetails, claims);					
+		return ResponseEntity.ok(new JwtResponseDTO(token, roles));
 	}
 
 	private void authenticate(String username, String password) throws Exception {

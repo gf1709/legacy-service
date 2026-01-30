@@ -13,7 +13,7 @@ export class User {
 })
 export class AuthenticationService {
 
-  isUserLoggedIn:WritableSignal<boolean> = signal(false);
+  isUserLoggedIn: WritableSignal<boolean> = signal(false);
 
   httpClient: HttpClient = inject(HttpClient);
   constructor(private bkservice: BkService) { }
@@ -29,16 +29,18 @@ export class AuthenticationService {
           sessionStorage.setItem("session", session);
           let tokenStr = "Bearer " + userData.token;
           sessionStorage.setItem("token", tokenStr);
+          sessionStorage.setItem("roles", userData.roles);
+
           this.isUserLoggedIn.set(true);
           return userData;
         })
       );
   }
 
-  // isUserLoggedIn() {
-  //   let user = sessionStorage.getItem("username");
-  //   return !(user === null);
-  // }
+  getRoles() {
+    let roles = sessionStorage.getItem("roles");
+    return roles;
+  }
 
   logOut() {
     return this.httpClient.get(environment.apiUrl + "/logout")
@@ -53,4 +55,30 @@ export class AuthenticationService {
       );
   }
 
+  canBeVisibile(route: string): boolean {
+    if (this.isUserLoggedIn()) {
+      if (route === 'object-manager'
+        || route === 'source-manager'
+        || route === 'spool-manager'
+        || route === 'job-manager'
+        || route === 'library-list'
+        || route === 'zztrut-manager'
+        || route === 'session-manager'
+        || route === 'netstat-job'
+        || route === 'servizi-sibank'
+        || route === 'ifs-manager'
+      ) {
+        console.log('route can be visibile', route)
+        return true;
+      }
+
+      if (route === 'cdc-table' || route === 'sql-script' || route === 'dsplog-manager')
+        if (this.getRoles()?.indexOf('admin')) {
+          console.log('route can be visibile', route)
+          return true;
+        }
+
+    }
+    return false;
+  }
 }

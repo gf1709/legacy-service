@@ -1,17 +1,17 @@
 package it.allitude.legacyserviceweb.models;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class JSession {
+
     private String user;
     private String terminal;
-     
-    @JsonIgnore 
+
+    @JsonIgnore
     private String jwt;
 
     private String targaCassa;
@@ -45,16 +45,7 @@ public class JSession {
     private String libreriaProcedure;
     private String descrizioneFiliale;
     private String codiceFiliale;
-    private boolean isAdminUserValue;
 
-    private List<String> getAdminUserList()
-    {
-        List<String> admins = new ArrayList<>();
-        admins.add("FC0382");
-        admins.add("FC0059");
-        return admins;
-    }
-    
     public String getTargaCassa() {
         return targaCassa;
     }
@@ -82,17 +73,16 @@ public class JSession {
     public String getUser() {
         return user;
     }
+    public ArrayList<String> getRoles() {
+        return Roles.getRoles(user);
+    }
+
     public boolean isAdminUser() {
-        return isAdminUserValue;
+        return Roles.getRoles(user).contains("admin");
     }
 
     public void setUser(String user) {
         this.user = user;
-        if (getAdminUserList().contains(this.user.toUpperCase())) {
-            this.isAdminUserValue = true;
-        } else {
-            this.isAdminUserValue = false;
-        }
     }
 
     public String getTerminal() {
