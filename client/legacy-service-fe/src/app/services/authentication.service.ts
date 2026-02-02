@@ -16,7 +16,7 @@ interface JwtPayloadWithRoles extends JwtPayload {
 })
 export class AuthenticationService {
 
-  isUserLoggedIn: WritableSignal<boolean> = signal(true);
+  isUserLoggedIn: WritableSignal<boolean> = signal(false);
 
   httpClient: HttpClient = inject(HttpClient);
   constructor(private bkservice: BkService) { }
@@ -34,13 +34,22 @@ export class AuthenticationService {
           sessionStorage.setItem("token", tokenStr);
           sessionStorage.setItem("roles", userData.roles);
           this.isUserLoggedIn.set(true);
+
+          this.bkservice.g_spoolManagerFilterParams.userName = username.toUpperCase();
+          this.bkservice.g_jobManagerFilterParams.jobUser = username.toUpperCase();
+          this.bkservice.g_jobManagerFilterParams.jobName = session.toUpperCase();
+
           return userData;
         })
       );
   }
 
   getRoles() {
-    const decodedJwt = jwtDecode<JwtPayloadWithRoles>(sessionStorage.getItem("token")!.split(' ')[1] || '');
+    let token = sessionStorage.getItem("token");
+    if (!token) {
+      return [];
+    }
+    const decodedJwt = jwtDecode<JwtPayloadWithRoles>(token.split(' ')[1]);
     console.log('decoded jwt :', decodedJwt);
     let rolesArray: string[] = decodedJwt.roles ? decodedJwt.roles : [];
     return rolesArray;
@@ -75,7 +84,11 @@ export class AuthenticationService {
         console.log('route can be visibile', route)
         return true;
       }
-      if (route === 'cdc-table' || route === 'sql-script' || route === 'dsplog-manager')
+      if (route === 'cdc-table'
+        || route === 'sql-script'
+        || route === 'dsplog-manager'
+        || route === 'utilities'
+      )
         if (this.getRoles()?.indexOf('admin')) {
           console.log('route can be visibile', route)
           return true;
