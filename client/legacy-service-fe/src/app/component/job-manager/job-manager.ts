@@ -5,6 +5,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 // import { JobListViewer } from "../job-list-viewer/job-list-viewer";
 import { JobListViewer } from '../job-list-viewer/job-list-viewer';
+import { AuthenticationService } from '../../services/authentication.service';
 
 @Component({
   selector: 'app-job-manager',
@@ -14,7 +15,7 @@ import { JobListViewer } from '../job-list-viewer/job-list-viewer';
 })
 export class JobManager {
 
-  constructor(private bkService: BkService, private message_service: MessageHelperService, private sanitizer: DomSanitizer) {
+  constructor(private bkService: BkService, private message_service: MessageHelperService) {
   }
 
   m_job_list: WritableSignal<JobListItemExtended[]> = signal([]);

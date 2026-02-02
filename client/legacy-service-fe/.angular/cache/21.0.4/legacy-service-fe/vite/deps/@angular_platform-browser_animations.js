@@ -1,8 +1,4 @@
 import {
-  BrowserModule,
-  DomRendererFactory2
-} from "./chunk-PS5ANYXP.js";
-import {
   AUTO_STYLE,
   AnimationGroupPlayer,
   AnimationMetadataType,
@@ -15,8 +11,12 @@ import {
   ɵPRE_STYLE,
   ɵɵdefineInjectable as ɵɵdefineInjectable2
 } from "./chunk-MMR5HQK2.js";
-import "./chunk-VP6D2ET6.js";
-import "./chunk-UDA5Q5AV.js";
+import {
+  BrowserModule,
+  DomRendererFactory2
+} from "./chunk-TDMOEEIS.js";
+import "./chunk-YGMNBOV6.js";
+import "./chunk-YJD54ND6.js";
 import {
   ANIMATION_MODULE_TYPE,
   Inject,
@@ -35,8 +35,8 @@ import {
   ɵɵdefineInjector,
   ɵɵinject
 } from "./chunk-4UWUISI3.js";
-import "./chunk-QNNPFTDN.js";
 import "./chunk-OFYGS3KQ.js";
+import "./chunk-QNNPFTDN.js";
 import "./chunk-6NLA7SIW.js";
 import "./chunk-XYSLGILQ.js";
 import {

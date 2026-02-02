@@ -181,10 +181,12 @@
         </button>
       </div>
       <div class="col">
+        @if(authService.isUserAdmin() || item.job.user().toLocaleLowerCase()===authService.getLoggedInUsername()?.toLocaleLowerCase()) {
         <button class="btn btn-sm" type="button" title="Termina lavoro"
           (click)="endJob(item.job.user(), item.job.name(), item.job.number())">
           <i class="bi bi-x-lg text-danger"></i>
         </button>
+      }
       </div>
     </div>
   </div>

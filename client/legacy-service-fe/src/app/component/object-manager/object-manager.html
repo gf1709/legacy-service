@@ -57,8 +57,8 @@
         Elenco oggetti
       </h6>
     </div>
-    <div class="row row-cols-auto justify-content-center text-align-center">
-      <table class="table table-sm small align-middle table-hover" style="max-width: 600px;">
+    <div class="row col-6 offset-3 justify-content-center text-align-center">
+      <table class="table table-sm small align-middle table-hover">
         <thead>
           <tr>
             <td scope="col">
@@ -230,14 +230,14 @@
 
 
     <!-- FFD Form -->
-    <div class="modal fade" id="ffdModal" tabindex="-1" role="dialog" aria-labelledby="ffdModalLabel"
-      aria-hidden="true">
+    <div class="modal" id="ffdModal" tabindex="-1" role="dialog" aria-labelledby="ffdModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
-          <div class="modal-header row row-cols-auto justify-content-center">
+          <div class="row row-cols-auto justify-content-center">
             <h5 class="modal-title" id="ffdModalLabel">FFD - {{m_ffd().library}}/{{m_ffd().ddsName}}
               [Len:{{getFFDLen()}}]</h5>
           </div>
+          <hr>
           <div class="modal-body">
             <div class="container">
               <div class="row row-cols-auto justify-content-center">

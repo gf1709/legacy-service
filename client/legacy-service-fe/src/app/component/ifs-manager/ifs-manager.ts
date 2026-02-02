@@ -6,6 +6,7 @@ import { formatDate } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import * as fflate from 'fflate';
+import { AuthenticationService } from '../../services/authentication.service';
 
 enum SortMode {
   Name_ASC,
@@ -49,7 +50,8 @@ export class IfsManager implements AfterContentChecked {
 
   locationName: string = '399';
 
-  constructor(private bkService: BkService, private message_service: MessageHelperService, public cdRef: ChangeDetectorRef) {
+  constructor(private bkService: BkService, private message_service: MessageHelperService,
+     public cdRef: ChangeDetectorRef, public authService: AuthenticationService) {
   }
 
   ngAfterContentChecked(): void {

@@ -34,7 +34,7 @@
     </form>
 
     <div class="row row-cols-auto justify-content-center">
-      <table class="table table-sm small align-middle table-hover" style="max-width: 1300px;">
+      <table class="table table-sm small align-middle table-hover">
         <thead>
 
           <tr>
@@ -143,8 +143,8 @@
             <th scope="col" class="p-0">
             </th>
             <th scope="col" class="p-0">
-              @if(m_spool_file_list().length>0) {
-              <button class="btn btn-sm rounded-0" type="button" title="Cancella Spool" (click)="deleteAllSpool()">
+              @if(m_spool_file_list().length>0 && authService.isUserAdmin()) {
+              <button class="btn btn-sm rounded-0" type="button" title="Cancella tutti gli spool in elenco" (click)="deleteAllSpool()">
                 <i class="bi bi-trash"></i>
               </button>
               }
@@ -154,7 +154,7 @@
         </thead>
         <tbody>
           @for (item of m_spool_file_list(); track $index; let i=$index) {
-          <tr>
+          <tr class="small">
             <td class="p-0">{{item.jobUser}}</td>
             <td class="p-0">
               <p class="text-center m-0 me-2">{{item.spoolfileName}}</p>
@@ -187,10 +187,12 @@
               </button>
             </td>
             <td class="p-0">
+              @if(authService.isUserAdmin() || item.jobUser.toLocaleLowerCase()===authService.getLoggedInUsername()?.toLocaleLowerCase()) {
               <button class="btn btn-sm rounded-0" type="button" title="Cancella tutti gli Spool"
                 (click)="deleteSpool(item, i)">
                 <i class="bi bi-trash"></i>
               </button>
+            }
             </td>
           </tr>
           }

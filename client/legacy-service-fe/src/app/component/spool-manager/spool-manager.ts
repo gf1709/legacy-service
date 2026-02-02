@@ -4,6 +4,7 @@ import { LoaderService } from '../../services/loader.service';
 import { tap } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { MessageHelperService } from '../../services/message-helper.service';
+import { AuthenticationService } from '../../services/authentication.service';
 
 enum SortMode {
   Nome_ASC,
@@ -38,7 +39,8 @@ export class SpoolManager {
     this.bkService.g_spoolManagerFilterParams = value;
   }
 
-  constructor(private bkService: BkService, private message_service: MessageHelperService, private loadingService: LoaderService) {
+  constructor(private bkService: BkService, private message_service: MessageHelperService,
+    private loadingService: LoaderService, public authService: AuthenticationService) {
   }
 
   getSpoolFileList() {

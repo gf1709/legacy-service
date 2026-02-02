@@ -1,3 +1,4 @@
+import { AuthenticationService } from './../../services/authentication.service';
 import { Component, computed, effect, input, InputSignal, output, signal, Signal, WritableSignal } from '@angular/core';
 import { BkService, JobListItemExtended } from '../../services/bk.service';
 import { MessageHelperService } from '../../services/message-helper.service';
@@ -74,7 +75,7 @@ export class JobListViewer {
     return allJobs;
   });
 
-  constructor(private bkService: BkService, private message_service: MessageHelperService, private sanitizer: DomSanitizer) {
+  constructor(private bkService: BkService, private message_service: MessageHelperService, public authService: AuthenticationService) {
   }
 
   clearJobNameFilter() {

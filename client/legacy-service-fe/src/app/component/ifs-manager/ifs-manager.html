@@ -54,8 +54,7 @@
           <tr>
             <th>
               <label>
-                <input type="checkbox" title="select" (click)="toggleSelectDeselectAllRows()"
-                  [value]="m_allRowsSelected">
+                <input type="checkbox" title="select/deselect all" (click)="toggleSelectDeselectAllRows()" [checked]="m_allRowsSelected">
               </label>
             </th>
 
@@ -109,7 +108,7 @@
               }
             </th>
             <th class="p-0">
-              @if (isAlmostOneFileSelected) {
+              @if (isAlmostOneFileSelected && authService.isUserAdmin()) {
               <button class="btn btn-sm" type="button" title="Delete selected file"
                 (click)="deleteAllSelectedFiles()">
                 <i class="bi bi-trash"></i>
@@ -180,10 +179,12 @@
               <td class="p-0">
                 @if(item.type==='f') {
                 <ng-container>
+                  @if (authService.isUserAdmin() || item.name.toLocaleLowerCase().indexOf(authService.getLoggedInUsername()?.toLocaleLowerCase()!)>0) {
                   <button class="btn btn-sm" type="button" title="Delete file"
                     (click)="deleteIFSFile(m_fileList().directory, item.name, i)">
                     <i class="bi bi-trash"></i>
                   </button>
+                }
                 </ng-container>
                 }
               </td>
