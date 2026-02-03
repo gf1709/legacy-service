@@ -10,23 +10,23 @@
     <div class="collapse navbar-collapse  gf_back_color_green" id="navbarNavDropdown">
       <ul class="navbar-nav nav-pills">
         @if (authService.isUserLoggedIn()) {
-        <li class="nav-item"><a class="nav-link text-white" routerLink="object-manager"><i class="bi bi-file-binary m-2"></i>Oggetti</a></li>
-        <li class="nav-item"><a class="nav-link text-white" routerLink="source-manager"><i class="bi bi-file-text m-2"></i>Sorgenti</a></li>
-        <li class="nav-item"><a class="nav-link text-white" routerLink="spool-manager"><i class="bi bi-printer m-2"></i>Spool</a></li>
-        <li class="nav-item"><a class="nav-link text-white" routerLink="job-manager"><i class="bi bi-opencollective m-2"></i>Lavori attivi</a></li>
-        <li class="nav-item"><a class="nav-link text-white" routerLink="netstat-job-info"><i class="bi bi-hdd-network m-2"></i>Netstat Job Info</a></li>
-        <li class="nav-item"><a class="nav-link text-white" routerLink="/servizi-sibank"><i class="bi bi-menu-button m-2"></i>Servizi Sibank</a></li>
-        <li class="nav-item"><a class="nav-link text-white" routerLink="/zztrut-manager"><i class="bi bi-filetype-exe m-2"></i>ZZTRUT</a> </li>
-        <li class="nav-item"><a class="nav-link text-white" routerLink="/ifs-manager"><i class="bi bi-folder m-2"></i>Ifs Manager</a></li>
+        <li class="nav-item"><a class="nav-link text-white" routerLink="object-manager"><i class="bi bi-file-binary m-2 small"></i>Oggetti</a></li>
+        <li class="nav-item"><a class="nav-link text-white" routerLink="source-manager"><i class="bi bi-file-text m-2 small"></i>Sorgenti</a></li>
+        <li class="nav-item"><a class="nav-link text-white" routerLink="spool-manager"><i class="bi bi-printer m-2 small"></i>Spool</a></li>
+        <li class="nav-item"><a class="nav-link text-white" routerLink="job-manager"><i class="bi bi-opencollective m-2 small"></i>Lavori attivi</a></li>
+        <li class="nav-item"><a class="nav-link text-white" routerLink="netstat-job-info"><i class="bi bi-hdd-network m-2 small"></i>Netstat Job Info</a></li>
+        <li class="nav-item"><a class="nav-link text-white" routerLink="/servizi-sibank"><i class="bi bi-menu-button m-2 small"></i>Servizi Sibank</a></li>
+        <li class="nav-item"><a class="nav-link text-white" routerLink="/zztrut-manager"><i class="bi bi-filetype-exe m-2 small"></i>ZZTRUT</a> </li>
+        <li class="nav-item"><a class="nav-link text-white" routerLink="/ifs-manager"><i class="bi bi-folder m-2 small"></i>Ifs Manager</a></li>
 
         @if (authService.canBeVisibile('dsplog-manager')) {
-        <li class="nav-item"><a class="nav-link text-white" routerLink="/dsplog-manager"><i class="bi bi-journal m-2"></i>Log and Journal</a></li>
+        <li class="nav-item"><a class="nav-link text-white" routerLink="/dsplog-manager"><i class="bi bi-journal m-2 small"></i>Log and Journal</a></li>
         }
 
         <li class="nav-item dropdown">
           <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1"
             data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-gear m-2"></i>
+            <i class="bi bi-gear m-2 small"></i>
             Job Utilities
           </a>
           <ul class="dropdown-menu text-small gf_back_color_green" aria-labelledby="dropdownUser1">
@@ -39,7 +39,7 @@
         <li class="nav-item dropdown">
           <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
             id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-tools m-2"></i>
+            <i class="bi bi-tools m-2 small"></i>
             <strong>Utilities</strong>
           </a>
           <ul class="dropdown-menu text-small gf_back_color_green" aria-labelledby="dropdownUser1">
@@ -57,11 +57,10 @@
         <li class="nav-item">
           <a class="nav-link text-white" routerLink="/logout" (click)="logout()" href="#">Logout</a>
         </li>
-
         }
         @else {
         <li class="nav-item">
-          <a class="nav-link text-white bi bi-person-circle icon-link" routerLink="/login">Login</a>
+          <a class="nav-link text-white bi bi-person-circle icon-link small" routerLink="/login">Login</a>
         </li>
         }
       </ul>
