@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
@@ -431,7 +432,7 @@ public class ISeriesProgramCallUtil {
     }
 
     // Dato un formato record e un array di byte, torna il record popolato
-    Record getRecord(RecordFormat aRecFmt, byte[] someBytes, int aStartIndex) throws Exception {
+    Record getRecord(RecordFormat aRecFmt, byte[] someBytes, int aStartIndex) throws UnsupportedEncodingException {
         Record newRec = aRecFmt.getNewRecord();
         int bytePos = aStartIndex;
         for (int idx = 0; idx < aRecFmt.getNumberOfFields(); idx++) {
@@ -464,8 +465,8 @@ public class ISeriesProgramCallUtil {
                     logger.error("Tipo non gestito: " + dType.getClass().getName());
                 }
                 logger.debug("Field " + idx + " name: " + f.getFieldName() + " value: " + newRec.getField(idx).toString());
-            } catch (Exception ex) {
-                logger.error("Errore nella conversione del campo " + f.getFieldName() + ": " + ex.getMessage());
+            } catch (ClassCastException | ArrayIndexOutOfBoundsException | NumberFormatException ex) {
+                logger.error("Errore nella conversione del campo " + aRecFmt.getName() + "." + f.getFieldName(), ex);
             }
             bytePos += dType.getByteLength();
         }

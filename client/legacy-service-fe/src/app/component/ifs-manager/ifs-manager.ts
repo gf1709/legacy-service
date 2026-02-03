@@ -22,6 +22,7 @@ enum SortMode {
 class IfsFileContent {
   lineNumber: number = 0;
   lineContent: string = '';
+  lineContentShowFullLine: boolean = false;
   requests: ProgramCallRequest[] = [];
   requestsShowDetails: boolean = false;
   responses: ProgramCallResponse[] = [];
@@ -51,7 +52,7 @@ export class IfsManager implements AfterContentChecked {
   locationName: string = '399';
 
   constructor(private bkService: BkService, private message_service: MessageHelperService,
-     public cdRef: ChangeDetectorRef, public authService: AuthenticationService) {
+    public cdRef: ChangeDetectorRef, public authService: AuthenticationService) {
   }
 
   ngAfterContentChecked(): void {
@@ -180,7 +181,7 @@ export class IfsManager implements AfterContentChecked {
                   responseRows.push(index);
                 }
                 // console.log('showFileContent new ele is ', ifsLine);
-                index+=1;
+                index += 1;
               });
           })
 
@@ -215,7 +216,7 @@ export class IfsManager implements AfterContentChecked {
     return lines;
   }
 
-showFileContentWorking(dir: string, fileName: string, idx: number) {
+  showFileContentWorking(dir: string, fileName: string, idx: number) {
     console.log('getFile:', dir, fileName);
     this.m_requestResponseRows.set([]);
     this.m_currentRow = -1;
@@ -230,8 +231,8 @@ showFileContentWorking(dir: string, fileName: string, idx: number) {
             let ifsLine: IfsFileContent = new IfsFileContent();
             ifsLine.lineNumber = index + 1;
             ifsLine.lineContent = line;
-            ifsLine.requestsShowDetails=false;
-            ifsLine.responsesShowDetails=false;
+            ifsLine.requestsShowDetails = false;
+            ifsLine.responsesShowDetails = false;
             fileContent.push(ifsLine);
             if (this.isISYCallInputLine(line)
               || this.isISYCallOutputLine(line)
@@ -641,9 +642,8 @@ showFileContentWorking(dir: string, fileName: string, idx: number) {
   showOutputDetails(line: IfsFileContent): boolean {
     return line.responsesShowDetails;
   }
-  getRealMessageSize(size:number):string
-  {
-    return ((size/5)-50).toFixed(0);
+  getRealMessageSize(size: number): string {
+    return ((size / 5) - 50).toFixed(0);
   }
 
   gotoFirstCall() {
@@ -688,6 +688,9 @@ showFileContentWorking(dir: string, fileName: string, idx: number) {
     let nextRowId: string = this.m_requestResponseRows()[idx].toString();
     const elmnt = document.getElementById(nextRowId);
     elmnt?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+  }
+  toggleShowFullLine(line: IfsFileContent) {
+    line.lineContentShowFullLine = !line.lineContentShowFullLine;
   }
 
 }
