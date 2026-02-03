@@ -1,7 +1,7 @@
 <div>
 
   <h2 style="text-align: center; padding: 5px;">Gestione file IFS</h2>
-  <div class="container">
+  <div class="container small">
     <div class="row row-cols-auto justify-content-center">
       <h6>
         Parametri di ricerca
@@ -243,8 +243,8 @@
               </button>
               <ul class="dropdown-menu overflow-auto" style="height: 500px;">
                 @for (reqRes of m_requestResponseRows(); track $index; let reqResIdx=$index) {
-                <li><a class="dropdown-item"
-                    (click)="gotoRowNr(reqResIdx)"><span><small>{{m_requestResponseRows()[reqResIdx]}}</small></span></a>
+                <li class="small"><a class="dropdown-item"
+                    (click)="gotoRowNr(reqResIdx)"><span><small>{{reqResIdx}} [rid:{{m_requestResponseRows()[reqResIdx]}}]</small></span></a>
                 </li>
                 }
               </ul>
@@ -256,7 +256,7 @@
 
         </div>
 
-        <div class="modal-body" tabindex="0">
+        <div class="modal-body small" tabindex="0">
 
           @for (item of m_file_content(); track $index; let joblogLineIdx=$index) {
           <div class="d-flex border-1 border-success mb-1 rounded"

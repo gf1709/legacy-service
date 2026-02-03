@@ -59,6 +59,8 @@ export class IfsManager implements AfterContentChecked {
 
     if (this.m_isyDsInputLineNumberToShow > 0) {
       let lineNumber = this.m_isyDsInputLineNumberToShow;
+      // this.m_currentRow = lineNumber;
+      // console.log('ngAfterContentChecked[1] - m_currentRow:', this.m_currentRow);
       this.m_isyDsInputLineNumberToShow = -1;
       if (this.m_file_content()[lineNumber].requests.length === 0) {
         let line: string = this.m_file_content()[lineNumber].lineContent;
@@ -82,6 +84,8 @@ export class IfsManager implements AfterContentChecked {
 
     if (this.m_isyDsOutputLineNumberToShow > 0) {
       let lineNumber = this.m_isyDsOutputLineNumberToShow;
+      // this.m_currentRow = lineNumber;
+      // console.log('ngAfterContentChecked[2] - m_currentRow:', this.m_currentRow);
       this.m_isyDsOutputLineNumberToShow = -1;
       if (this.m_file_content()[lineNumber].responses.length === 0) {
         let line: string = this.m_file_content()[lineNumber].lineContent;
@@ -651,12 +655,14 @@ showFileContentWorking(dir: string, fileName: string, idx: number) {
   gotoLastCall() {
     if (this.m_requestResponseRows().length > 0) {
       this.m_currentRow = this.m_requestResponseRows().length - 1;
+      console.log('gotoLastCall[1] - m_currentRow:', this.m_currentRow);
       this.gotoRow();
     }
   }
   gotoNextCall() {
     if (this.m_requestResponseRows().length > 0) {
       this.m_currentRow = this.m_currentRow + 1;
+      console.log('gotoNextCall[1] - m_currentRow:', this.m_currentRow);
       if (this.m_currentRow >= this.m_requestResponseRows().length || this.m_currentRow < 0)
         this.m_currentRow = 0;
       this.gotoRow();
@@ -665,6 +671,7 @@ showFileContentWorking(dir: string, fileName: string, idx: number) {
   gotoPreviousCall() {
     if (this.m_requestResponseRows().length > 0) {
       this.m_currentRow = this.m_currentRow - 1;
+      console.log('gotoPreviousCall[1] - m_currentRow:', this.m_currentRow);
       if (this.m_currentRow >= this.m_requestResponseRows().length || this.m_currentRow < 0)
         this.m_currentRow = 0;
       this.gotoRow();
@@ -677,6 +684,7 @@ showFileContentWorking(dir: string, fileName: string, idx: number) {
   }
   public gotoRowNr(idx: number) {
     this.m_currentRow = idx;
+    console.log('gotoRowNr[1] - m_currentRow:', this.m_currentRow);
     let nextRowId: string = this.m_requestResponseRows()[idx].toString();
     const elmnt = document.getElementById(nextRowId);
     elmnt?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });

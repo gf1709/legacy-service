@@ -8,30 +8,30 @@
       }
     </a>
     <div class="collapse navbar-collapse  gf_back_color_green" id="navbarNavDropdown">
-      <ul class="navbar-nav nav-pills">
+      <ul class="navbar-nav nav-pills small">
         @if (authService.isUserLoggedIn()) {
-        <li class="nav-item"><a class="nav-link text-white" routerLink="object-manager"><i class="bi bi-file-binary m-2 small"></i>Oggetti</a></li>
-        <li class="nav-item"><a class="nav-link text-white" routerLink="source-manager"><i class="bi bi-file-text m-2 small"></i>Sorgenti</a></li>
-        <li class="nav-item"><a class="nav-link text-white" routerLink="spool-manager"><i class="bi bi-printer m-2 small"></i>Spool</a></li>
-        <li class="nav-item"><a class="nav-link text-white" routerLink="job-manager"><i class="bi bi-opencollective m-2 small"></i>Lavori attivi</a></li>
-        <li class="nav-item"><a class="nav-link text-white" routerLink="netstat-job-info"><i class="bi bi-hdd-network m-2 small"></i>Netstat Job Info</a></li>
-        <li class="nav-item"><a class="nav-link text-white" routerLink="/servizi-sibank"><i class="bi bi-menu-button m-2 small"></i>Servizi Sibank</a></li>
-        <li class="nav-item"><a class="nav-link text-white" routerLink="/zztrut-manager"><i class="bi bi-filetype-exe m-2 small"></i>ZZTRUT</a> </li>
-        <li class="nav-item"><a class="nav-link text-white" routerLink="/ifs-manager"><i class="bi bi-folder m-2 small"></i>Ifs Manager</a></li>
+        <li class="nav-item"><a class="nav-link text-white" routerLink="object-manager"><i class="bi bi-file-binary m-2"></i>Oggetti</a></li>
+        <li class="nav-item"><a class="nav-link text-white" routerLink="source-manager"><i class="bi bi-file-text m-2"></i>Sorgenti</a></li>
+        <li class="nav-item"><a class="nav-link text-white" routerLink="spool-manager"><i class="bi bi-printer m-2"></i>Spool</a></li>
+        <li class="nav-item"><a class="nav-link text-white" routerLink="job-manager"><i class="bi bi-opencollective m-2"></i>Lavori attivi</a></li>
+        <li class="nav-item"><a class="nav-link text-white" routerLink="netstat-job-info"><i class="bi bi-hdd-network m-2"></i>Netstat Job Info</a></li>
+        <li class="nav-item"><a class="nav-link text-white" routerLink="/servizi-sibank"><i class="bi bi-menu-button m-2"></i>Servizi Sibank</a></li>
+        <li class="nav-item"><a class="nav-link text-white" routerLink="/zztrut-manager"><i class="bi bi-filetype-exe m-2"></i>ZZTRUT</a> </li>
+        <li class="nav-item"><a class="nav-link text-white" routerLink="/ifs-manager"><i class="bi bi-folder m-2"></i>Ifs Manager</a></li>
 
         @if (authService.canBeVisibile('dsplog-manager')) {
-        <li class="nav-item"><a class="nav-link text-white" routerLink="/dsplog-manager"><i class="bi bi-journal m-2 small"></i>Log and Journal</a></li>
+        <li class="nav-item"><a class="nav-link text-white" routerLink="/dsplog-manager"><i class="bi bi-journal m-2"></i>Log and Journal</a></li>
         }
 
         <li class="nav-item dropdown">
           <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1"
             data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-gear m-2 small"></i>
+            <i class="bi bi-gear m-2"></i>
             Job Utilities
           </a>
-          <ul class="dropdown-menu text-small gf_back_color_green" aria-labelledby="dropdownUser1">
-            <li class="nav-item"><a class="nav-link text-white" routerLink="/library-list-manager">Lista librerie</a></li>
-            <li class="nav-item"><a class="nav-link text-white" routerLink="/session-manager">Dati Sessione</a> </li>
+          <ul class="dropdown-menu gf_back_color_green" aria-labelledby="dropdownUser1">
+            <li class="nav-item small"><a class="nav-link text-white" routerLink="/library-list-manager">Lista librerie</a></li>
+            <li class="nav-item small"><a class="nav-link text-white" routerLink="/session-manager">Dati Sessione</a> </li>
           </ul>
         </li>
 
@@ -39,17 +39,13 @@
         <li class="nav-item dropdown">
           <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
             id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-tools m-2 small"></i>
+            <i class="bi bi-tools m-2"></i>
             <strong>Utilities</strong>
           </a>
           <ul class="dropdown-menu text-small gf_back_color_green" aria-labelledby="dropdownUser1">
-            <li> <a class="dropdown-item small text-white" routerLink="/cdc-table-creation">DDL
-                creation for CDC
-                tables</a></li>
-            <li><a class="dropdown-item small text-white" routerLink="/sql-script-manager">Oracle Sql script</a>
-            </li>
-            <li><a class="dropdown-item small text-white" (click)="update_abi_mapper()">Update Legacy Terminal
-                Abi Mapper</a></li>
+            <li><a class="dropdown-item text-white small" routerLink="/cdc-table-creation">DDL creation for CDC tables</a></li>
+            <li><a class="dropdown-item text-white small" routerLink="/sql-script-manager">Oracle Sql script</a></li>
+            <li><a class="dropdown-item text-white small" (click)="update_abi_mapper()">Update Legacy Terminal Abi Mapper</a></li>
           </ul>
         </li>
         }
@@ -60,7 +56,7 @@
         }
         @else {
         <li class="nav-item">
-          <a class="nav-link text-white bi bi-person-circle icon-link small" routerLink="/login">Login</a>
+          <a class="nav-link text-white bi bi-person-circle icon-link" routerLink="/login">Login</a>
         </li>
         }
       </ul>
@@ -80,7 +76,6 @@
           <rect width="100%" height="100%" fill="#007aff"></rect>
         </svg>
         <strong class="me-auto">Messaggi:</strong>
-        <!-- <small>11 mins ago</small> -->
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body">
