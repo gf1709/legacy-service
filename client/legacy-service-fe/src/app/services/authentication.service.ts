@@ -16,7 +16,7 @@ interface JwtPayloadWithRoles extends JwtPayload {
 })
 export class AuthenticationService {
 
-  isUserLoggedIn: WritableSignal<boolean> = signal(true);
+  isUserLoggedIn: WritableSignal<boolean> = signal(false);
 
   httpClient: HttpClient = inject(HttpClient);
   constructor(private bkservice: BkService) { }
@@ -50,7 +50,6 @@ export class AuthenticationService {
       return [];
     }
     const decodedJwt = jwtDecode<JwtPayloadWithRoles>(token.split(' ')[1]);
-    console.log('decoded jwt :', decodedJwt);
     let rolesArray: string[] = decodedJwt.roles ? decodedJwt.roles : [];
     return rolesArray;
   }
@@ -81,7 +80,7 @@ export class AuthenticationService {
         || route === 'servizi-sibank'
         || route === 'ifs-manager'
       ) {
-        console.log('route can be visibile', route)
+        // console.log('route can be visibile', route)
         return true;
       }
       if (route === 'cdc-table'
@@ -90,7 +89,7 @@ export class AuthenticationService {
         || route === 'utilities'
       )
         if (this.getRoles()?.indexOf('admin')) {
-          console.log('route can be visibile', route)
+          // console.log('route can be visibile', route)
           return true;
         }
     }

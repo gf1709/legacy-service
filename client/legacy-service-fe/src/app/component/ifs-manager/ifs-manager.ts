@@ -158,9 +158,11 @@ export class IfsManager implements AfterContentChecked {
     this.m_current_file = { dir: dir, file: fileName, idx: idx };
     let index: number = 0;
 
+    console.log('showFileContent-calling getIFSFileContentZipped for ', aFullFileName, new Date());
     this.bkService.getIFSFileContentZipped(aFullFileName).subscribe(
       data => {
         // console.log('swhoFileConntent compressed message is ', data);
+        console.log('showFileContent-calling getIFSFileContentZipped lines retrieved for ', aFullFileName, new Date());
         data.forEach(
           (b64LineCompressed) => {
             let lines: string[] = this.decompressLines(b64LineCompressed);
@@ -184,9 +186,10 @@ export class IfsManager implements AfterContentChecked {
                 index += 1;
               });
           })
-
+        console.log('showFileContent-calling getIFSFileContentZipped lines fetched for ', aFullFileName, new Date());
         this.m_requestResponseRows.set(responseRows);
         this.m_file_content.set(fileContent);
+        console.log('showFileContent-calling getIFSFileContentZipped lines set to show ', new Date());
         // console.log('getFile data is', this.m_file_content());
       }
       , err => {
@@ -206,7 +209,7 @@ export class IfsManager implements AfterContentChecked {
     const decompressedStringBytes = fflate.decompressSync(bytes);
     const b64LineDecompressed = fflate.strFromU8(decompressedStringBytes);
     if (b64LineDecompressed.length > 0) {
-      var tmpLines = b64LineDecompressed.split('\r\r\t\n\nGREG\r\r\t\n\n');
+      var tmpLines = b64LineDecompressed.split('\r\t\nGrEg\r\t\n');
       tmpLines.forEach((value) => {
         if (value.length > 0)  // Non torno le rihe vuote
           lines.push(value);

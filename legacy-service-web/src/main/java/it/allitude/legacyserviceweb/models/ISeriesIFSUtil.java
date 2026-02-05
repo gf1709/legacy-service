@@ -82,8 +82,8 @@ public class ISeriesIFSUtil {
 
     // Comprimo LINESxCHUNCK righe per volta
     public ArrayList<String> getIFSFileContentZipped(String aFileName) throws Exception {
-        final String SEPARATOR = "\r\r\t\n\nGREG\r\r\t\n\n";
-        final int LINESxCHUNCK = 200;
+        final String SEPARATOR = "\r\t\nGrEg\r\t\n";
+        final int LINESxCHUNCK = 2000;
         ArrayList<String> result = new ArrayList<>();
         String line, linesToCompress = "";
         int lineNr = 0;
