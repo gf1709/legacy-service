@@ -154,15 +154,20 @@
                 <p class="m-0 me-4 small">{{item.size}}</p>
               </td>
               <td class="p-0">
-                @if(item.type==='f' && item.size>0) {
-                <ng-container>
+                @if(item.type==='f') {
+                  @if (item.size>0 && item.size<=21000000) {
                   <button class="btn btn-sm" type="button" title="Visualizza file"
                     (click)="showFileContent(m_fileList().directory, item.name, i)" data-bs-toggle="modal"
                     data-bs-target="#showFileModal">
                     <i class="bi bi-eye"></i>
                   </button>
-                </ng-container>
                 }
+                @else {
+                  <button class="btn btn-sm" type="button" title="Suddividi il file in parti di dimensione minore di 20MB" (click)="split(m_fileList().directory, item.name, i)">
+                    <i class="bi bi-hr"></i>
+                  </button>
+                }
+              }
               </td>
 
               <td class="p-0">

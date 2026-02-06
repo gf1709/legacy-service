@@ -47,7 +47,10 @@ public class ISeriesUtilityController {
     public IFSListFileResponseDTO listFiles(@RequestBody IFSListFileRequestDTO in) throws Exception {
         return _iSeriesIFSUtil.listFiles(in.getDirectory(), in.getPattern());
     }
-
+    @PostMapping("/utility/splitIFSFileContent")
+    public boolean splitIFSFileContent(@RequestBody String aFileName) throws Exception {
+        return _iSeriesIFSUtil.split(aFileName);
+    }
     @PostMapping("/utility/getIFSFileContent")
     public ArrayList<String> getIFSFileContent(@RequestBody String aFileName) throws Exception {
         return _iSeriesIFSUtil.getIFSFileContent(aFileName);

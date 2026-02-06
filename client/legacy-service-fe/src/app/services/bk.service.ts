@@ -510,6 +510,10 @@ export class BkService {
     };
     return this.httpClient.post<IfsFileListFileResult>(environment.apiUrl + "/utility/listFiles", parms);
   }
+  splitIFSFile(aFileName: string) {
+    console.log('[0] splitIFSFileContent. aFileName:', aFileName);
+    return this.httpClient.post<boolean>(environment.apiUrl + "/utility/splitIFSFileContent", aFileName);
+  }
   getIFSFileContent(aFileName: string) {
     console.log('[0] getIFSFileContent. aFileName:', aFileName);
     return this.httpClient.post<string[]>(environment.apiUrl + "/utility/getIFSFileContent", aFileName);

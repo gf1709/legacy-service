@@ -1,8 +1,10 @@
 package it.allitude.legacyserviceweb.models;
 
+import java.beans.PropertyVetoException;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -13,10 +15,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.ibm.as400.access.AS400;
+import com.ibm.as400.access.AS400SecurityException;
+import com.ibm.as400.access.CommandCall;
+import com.ibm.as400.access.ErrorCompletingRequestException;
 import com.ibm.as400.access.IFSFile;
 import com.ibm.as400.access.IFSFileFilter;
 import com.ibm.as400.access.IFSFileReader;
 import com.ibm.as400.access.IFSTextFileOutputStream;
+import com.ibm.as400.access.Job;
+import com.ibm.as400.access.ObjectDoesNotExistException;
 
 import it.allitude.legacyserviceweb.DTOs.IFSListFileResponseDTO;
 import it.allitude.legacyserviceweb.db.ConnectionService;
@@ -125,6 +132,18 @@ public class ISeriesIFSUtil {
             }
         }
         return result;
+    }
+    public boolean split(String aFileName) throws Exception {
+        boolean isSuccess;
+        CommandCall splitCmd;
+        splitCmd = new CommandCall(_connectionService.getAS400Connection());
+        String strCmd = String.format("QSH CMD('split -b 20m %s %s.chunk.p_')", aFileName, aFileName);
+        try {
+            isSuccess = splitCmd.run(strCmd);
+        } catch (AS400SecurityException | ErrorCompletingRequestException | IOException | InterruptedException e) {
+            throw (new Exception(e));
+        }
+        return isSuccess;
     }
 
     public ArrayList<String> findSibankCall(ArrayList<String> aFileNames) throws Exception {

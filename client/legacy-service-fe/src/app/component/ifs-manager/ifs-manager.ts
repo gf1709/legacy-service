@@ -107,7 +107,6 @@ export class IfsManager implements AfterContentChecked {
         );
       }
     }
-
   }
 
   get ifsManagerSearchParams(): IfsManagerSearchParams {
@@ -694,6 +693,19 @@ export class IfsManager implements AfterContentChecked {
   }
   toggleShowFullLine(line: IfsFileContent) {
     line.lineContentShowFullLine = !line.lineContentShowFullLine;
+  }
+
+  split(dir: string, fileName: string, idx: number) {
+    this.bkService.splitIFSFile(dir + '/' + fileName).subscribe(
+      (result) => {
+        console.log('splitIFSFile result:', result);
+        this.ifsManagerSearchParams.filePattern = fileName + '*';
+        this.listFiles();
+      },
+      (error) => {
+        console.error('Error splitting IFS file:', error);
+      }
+    );
   }
 
 }
