@@ -16,7 +16,7 @@ interface JwtPayloadWithRoles extends JwtPayload {
 })
 export class AuthenticationService {
 
-  isUserLoggedIn: WritableSignal<boolean> = signal(false);
+  isUserLoggedIn: WritableSignal<boolean> = signal(true);
 
   httpClient: HttpClient = inject(HttpClient);
   constructor(private bkservice: BkService) { }
