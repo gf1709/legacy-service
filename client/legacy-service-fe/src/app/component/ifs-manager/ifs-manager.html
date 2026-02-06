@@ -1,8 +1,8 @@
 <div>
-
-  <h2 style="text-align: center; padding: 5px;">Gestione file IFS</h2>
+  <!-- <h2 style="text-align: center; padding: 3px;">Gestione file IFS</h2> -->
+  <h2 class="text-center m-0">Gestione file IFS</h2>
   <div class="container small">
-    <div class="row row-cols-auto justify-content-center">
+    <div class="row row-cols-auto justify-content-center mt-1">
       <h6>
         Parametri di ricerca
       </h6>
@@ -44,17 +44,18 @@
 
   <div class="row">
     <div class="row row-cols-auto justify-content-center">
-      <h6 class="mt-3">
+      <h6 class="mt-0">
         File [{{m_fileList().files.length}}]
       </h6>
     </div>
     <div class="row row-cols-auto justify-content-center fixed-table-loading table table-bordered table-hover">
-      <table class="table table-sm small table-hover" style="width:80%">
+      <table class="table table-sm small table-hover" style="width:60%">
         <thead>
           <tr>
             <th>
               <label>
-                <input type="checkbox" title="select/deselect all" (click)="toggleSelectDeselectAllRows()" [checked]="m_allRowsSelected">
+                <input type="checkbox" title="select/deselect all" (click)="toggleSelectDeselectAllRows()"
+                  [checked]="m_allRowsSelected">
               </label>
             </th>
 
@@ -109,8 +110,7 @@
             </th>
             <th class="p-0">
               @if (isAlmostOneFileSelected && authService.isUserAdmin()) {
-              <button class="btn btn-sm" type="button" title="Delete selected file"
-                (click)="deleteAllSelectedFiles()">
+              <button class="btn btn-sm" type="button" title="Delete selected file" (click)="deleteAllSelectedFiles()">
                 <i class="bi bi-trash"></i>
               </button>
               }
@@ -155,19 +155,20 @@
               </td>
               <td class="p-0">
                 @if(item.type==='f') {
-                  @if (item.size>0 && item.size<=21000000) {
-                  <button class="btn btn-sm" type="button" title="Visualizza file"
-                    (click)="showFileContent(m_fileList().directory, item.name, i)" data-bs-toggle="modal"
-                    data-bs-target="#showFileModal">
-                    <i class="bi bi-eye"></i>
+                @if (item.size>=0 && item.size<=21000000) { <button class="btn btn-sm" type="button"
+                  title="Visualizza file" (click)="showFileContent(m_fileList().directory, item.name, i)"
+                  data-bs-toggle="modal" data-bs-target="#showFileModal">
+                  <i class="bi bi-eye"></i>
                   </button>
-                }
-                @else {
-                  <button class="btn btn-sm" type="button" title="Suddividi il file in parti di dimensione minore di 20MB" (click)="split(m_fileList().directory, item.name, i)">
+                  }
+                  @else {
+                  <button class="btn btn-sm" type="button"
+                    title="Suddividi il file in parti di dimensione minore di 20MB"
+                    (click)="split(m_fileList().directory, item.name, i)">
                     <i class="bi bi-hr"></i>
                   </button>
-                }
-              }
+                  }
+                  }
               </td>
 
               <td class="p-0">
@@ -184,12 +185,13 @@
               <td class="p-0">
                 @if(item.type==='f') {
                 <ng-container>
-                  @if (authService.isUserAdmin() || item.name.toLocaleLowerCase().indexOf(authService.getLoggedInUsername()?.toLocaleLowerCase()!)>0) {
+                  @if (authService.isUserAdmin() ||
+                  item.name.toLocaleLowerCase().indexOf(authService.getLoggedInUsername()?.toLocaleLowerCase()!)>0) {
                   <button class="btn btn-sm" type="button" title="Delete file"
                     (click)="deleteIFSFile(m_fileList().directory, item.name, i)">
                     <i class="bi bi-trash"></i>
                   </button>
-                }
+                  }
                 </ng-container>
                 }
               </td>
@@ -248,8 +250,8 @@
               </button>
               <ul class="dropdown-menu overflow-auto" style="height: 500px;">
                 @for (reqRes of m_requestResponseRows(); track $index; let reqResIdx=$index) {
-                <li class="small"><a class="dropdown-item"
-                    (click)="gotoRowNr(reqResIdx)"><span><small>{{reqResIdx}} [rid:{{m_requestResponseRows()[reqResIdx]}}]</small></span></a>
+                <li class="small"><a class="dropdown-item" (click)="gotoRowNr(reqResIdx)"><span><small>{{reqResIdx}}
+                        [rid:{{m_requestResponseRows()[reqResIdx]}}]</small></span></a>
                 </li>
                 }
               </ul>
@@ -272,7 +274,8 @@
                 <button class="btn btn-sm border-0 ms-1 mb-1 p-0 ps-1 pe-1 btn-primary" type="button">
                   XAM Message
                 </button>
-                <pre class="m-0 text-wrap"><small class="fw-bold text-primary">[{{joblogLineIdx}}] {{item.lineContent}}</small></pre>
+                <pre
+                  class="m-0 text-wrap"><small class="fw-bold text-primary">[{{joblogLineIdx}}] {{item.lineContent}}</small></pre>
               </div>
               } @else {
               <div class="col">
@@ -302,9 +305,9 @@
                     <i class="bi bi-plus"></i>
                     }
                   </button>
-                </div>
+              </div>
 
-                @if(item.requests.length>0) {
+              @if(item.requests.length>0) {
                 <div class="col-10  border border-2 border-primary rounded mb-1">
                   @for (programCallRequest of item.requests; track $callIdx; let $callIdx = $index) {
                   @if ($callIdx===0) {
