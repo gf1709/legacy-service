@@ -451,6 +451,11 @@ export class IfsManager implements AfterContentChecked {
   }
 
   deleteAllSelectedFiles() {
+    let text = "Conferma la cancellazione dei file selezionati!\nPremi OK o Annulla.";
+    if (confirm(text) === false) {
+      return;
+    }
+
     console.log('deleteAllListedFiles:');
     let bFullFileNamesToDelete: string[] = [];
     let bFullFileIndexesToDelete: number[] = [];
