@@ -274,7 +274,7 @@ export class IfsManagerSearchParams {
 };
 
 export class ObjectManagerListFilterParams {
-  libreria: string = '*LIBL';
+  libreria: string = '';
   nome: string = '';
   tipo: string = '';
 };
