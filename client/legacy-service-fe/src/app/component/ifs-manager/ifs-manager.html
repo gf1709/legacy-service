@@ -15,23 +15,47 @@
           <div class="input-group input-group-sm mb-2" style="width: 400px;">
             <input #filter_directory type="text" id="filter_directory" name="filter_directory"
               class="form-control border-end-0 border shadow-none mt-0" [(ngModel)]="ifsManagerSearchParams.directory"
-              data-toggle="tooltip" data-placement="top" title="Directory">
+              title="Directory">
             <span class="input-group-text bg-transparent">
               <i class="bi bi-folder" title="Specificare la directory"></i>
             </span>
           </div>
         </div>
+
         <div class="col">
           <span class="gf_label">Nome file da elencare</span>
           <div class="input-group input-group-sm mb-2" style="width: 200px;">
             <input #filter_filepattern type="text" id="filter_filepattern" name="filter_filepattern"
               class="form-control border-end-0 border shadow-none mt-0" [(ngModel)]="ifsManagerSearchParams.filePattern"
-              data-toggle="tooltip" data-placement="top" title="File pattern">
+              title="File pattern">
             <span class="input-group-text bg-transparent">
               <i class="bi bi-regex" title="Specificare il filtro sul nome dei file da elencare"></i>
             </span>
           </div>
         </div>
+
+        <div class="col">
+          <span class="gf_label">Data creazione da</span>
+          <div style="width: 180px;">
+            <input #filter_fromDate type="datetime-local" id="filter_fromDate" name="filter_fromDate"
+              class="form-control form-control-sm mt-0" [(ngModel)]="ifsManagerSearchParams.fromDateString"
+              title="Data da cui iniziare ad elencare i file (formato: yyyy-MM-dd HH:mm)"
+              placeholder="yyyy-MM-ddTHH:mm"
+              min="2024-01-01T00:01"  max="2035-01-01T23:59" required>
+          </div>
+        </div>
+
+        <div class="col">
+          <span class="gf_label">Data creazione a</span>
+          <div style="width: 180px;">
+            <input #filter_toDate type="datetime-local" id="filter_toDate" name="filter_toDate"
+              class="form-control form-control-sm mt-0" [(ngModel)]="ifsManagerSearchParams.toDateString"
+              title="Data fino a cui elencare i file (formato: yyyy-MM-dd HH:mm)"
+              placeholder="yyyy-MM-ddTHH:mm"
+              min="2024-01-01T00:01"  max="2035-01-01T23:59" required>
+          </div>
+        </div>
+
         <div class="col mt-4">
           <button class="btn btn-sm btn-primary" type="submit" title="Elenca file" [disabled]="!jobListFileForm.valid">
             Elenca

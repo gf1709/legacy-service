@@ -271,6 +271,63 @@ export class IfsFileListFileResult {
 export class IfsManagerSearchParams {
   directory: string = '/tmp/jotcpworker4';
   filePattern: string = '*';
+  fromDate: Date = new Date();
+  toDate: Date = new Date();
+
+  constructor() {
+    this.fromDate.setTime(this.fromDate.getTime() - 12 * 60 * 60 * 1000); // default fromDate is 24 hours before current time
+    this.toDate.setTime(this.toDate.getTime() + 1 * 60 * 60 * 1000); // default toDate is 1 hours after fromDate
+  }
+
+  public get fromDateString(): string {
+    return this.convertDateToString(this.fromDate);
+  }
+  public set fromDateString(value: string) {
+    this.fromDate = this.convertFromDateString(value);
+  }
+
+  public get toDateString(): string {
+    return this.convertDateToString(this.toDate);
+  }
+  public set toDateString(value: string) {
+    this.toDate = this.convertFromDateString(value);
+  }
+
+private convertDateToString(value: Date): string {
+
+  let year = value.getFullYear();
+  if (year < 2000) {
+    year = 2020 + (year % 10);
+  }
+  let res = year + '-' +
+    ("0" + (value.getMonth() + 1)).slice(-2)
+    + '-' + ("0" + value.getDate()).slice(-2)
+    + 'T' + ("0" + value.getHours()).slice(-2) + ':' + ("0" + value.getMinutes()).slice(-2);
+  // console.log('convertDateToString. value:', value, ', res:', res);
+  return res;
+}
+private convertFromDateString(value: string): Date {
+    let parts = value.split('T');
+    if (parts.length !== 2) {
+      return new Date();
+    }
+    let datePart = parts[0];
+    let timePart = parts[1];
+    if (!datePart || !timePart) {
+      return new Date();
+    }
+
+    let dateParts = datePart.split('-');
+    let timeParts = timePart.split(':');
+    let res = new Date(
+      parseInt(dateParts[0]),
+      parseInt(dateParts[1]) - 1,
+      parseInt(dateParts[2]),
+      parseInt(timeParts[0]),
+      parseInt(timeParts[1])
+    );
+    return res;
+  }
 };
 
 export class ObjectManagerListFilterParams {
@@ -503,10 +560,10 @@ export class BkService {
     console.log('[0] retrieveHistorySql.');
     return this.httpClient.get<string[]>(environment.apiUrl + "/history-sql-retrieve");
   }
-  listIFSFiles(aDir: string, aPattern: string) {
+  listIFSFiles(aDir: string, aPattern: string, fromDate: Date | null, toDate: Date | null) {
     console.log('[0] listIFSFiles. aDir:', aDir, ', aPattern:', aPattern);
-    var parms: { directory: string, pattern: string } = {
-      directory: aDir, pattern: aPattern
+    var parms: { directory: string, pattern: string, fromDate: Date | null, toDate: Date | null } = {
+      directory: aDir, pattern: aPattern, fromDate: fromDate, toDate: toDate
     };
     return this.httpClient.post<IfsFileListFileResult>(environment.apiUrl + "/utility/listFiles", parms);
   }

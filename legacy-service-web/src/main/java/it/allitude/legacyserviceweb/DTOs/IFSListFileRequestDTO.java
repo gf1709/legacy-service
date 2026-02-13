@@ -1,9 +1,13 @@
 package it.allitude.legacyserviceweb.DTOs;
 
+import java.util.Date;
+
 public class IFSListFileRequestDTO {
 
     String directory;
     String pattern;
+    Date fromDate;
+    Date toDate;
 
     public String getPattern() {
         return pattern;
@@ -13,6 +17,14 @@ public class IFSListFileRequestDTO {
         this.pattern = pattern;
     }
 
+    public Date getFromDate() {
+        return fromDate;
+    }
+
+    public Date getToDate() {
+        return toDate;
+    }
+
     public String getDirectory() {
         return directory;
     }
@@ -20,4 +32,5 @@ public class IFSListFileRequestDTO {
     public void setDirectory(String directory) {
         this.directory = directory;
     }
+
 }

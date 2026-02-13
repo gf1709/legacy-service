@@ -1,6 +1,5 @@
 package it.allitude.legacyserviceweb.models;
 
-import java.beans.PropertyVetoException;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -22,9 +21,6 @@ import com.ibm.as400.access.IFSFile;
 import com.ibm.as400.access.IFSFileFilter;
 import com.ibm.as400.access.IFSFileReader;
 import com.ibm.as400.access.IFSTextFileOutputStream;
-import com.ibm.as400.access.Job;
-import com.ibm.as400.access.ObjectDoesNotExistException;
-
 import it.allitude.legacyserviceweb.DTOs.IFSListFileResponseDTO;
 import it.allitude.legacyserviceweb.db.ConnectionService;
 
@@ -40,10 +36,12 @@ public class ISeriesIFSUtil {
         this.appConfig = appConfig;
     }
 
-    public IFSListFileResponseDTO listFiles(String aDirectory, String aPattern) throws Exception {
+    public IFSListFileResponseDTO listFiles(String aDirectory, String aPattern, java.util.Date fromDate, java.util.Date toDate) throws Exception {
         String pattern = "yyyy-MM-dd HH:mm:ss.SSS";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-
+        
+        log.info("Listing files in directory: " + aDirectory + " with pattern: " + aPattern + ", from date: " + simpleDateFormat.format(fromDate) + ", to date: " + simpleDateFormat.format(toDate));
+        
         AS400 as400 = _connectionService.getAS400Connection();
         IFSFile directory = new IFSFile(as400, aDirectory);
         if (!directory.exists()) {
@@ -51,7 +49,7 @@ public class ISeriesIFSUtil {
         }
         String absDirPath = org.springframework.util.StringUtils.cleanPath(aDirectory);
         IFSListFileResponseDTO res = new IFSListFileResponseDTO(absDirPath);
-        IFSFile[] directoryFiles = directory.listFiles(new MyDirectoryFilter(), aPattern);
+        IFSFile[] directoryFiles = directory.listFiles(new MyDirectoryFilter(fromDate, toDate), aPattern);
         if (directoryFiles == null) {
             log.error("The directory does not exist");
             return res;
@@ -133,6 +131,7 @@ public class ISeriesIFSUtil {
         }
         return result;
     }
+
     public boolean split(String aFileName) throws Exception {
         boolean isSuccess;
         CommandCall splitCmd;
@@ -189,7 +188,7 @@ public class ISeriesIFSUtil {
         // Intestazioni di colonna
         msg = "Nome File; Numero riga;Riga;Tipo Call;Programma/Service Program" + "\n";
         outFile.write(msg);
-        msg="";
+        msg = "";
         for (String fName : aFileNames) {
             int lineNr = 0;
             IFSFile file = new IFSFile(as400, fName);
@@ -326,15 +325,35 @@ public class ISeriesIFSUtil {
 
 class MyDirectoryFilter implements IFSFileFilter {
 
+    java.util.Date fromDate;
+    java.util.Date toDate;
+
+    MyDirectoryFilter(java.util.Date fromDate, java.util.Date toDate) {
+        if (fromDate == null) {
+            this.fromDate = new java.util.Date(0); // 1 gennaio 1970
+        } else {
+            this.fromDate = fromDate;
+        }
+
+        if (toDate == null) {
+            this.toDate = new java.util.Date(32503680000000L); // 31 dicembre 3000
+        } else {
+            this.toDate = toDate;
+        }
+    }
+
     @Override
     public boolean accept(IFSFile file) {
         try {
             if ((file.getName().contains(".sock")) && (!JSession.getCurrentSession().isAdminUser())) {
                 return false;
             }
+            if ((file.lastModified() < fromDate.getTime()) || (file.lastModified() > toDate.getTime())) {
+                return false;
+            }
             // Keep this entry.  Returning true tells the IFSList object  to return this file in the list of entries returned to the  .list() method.
             return true;
-        } catch (Exception e) {
+        } catch (IOException e) {
             return false;
         }
     }

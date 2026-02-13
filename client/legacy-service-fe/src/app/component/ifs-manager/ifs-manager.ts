@@ -124,7 +124,7 @@ export class IfsManager implements AfterContentChecked {
   listFiles() {
     console.log('[0]-listFiles', this.ifsManagerSearchParams.directory, this.ifsManagerSearchParams.filePattern);
     // this.m_job_list = [];
-    this.bkService.listIFSFiles(this.ifsManagerSearchParams.directory, this.ifsManagerSearchParams.filePattern).subscribe(
+    this.bkService.listIFSFiles(this.ifsManagerSearchParams.directory, this.ifsManagerSearchParams.filePattern, this.ifsManagerSearchParams.fromDate, this.ifsManagerSearchParams.toDate).subscribe(
       data => {
         this.m_fileList.set(data);
         this.ifsManagerSearchParams.directory = this.m_fileList().directory;

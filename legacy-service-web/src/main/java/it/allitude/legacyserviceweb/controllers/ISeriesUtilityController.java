@@ -45,7 +45,7 @@ public class ISeriesUtilityController {
 
     @PostMapping("/utility/listFiles")
     public IFSListFileResponseDTO listFiles(@RequestBody IFSListFileRequestDTO in) throws Exception {
-        return _iSeriesIFSUtil.listFiles(in.getDirectory(), in.getPattern());
+        return _iSeriesIFSUtil.listFiles(in.getDirectory(), in.getPattern(), in.getFromDate(), in.getToDate());
     }
     @PostMapping("/utility/splitIFSFileContent")
     public boolean splitIFSFileContent(@RequestBody String aFileName) throws Exception {
