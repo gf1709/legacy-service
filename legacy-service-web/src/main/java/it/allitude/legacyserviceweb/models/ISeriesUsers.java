@@ -43,6 +43,7 @@ public class ISeriesUsers {
                     String usr = rs.getString("NAME").trim();
                     String des = rs.getString("DES").trim();
                     users.put(usr, des);
+                    log.debug(String.format("Caricato utente %s - %s", usr, des));
                 }
             } catch (Exception ex) {
                 log.error("Errore nel caricamento della lista utenti: " + ex.getMessage());
