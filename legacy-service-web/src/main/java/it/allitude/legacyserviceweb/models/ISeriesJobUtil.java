@@ -173,7 +173,7 @@ public class ISeriesJobUtil {
             res.put(key, resEle);
         }
         con.close();        
-        return new ArrayList<JobListResponseDTO>(res.values());
+        return new ArrayList<>(res.values());
     }
 
     public ArrayList<JobListResponseDTO> WRKACTJOB(WRKACTJOB_Filter filter) throws Exception {
