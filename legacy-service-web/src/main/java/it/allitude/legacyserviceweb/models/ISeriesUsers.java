@@ -41,7 +41,12 @@ public class ISeriesUsers {
                 java.sql.ResultSet rs = stmt.executeQuery(sql);
                 while (rs.next()) {
                     String usr = rs.getString("NAME").trim();
-                    String des = rs.getString("DES").trim();
+                    String des = rs.getString("DES");
+                    if (des != null) {
+                        des = des.trim();
+                    } else {
+                        des = "";
+                    }
                     users.put(usr, des);
                     log.debug(String.format("Caricato utente %s - %s", usr, des));
                 }
