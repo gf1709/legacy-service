@@ -6,9 +6,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Enumeration;
+import java.util.Hashtable;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
 import it.allitude.legacyserviceweb.db.ConnectionService;
 
 @Component
