@@ -116,7 +116,7 @@ public class ISeriesObjectUtil {
         res.setLibrary(bLibrary);
         res.setDdsName(ddsName);
         res.setIdf(getIdf(bLibrary, ddsName));
-
+        boolean hasFields = false;
         while (rs.next()) {
             ISeriesFieldDescription fld = new ISeriesFieldDescription();
             fld.setFieldNo(Integer.parseInt(rs.getString(1)));
@@ -132,8 +132,10 @@ public class ISeriesObjectUtil {
             if (!_fieldDescriptionCache.containsKey(keyFieldDes)) {
                 _fieldDescriptionCache.put(keyFieldDes, fld.getFieldDescription());
             }
+            hasFields = true;
         }
-        _ffdCache.put(key, res);
+        if (hasFields || res.getIdf().length() > 0)        
+            _ffdCache.put(key, res);
         return res;
     }
 

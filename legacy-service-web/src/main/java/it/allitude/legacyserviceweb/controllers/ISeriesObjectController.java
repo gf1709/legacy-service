@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,9 +49,12 @@ public class ISeriesObjectController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @PostMapping("/ffd")
-    public FFDResponseDTO getFFD(@RequestBody FFDRequestDTO ffdInfo) throws Exception {
-
-        return _objectUtil.getFFD(ffdInfo.getLibrary(), ffdInfo.getDdsName());
+    public ResponseEntity<?> getFFD(@RequestBody FFDRequestDTO ffdInfo) throws Exception {
+        FFDResponseDTO responseDTO = _objectUtil.getFFD(ffdInfo.getLibrary(), ffdInfo.getDdsName());
+        if (responseDTO != null && responseDTO.getFields() != null && responseDTO.getFields().size() > 0 && responseDTO.getIdf() != null && responseDTO.getIdf().length() > 0)
+            return ResponseEntity.ok(responseDTO);
+        else
+            return ResponseEntity.notFound().build();
     }
 
     @PostMapping("/wrkobj")

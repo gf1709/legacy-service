@@ -19,6 +19,7 @@ export class JavaClassGenerator {
   }
   createJavaClass() {
     console.log('creating java class for library', this.m_library, 'and file', this.m_file);
+    this.m_dds_lines.set([]);
 
     this.bkService.getFFD(this.m_library, this.m_file).subscribe(
       data => {
