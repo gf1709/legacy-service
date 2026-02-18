@@ -12,6 +12,7 @@ public class FFDResponseDTO implements Serializable {
 
 	private String library;
 	private String ddsName;
+	private String idf;
 	private List<ISeriesFieldDescription> fields = new ArrayList<ISeriesFieldDescription>();
 
 	public static long getSerialversionuid() {
@@ -36,5 +37,13 @@ public class FFDResponseDTO implements Serializable {
 	public void setFields(List<ISeriesFieldDescription> fields) {
 		this.fields = fields;
 	}
+
+    public String getIdf() {
+        return idf;
+    }
+
+    public void setIdf(String idf) {
+        this.idf = idf;
+    }
 	
 }

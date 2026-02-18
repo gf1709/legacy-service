@@ -128,6 +128,7 @@ export class ObjectDescriptionDetail {
 export class FFDResult {
   library: string | undefined;
   ddsName: string | undefined;
+  idf: string | undefined;
   fields: [
     {
       fieldNo: number;

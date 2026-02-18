@@ -88,10 +88,10 @@ export class AuthenticationService {
         || route === 'dsplog-manager'
         || route === 'utilities'
       )
-        if (this.getRoles()?.indexOf('admin')) {
-          // console.log('route can be visibile', route)
-          return true;
-        }
+        return true;
+        // if (this.getRoles()?.indexOf('admin')) {
+        //   return true;
+        // }
     }
     return false;
   }

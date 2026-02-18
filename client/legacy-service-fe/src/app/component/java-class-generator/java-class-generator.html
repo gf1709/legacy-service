@@ -1,0 +1,49 @@
+<div>
+  <div class="container">
+
+    <div class="row row-cols-auto justify-content-center p-3">
+      <h5>
+        Generatore classi Java per DDS
+      </h5>
+    </div>
+
+    <form class="row gy-2 gx-3 justify-content-center" #form="ngForm" (ngSubmit)="createJavaClass()">
+      <div class="col-auto">
+        <span class="gf_label">Libreria</span>
+        <input #library type="text" name="library" class="form-control form-control-sm text-uppercase"
+          [(ngModel)]="m_library" data-toggle="tooltip" data-placement="top"
+          title="Specificare la libreria AS400 della DDS" required minlength="2">
+      </div>
+      <div class="col-auto">
+        <span class="gf_label">File</span>
+        <input #file type="text" name="file" class="form-control form-control-sm text-uppercase" [(ngModel)]="m_file"
+          data-toggle="tooltip" data-placement="top" title="Specificare il nome della DDS AS400" required minlength="2">
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-sm btn-primary mt-4" type="submit" title="Crea classe java" [disabled]="!form.valid">
+          Crea classe java
+        </button>
+      </div>
+    </form>
+
+    @if (m_dds_lines().length>0) {
+    <div class="row row-cols-auto justify-content-center mt-4">
+      <h5 class="text-center m-0 p-0">
+        Definizione java per la DDS {{m_library.toUpperCase()}}/{{m_file.toUpperCase()}}
+      </h5>
+      @if(m_dds_lines().length>0) {
+      <button class="btn ms-3 p-0" type="button" title="Copia negli appunti" (click)="copyToClipboard()">
+        <i class="bi bi-clipboard"></i>
+      </button>
+      }
+    </div>
+
+    <div class="row justify-content-center mt-2">
+      <div class="col-auto border rounded small p-3">
+        @for (line of m_dds_lines(); track $index) {
+        <pre class="m-0"><small>{{line}}</small></pre>
+        }
+      </div>
+    </div>
+    }
+  </div>

@@ -23,8 +23,8 @@
       <span class="gf_label">Oggetto</span>
       <div class="input-group input-group-sm mb-2">
         <input type="text" id="filter_obj" name="filter_obj" class="form-control border-end-0 border shadow-none mt-0"
-          placeholder="Oggetto (A01*)" [(ngModel)]="objectManagerListFilterParams.nome" (keydown)="onKeydown($event)" data-toggle="tooltip"
-          data-placement="top" title="Specificare il filtro sull'oggetto (es. A01*)">
+          placeholder="Oggetto (A01*)" [(ngModel)]="objectManagerListFilterParams.nome" (keydown)="onKeydown($event)"
+          data-toggle="tooltip" data-placement="top" title="Specificare il filtro sull'oggetto (es. A01*)">
         <span class="input-group-text bg-transparent">
           <i class="bi bi-database" title="Specificare l'oggetto"></i>
         </span>
@@ -35,8 +35,9 @@
       <span class="gf_label">Tipo</span>
       <div class="input-group input-group-sm mb-2">
         <input type="text" id="filter_type" name="filter_type" class="form-control border-end-0 border shadow-none mt-0"
-          placeholder="Tipo (*FILE, *LIB)" [(ngModel)]="objectManagerListFilterParams.tipo" (keydown)="onKeydown($event)"
-          data-toggle="tooltip" data-placement="top" title="Specificare il filtro sul tipo oggetto (es. *FILE, *PGM)">
+          placeholder="Tipo (*FILE, *LIB)" [(ngModel)]="objectManagerListFilterParams.tipo"
+          (keydown)="onKeydown($event)" data-toggle="tooltip" data-placement="top"
+          title="Specificare il filtro sul tipo oggetto (es. *FILE, *PGM)">
         <span class="input-group-text bg-transparent" title="Specificare il filtro sul tipo oggetto (es. *FILE, *PGM)">
           <i class="bi bi-fonts" title="Specificare il tipo"></i>
         </span>
@@ -121,7 +122,8 @@
 
 
       <!-- Object Deail Form -->
-      <div class="modal fade" id="objectDetailModal" tabindex="-1" role="dialog" aria-labelledby="objectDetailModalLabel" aria-hidden="true">
+      <div class="modal fade" id="objectDetailModal" tabindex="-1" role="dialog"
+        aria-labelledby="objectDetailModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header justify-content-center">
@@ -234,8 +236,10 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="row row-cols-auto justify-content-center">
-            <h5 class="modal-title" id="ffdModalLabel">FFD - {{m_ffd().library}}/{{m_ffd().ddsName}}
-              [Len:{{getFFDLen()}}]</h5>
+            <h5 class="modal-title" id="ffdModalLabel">FFD - {{m_ffd().library}}/{{m_ffd().ddsName}}</h5>
+          </div>
+          <div class="row row-cols-auto justify-content-center">
+            <h6 class="modal-title" id="ffdModalLabel">IDF:{{m_ffd().idf}} - Record Len:{{getFFDLen()}}</h6>
           </div>
           <hr>
           <div class="modal-body">
