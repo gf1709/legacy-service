@@ -23,6 +23,7 @@ import it.allitude.legacyserviceweb.DTOs.IFSListFileResponseDTO;
 import it.allitude.legacyserviceweb.db.ConnectionService;
 import it.allitude.legacyserviceweb.models.ISeriesGPLUtil;
 import it.allitude.legacyserviceweb.models.ISeriesIFSUtil;
+import it.allitude.legacyserviceweb.models.JSession;
 
 @RestController
 @CrossOrigin(origins = {"*"})
@@ -47,15 +48,18 @@ public class ISeriesUtilityController {
     public IFSListFileResponseDTO listFiles(@RequestBody IFSListFileRequestDTO in) throws Exception {
         return _iSeriesIFSUtil.listFiles(in.getDirectory(), in.getPattern(), in.getFromDate(), in.getToDate());
     }
+
     @PostMapping("/utility/splitIFSFileContent")
     public boolean splitIFSFileContent(@RequestBody String aFileName) throws Exception {
         return _iSeriesIFSUtil.split(aFileName);
     }
+
     @PostMapping("/utility/getIFSFileContent")
     public ArrayList<String> getIFSFileContent(@RequestBody String aFileName) throws Exception {
         return _iSeriesIFSUtil.getIFSFileContent(aFileName);
     }
-    @PostMapping(value="/utility/getIFSFileContentZipped")
+
+    @PostMapping(value = "/utility/getIFSFileContentZipped")
     public ArrayList<String> getIFSFileContentZipped(@RequestBody String aFileName) throws Exception {
         return _iSeriesIFSUtil.getIFSFileContentZipped(aFileName);
     }
@@ -64,14 +68,17 @@ public class ISeriesUtilityController {
     public ArrayList<String> getIFSFilesContent(@RequestBody ArrayList<String> aFileNames) throws Exception {
         return _iSeriesIFSUtil.getIFSFilesContent(aFileNames);
     }
+
     @PostMapping("/utility/deleteIFSFile")
     public boolean deleteIFSFile(@RequestBody String aFileName) throws Exception {
         return _iSeriesIFSUtil.deleteIFSFile(aFileName);
     }
+
     @PostMapping("/utility/findSibankCall")
     public ArrayList<String> findSibankCall(@RequestBody ArrayList<String> aFileNames) throws Exception {
         return _iSeriesIFSUtil.findSibankCall(aFileNames);
     }
+
     @PostMapping("/utility/deleteIFSFiles")
     public boolean deleteIFSFile(@RequestBody ArrayList<String> aFileNames) throws Exception {
         return _iSeriesIFSUtil.deleteIFSFiles(aFileNames);
@@ -82,6 +89,13 @@ public class ISeriesUtilityController {
         int maxRows = 500;
         try {
             Connection con = _connectionService.getAS400JdbcConnection();
+            String sql = in.getSql();
+            if (!JSession.getCurrentSession().isAdminUser()) {
+                if (sql.toLowerCase().contains("update") || sql.toLowerCase().contains("delete") || sql.toLowerCase().contains("insert")) {
+                    ResponseEntity<?> resEnt = new ResponseEntity<>("Only select statements are allowed", HttpStatus.BAD_REQUEST);
+                    return resEnt;
+                }
+            }
             ResultSet rs = con.createStatement().executeQuery(in.getSql());
             ResultSetMetaData rsmd = rs.getMetaData();
             int nrRows = 0;
@@ -103,11 +117,11 @@ public class ISeriesUtilityController {
             rs.close();
             con.close();
             writer.endArray();
-            String result = sb.toString();            
+            String result = sb.toString();
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             ResponseEntity<?> resEnt = new ResponseEntity<>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
-            return resEnt;            
+            return resEnt;
         }
     }
 }
