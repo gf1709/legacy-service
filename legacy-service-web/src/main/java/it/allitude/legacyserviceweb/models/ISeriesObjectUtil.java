@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -127,11 +128,7 @@ public class ISeriesObjectUtil {
             fld.setFieldScale(scale);
             fld.setFieldDescription(rs.getString(7));
             res.getFields().add(fld);
-
-            String keyFieldDes = ddsName.trim() + "." + fld.getFieldName().trim();
-            if (!_fieldDescriptionCache.containsKey(keyFieldDes)) {
-                _fieldDescriptionCache.put(keyFieldDes, fld.getFieldDescription());
-            }
+            addFieldDescriptionToCache(bLibrary, ddsName, fld.getFieldName(), fld.getFieldDescription());
             hasFields = true;
         }
         if (hasFields || res.getIdf().length() > 0)        
@@ -152,20 +149,31 @@ public class ISeriesObjectUtil {
 
     private static final HashMap<String, String> _fieldDescriptionCache = new HashMap<>();
 
-    String getFiedDescription(String ddsName, String fieldName) throws Exception {
+    String getFieldDescriptionKey(String libName, String ddsName, String fieldName) {
+        LocalDateTime now = LocalDateTime.now();
+        return libName.trim() + "." + ddsName.trim() + "." + fieldName.trim() + "." + Integer.toString(now.getMonthValue()) + Integer.toString(now.getDayOfMonth()) + Integer.toString(now.getHour());
+    }
 
-        String keyFieldDes = ddsName.trim() + "." + fieldName.trim() + JSession.getCurrentSession().getJwt();
-        // Una volta raggiunti i MAX_CACHE_SIZE elementi nella cache la ripulisco
-        if (_fieldDescriptionCache.keySet().size() > MAX_CACHE_SIZE) {
-            _fieldDescriptionCache.clear();
+    public void addFieldDescriptionToCache(String libName, String ddsName, String fieldName, String description) {
+        String keyFieldDes = getFieldDescriptionKey(libName, ddsName, fieldName);
+        if (!_fieldDescriptionCache.containsKey(keyFieldDes)) {
+            // Una volta raggiunti i MAX_CACHE_SIZE elementi nella cache la ripulisco
+            if (_fieldDescriptionCache.keySet().size() > MAX_CACHE_SIZE) {
+                _fieldDescriptionCache.clear();
+            }
+            _fieldDescriptionCache.put(keyFieldDes, description);
         }
+    }
+
+    String getFiedDescription(String libName, String ddsName, String fieldName) throws Exception {
+
+        String keyFieldDes = getFieldDescriptionKey(libName, ddsName, fieldName);
         String res = _fieldDescriptionCache.get(keyFieldDes);
         if (res != null) {
             return res;
         }
 
         Connection con = _connectionService.getAS400JdbcConnection();
-
         String sql = "SELECT DBITXT FROM QSYS.QADBILFI WHERE DBIFIL=? AND DBIFLD=? LIMIT 1";
         PreparedStatement stmt = con.prepareStatement(sql);
         stmt.setString(1, ddsName);
@@ -175,7 +183,7 @@ public class ISeriesObjectUtil {
         if (rs.next()) {
             res = rs.getString(1);
         }
-        _fieldDescriptionCache.put(keyFieldDes, res);
+        addFieldDescriptionToCache(libName, ddsName, fieldName, res);
         return res;
     }
 

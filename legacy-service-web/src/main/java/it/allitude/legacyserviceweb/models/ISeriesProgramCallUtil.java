@@ -486,7 +486,7 @@ public class ISeriesProgramCallUtil {
             newVal.setName(f.getFieldName());
             newVal.setLength(dType.getByteLength());
             newVal.setScale(0);
-            newVal.setDescription(_objectUtil.getFiedDescription(aRecFormat.getName(), f.getFieldName()));
+            newVal.setDescription(_objectUtil.getFiedDescription(ffd.getLibrary(), aRecFormat.getName(), f.getFieldName()));
             if (dType instanceof AS400PackedDecimal) {
                 PackedDecimalFieldDescription pdFld = (PackedDecimalFieldDescription) f;
                 newVal.setScale(pdFld.getDecimalPositions());
