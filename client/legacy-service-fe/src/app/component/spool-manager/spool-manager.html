@@ -154,7 +154,7 @@
         </thead>
         <tbody>
           @for (item of m_spool_file_list(); track $index; let i=$index) {
-          <tr class="small">
+          <tr class="small" (click)="selectRow(i)" [ngClass]="{'fw-bold' : m_selectedRowIndex===i}">
             <td class="p-0">{{item.jobUser}}</td>
             <td class="p-0">
               <p class="text-center m-0 me-2">{{item.spoolfileName}}</p>

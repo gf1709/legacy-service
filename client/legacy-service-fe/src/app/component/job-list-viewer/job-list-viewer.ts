@@ -27,6 +27,7 @@ export class JobListViewer {
   m_curr_JobLogName: string = '';
   m_curr_JobLogNumber: string = '';
 
+  m_selectedRowIndex: number = -1;
 
   m_filter_jobname: WritableSignal<string> = signal(''); // filtro sul nome del job. I filtri possono essere molti separatati da virgola
   m_filter_username: WritableSignal<string> = signal(''); // filtro sul nome utente. I filtri possono essere molti separatati da virgola
@@ -72,6 +73,7 @@ export class JobListViewer {
         continue;
       }
     }
+    this.m_selectedRowIndex = -1;
     return allJobs;
   });
 
@@ -230,6 +232,7 @@ export class JobListViewer {
         console.log(data);
         this.message_service.messageShow(this.message_service.msg_type.Success, 'Elaborazione completata con successo');
         this.updateList.emit(); // chiamo la funzione del componente padre per aggiornare la lista
+        this.m_selectedRowIndex =-1;
       },
       err => {
         console.log('errore in fase di esecuzione della richiesta');
@@ -315,6 +318,8 @@ export class JobListViewer {
     aListIem.jobDate.update(() => '');
     this.loadDetailInfo(aListIem);
   }
-
+  selectRow(i: number) {
+    this.m_selectedRowIndex = i;
+  }
 }
 

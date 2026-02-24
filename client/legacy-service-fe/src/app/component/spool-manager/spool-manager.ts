@@ -5,6 +5,7 @@ import { tap } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { MessageHelperService } from '../../services/message-helper.service';
 import { AuthenticationService } from '../../services/authentication.service';
+import { NgClass } from '@angular/common';
 
 enum SortMode {
   Nome_ASC,
@@ -17,13 +18,14 @@ enum SortMode {
 }
 @Component({
   selector: 'app-spool-manager',
-  imports: [FormsModule],
+  imports: [FormsModule,NgClass],
   templateUrl: './spool-manager.html',
   styleUrl: './spool-manager.css',
 })
 
 export class SpoolManager {
 
+  m_selectedRowIndex: number = -1;
 
   m_sort_mode: SortMode = SortMode.undefined;
   protected readonly m_spool_file_list: WritableSignal<SpoolFileItem[]> = signal([]);
@@ -45,6 +47,7 @@ export class SpoolManager {
 
   getSpoolFileList() {
     console.log('getSpoolFileList params are:', this.spoolManagerFilterParams);
+    this.m_selectedRowIndex=-1;
     this.bkService.getSpoolFileList(this.spoolManagerFilterParams.userName).subscribe(
       data => {
         console.log(data);
@@ -118,6 +121,7 @@ export class SpoolManager {
       data => {
         this.m_spool_file_list.update((items) => items.filter((_, index) => index !== idx));
         this.message_service.info('Cancellazione terminata con successo');
+        this.m_selectedRowIndex = -1;
       },
       error => {
         console.log('errore in fase di esecuzione della richiesta');
@@ -133,6 +137,7 @@ export class SpoolManager {
       data => {
         this.getSpoolFileList();
         this.message_service.info('Cancellazione degli spool terminata con successo');
+        this.m_selectedRowIndex = -1;
       },
       error => {
         this.message_service.error('Errore in fase di esecuzione della richiesta');
@@ -152,6 +157,7 @@ export class SpoolManager {
 
   sort(sortCol: string) {
     console.log('sort', sortCol);
+    this.m_selectedRowIndex = -1;
     this.loadingService.setLoading(true);
     if (sortCol === 'nome') {
       if (this.m_sort_mode === SortMode.Nome_ASC) {
@@ -192,6 +198,7 @@ export class SpoolManager {
     console.log('filterSpool - spoolNameFilter is: ', this.spoolManagerFilterParams.spoolNameFilter);
     console.log('filterSpool - spoolDateFilter is: ', this.spoolManagerFilterParams.spoolDateFilter);
     console.log('filterSpool - spoolJobNameFilter is: ', this.spoolManagerFilterParams.spoolJobNameFilter);
+    this.m_selectedRowIndex = -1;
     this.m_spool_file_list.set([...this.m_spool_file_list_all()]);
     var i = this.m_spool_file_list().length;
     while (i--) {
@@ -243,6 +250,8 @@ export class SpoolManager {
     this.filterSpool();
 
   }
-
+  selectRow(i: number) {
+    this.m_selectedRowIndex = i;
+  }
 }
 

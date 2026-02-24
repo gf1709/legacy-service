@@ -136,7 +136,7 @@
 
       <tbody>
         <ng-container *ngFor="let item of m_fileList().files; let i=index">
-          <tr class="border-top">
+          <tr class="border-top" (click)="clickRow(i)" [ngClass]="{'fw-bold' : m_selectedRowIndex===i}">
             <td class="text-center">
               @if (item.type==='f') {
               <label>

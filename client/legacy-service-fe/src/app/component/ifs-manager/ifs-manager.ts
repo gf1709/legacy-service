@@ -36,6 +36,7 @@ class IfsFileContent {
 })
 export class IfsManager implements AfterContentChecked {
 
+  m_selectedRowIndex: number = -1;
   m_fileList: WritableSignal<IfsFileListFileResult> = signal(new IfsFileListFileResult());
   m_current_file: { dir: string, file: string, idx: number } = { dir: '', file: '', idx: -1 };
   m_file_content: WritableSignal<IfsFileContent[]> = signal([]);
@@ -123,6 +124,7 @@ export class IfsManager implements AfterContentChecked {
 
   listFiles() {
     console.log('[0]-listFiles', this.ifsManagerSearchParams.directory, this.ifsManagerSearchParams.filePattern);
+    this.m_selectedRowIndex = -1;
     // this.m_job_list = [];
     this.bkService.listIFSFiles(this.ifsManagerSearchParams.directory, this.ifsManagerSearchParams.filePattern, this.ifsManagerSearchParams.fromDate, this.ifsManagerSearchParams.toDate).subscribe(
       data => {
@@ -354,6 +356,7 @@ export class IfsManager implements AfterContentChecked {
 
   sort(sortCol: string) {
     console.log('[1] sort, this.m_sort_mode', sortCol, this.m_sort_mode);
+    this.m_selectedRowIndex = -1;
     if (sortCol === 'name') {
 
       if (this.m_sort_mode === SortMode.Name_ASC) {
@@ -455,6 +458,7 @@ export class IfsManager implements AfterContentChecked {
     if (confirm(text) === false) {
       return;
     }
+    this.m_selectedRowIndex = -1;
 
     console.log('deleteAllListedFiles:');
     let bFullFileNamesToDelete: string[] = [];
@@ -492,6 +496,7 @@ export class IfsManager implements AfterContentChecked {
     let bFullFileName: string = this.getFullFileName(dir, fileName);
     // if (!confirm("Sicuro di voler cancellare il file " + bFullFileName))
     //   return;
+    this.m_selectedRowIndex = -1;
     this.setCurrentFileEmpty();
     console.log('delete', dir, fileName);
     this.bkService.deleteIFSFile(bFullFileName).subscribe(
@@ -618,6 +623,7 @@ export class IfsManager implements AfterContentChecked {
   }
 
   toggleSelectDeselectAllRows() {
+    this.m_selectedRowIndex = -1;
     this.m_allRowsSelected = !this.m_allRowsSelected;
     for (let ifsFileIdx: number = this.m_fileList().files.length - 1; ifsFileIdx >= 0; ifsFileIdx--) {
       this.m_fileList().files[ifsFileIdx].isSelected = this.m_allRowsSelected;
@@ -711,6 +717,9 @@ export class IfsManager implements AfterContentChecked {
         console.error('Error splitting IFS file:', error);
       }
     );
+  }
+  clickRow(i: number) {
+    this.m_selectedRowIndex = i;
   }
 
 }

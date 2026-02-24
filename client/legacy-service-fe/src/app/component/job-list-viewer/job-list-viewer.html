@@ -121,23 +121,23 @@
 
 
 @for (item of m_job_list(); track $index; let i = $index) {
-<div class="row small border-1 border-bottom  mt-1 g-1">
-  <div class="col-1 small mb-1" [ngClass]="{'fw-bold text-success' : item.showJobInfo()}">
+<div class="row small border-1 border-bottom  mt-1 g-1" (click)="selectRow(i)">
+  <div class="col-1 small mb-1">
     {{i}}
   </div>
-  <div class="col-1 small" [ngClass]="{'fw-bold' : item.showJobInfo()}">
+  <div class="col-1 small" [ngClass]="{'fw-bold' : m_selectedRowIndex===i}">
     {{item.job.name()}}
   </div>
-  <div class="col-1 small" [ngClass]="{'fw-bold' : item.showJobInfo()}">
+  <div class="col-1 small" [ngClass]="{'fw-bold' : m_selectedRowIndex===i}">
     {{item.job.user()}}
   </div>
-  <div class="col-3 small" [ngClass]="{'fw-bold' : item.showJobInfo()}">
+  <div class="col-3 small" [ngClass]="{'fw-bold' : m_selectedRowIndex===i}">
     {{item.job.currentUser()}}-{{item.job.currentUserDescription()}}
   </div>
-  <div class="col-1 small" [ngClass]="{'fw-bold' : item.showJobInfo()}">
+  <div class="col-1 small" [ngClass]="{'fw-bold' : m_selectedRowIndex===i}">
     {{item.job.number()}}
   </div>
-  <div class="col-1 small" [ngClass]="{'fw-bold' : item.showJobInfo()}">
+  <div class="col-1 small" [ngClass]="{'fw-bold' : m_selectedRowIndex===i}">
     @if (!m_is_netstat_list()) {
     {{item.job.function()}}
     }
@@ -147,7 +147,7 @@
     }
     }
   </div>
-  <div class="col-1 small" [ngClass]="{'fw-bold' : item.showJobInfo()}">
+  <div class="col-1 small" [ngClass]="{'fw-bold' : m_selectedRowIndex===i}">
     @if (!m_is_netstat_list()) {
     {{item.job.status()}}
     }
@@ -156,33 +156,33 @@
   <div class="col-auto">
     <div class="row">
       <div class="col">
-        <button class="btn btn-sm" type="button" title="Download joblog"
+        <button class="btn btn-sm py-0" type="button" title="Download joblog"
           (click)="getJobLogFile(item.job.user(), item.job.name(), item.job.number())">
           <i class="bi bi-download"></i>
         </button>
       </div>
       <div class="col">
-        <button class="btn btn-sm" type="button" title="Visualizza joblog"
+        <button class="btn btn-sm py-0" type="button" title="Visualizza joblog"
           (click)="getJobLog(item.job.user(), item.job.name(), item.job.number())" data-bs-toggle="modal"
           data-bs-target="#showJobLogModal">
           <i class="bi bi-eye"></i>
         </button>
       </div>
       <div class="col">
-        <button class="btn btn-sm" type="button" title="Visualizza informazioni job"
+        <button class="btn btn-sm py-0" type="button" title="Visualizza informazioni job"
           (click)="toggleShowJobStatusInfo(item)">
           <i class="bi bi-info-circle"></i>
         </button>
       </div>
       <div class="col">
-        <button class="btn btn-sm" type="button" title="Set joblog verbose"
+        <button class="btn btn-sm py-0" type="button" title="Set joblog verbose"
           (click)="setJobLogVerbose(item.job.user(), item.job.name(), item.job.number())">
           <i class="bi bi-chat-left-text"></i>
         </button>
       </div>
       <div class="col">
         @if(authService.isUserAdmin() || item.job.user().toLocaleLowerCase()===authService.getLoggedInUsername()?.toLocaleLowerCase()) {
-        <button class="btn btn-sm" type="button" title="Termina lavoro"
+        <button class="btn btn-sm py-0" type="button" title="Termina lavoro"
           (click)="endJob(item.job.user(), item.job.name(), item.job.number())">
           <i class="bi bi-x-lg text-danger"></i>
         </button>

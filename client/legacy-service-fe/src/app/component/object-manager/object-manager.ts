@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 import { Component, signal, WritableSignal } from '@angular/core';
 import { BkService, FFDResult, ObjectDescription, ObjectDescriptionDetail, ObjectManagerListFilterParams } from '../../services/bk.service';
 import { MessageHelperService } from '../../services/message-helper.service';
@@ -9,7 +9,7 @@ class DSPOBJDResult {
 
 @Component({
   selector: 'app-object-manager',
-  imports: [FormsModule],
+  imports: [FormsModule, NgClass],
   templateUrl: './object-manager.html',
   styleUrl: './object-manager.css',
 })
@@ -17,6 +17,7 @@ export class ObjectManager {
 
   constructor(private bkService: BkService, private message_service: MessageHelperService) {
   }
+  m_selectedRowIndex: number = -1;
 
   m_object_list: WritableSignal<ObjectDescription[]> = signal([]);
 
@@ -118,4 +119,10 @@ export class ObjectManager {
     if (event.code.indexOf('Enter') > -1)
       this.getObjetcList();
   }
+
+  selectRow(i: number) {
+    this.m_selectedRowIndex = i;
+  }
+
+
 }
