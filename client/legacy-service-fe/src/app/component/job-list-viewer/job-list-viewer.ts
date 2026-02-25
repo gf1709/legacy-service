@@ -34,6 +34,8 @@ export class JobListViewer {
   m_filter_current_username: WritableSignal<string> = signal(''); // filtro sul nome utente. I filtri possono essere molti separatati da virgola
   m_filter_status: WritableSignal<string> = signal(''); // filtro sulla funzione. I filtri possono essere molti separatati da virgola
 
+  m_remote_addresses_len: number = 0;
+
   // lista dei job filtrata
   public m_job_list: Signal<JobListItemExtended[]> = computed(() => {
     const allJobs = this.joblist().slice(); // copia dell'array originale
@@ -43,9 +45,11 @@ export class JobListViewer {
     const filter_status_values = this.m_filter_status().split(',');
 
     var i = allJobs.length;
-
+    var remote_addresses = 0;
     while (i--) {
       var element: JobListItemExtended = allJobs[i];
+      if (this.m_is_netstat_list() == true)
+        remote_addresses += element.job.remoteAddresses().length;
 
       const jobName = element.job.name();
       if (!this.isValueContainedInFilters(jobName, filter_jobname_values)) {
@@ -74,6 +78,7 @@ export class JobListViewer {
       }
     }
     this.m_selectedRowIndex = -1;
+    this.m_remote_addresses_len = remote_addresses;
     return allJobs;
   });
 

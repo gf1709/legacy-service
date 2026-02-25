@@ -1,6 +1,10 @@
 <div class="row row-cols-auto justify-content-center">
   <h6 class="mt-3">
     Lavori [{{m_job_list().length}}]
+    @if(m_is_netstat_list())
+    {
+      - Indirizzi remoti [{{m_remote_addresses_len}}]
+    }
   </h6>
 </div>
 
