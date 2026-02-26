@@ -17,13 +17,16 @@ foreach ($branch in $branches) {
         echo_error "ignore master !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
         continue
     }
-    git checkout $b
-    $grepResult = Select-String -Path * -Pattern '\bmysql_user\b' -Exclude 'res.txt', $MyInvocation.MyCommand.Name -Recurse -Quiet
-    if ($grepResult) {
-        "found----------------------------------" | Out-File -FilePath res.txt -Append -Encoding utf8
-        $b | Out-File -FilePath res.txt -Append -Encoding utf8
-        Select-String -Path * -Pattern '\bmysql_user\b' -Exclude 'res.txt', $MyInvocation.MyCommand.Name -Recurse | Out-File -FilePath res.txt -Append -Encoding utf8
-        "sector end-----------------------------" | Out-File -FilePath res.txt -Append -Encoding utf8
-        ""
-    }
+    echo_ok($branch)
+    echo_ok($b)
+
+    # # git checkout $b
+    # # $grepResult = Select-String -Path * -Pattern '\bmysql_user\b' -Exclude 'res.txt', $MyInvocation.MyCommand.Name -Recurse -Quiet
+    # # if ($grepResult) {
+    # #     "found----------------------------------" | Out-File -FilePath res.txt -Append -Encoding utf8
+    # #     $b | Out-File -FilePath res.txt -Append -Encoding utf8
+    # #     Select-String -Path * -Pattern '\bmysql_user\b' -Exclude 'res.txt', $MyInvocation.MyCommand.Name -Recurse | Out-File -FilePath res.txt -Append -Encoding utf8
+    # #     "sector end-----------------------------" | Out-File -FilePath res.txt -Append -Encoding utf8
+    # #     ""
+    # # }
 }
