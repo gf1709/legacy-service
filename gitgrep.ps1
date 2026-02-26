@@ -21,12 +21,13 @@ foreach ($branch in $branches) {
     echo_ok('current branch is ', $b)
     $searchString = '\bif\b'
     git checkout $b
-    $grepResult = Select-String -Path * -Pattern $searchString -Exclude 'res.txt', $MyInvocation.MyCommand.Name -Recurse -Quiet
+    $grepResult = Get-ChildItem -Recurse -Include *.java | Select-String -Pattern  $searchString
     if ($grepResult) {
         "found----------------------------------" | Out-File -FilePath res.txt -Append -Encoding utf8
         $b | Out-File -FilePath res.txt -Append -Encoding utf8
-        Select-String -Path * -Pattern $searchString -Exclude 'res.txt', $MyInvocation.MyCommand.Name -Recurse | Out-File -FilePath res.txt -Append -Encoding utf8
+        $grepResult | Out-File -FilePath res.txt -Append -Encoding utf8
         "sector end-----------------------------" | Out-File -FilePath res.txt -Append -Encoding utf8
         ""
     }
 }
+# Get-ChildItem -Recurse -Include *.java | Select-String -Pattern 'if'
