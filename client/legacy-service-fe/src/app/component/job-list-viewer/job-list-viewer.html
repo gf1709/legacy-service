@@ -125,23 +125,23 @@
 
 
 @for (item of m_job_list(); track $index; let i = $index) {
-<div class="row small border-1 border-bottom  mt-1 g-1" (click)="selectRow(i)">
-  <div class="col-1 small mb-1">
+<div class="row small border-1 border-bottom  mt-1 g-1 align-items-center" (click)="selectRow(i)">
+  <div class="col-1 small mb-1 mt-0">
     {{i}}
   </div>
-  <div class="col-1 small" [ngClass]="{'fw-bold' : m_selectedRowIndex===i}">
+  <div class="col-1 small mt-0" [ngClass]="{'fw-bold' : m_selectedRowIndex===i}">
     {{item.job.name()}}
   </div>
-  <div class="col-1 small" [ngClass]="{'fw-bold' : m_selectedRowIndex===i}">
+  <div class="col-1 small mt-0" [ngClass]="{'fw-bold' : m_selectedRowIndex===i}">
     {{item.job.user()}}
   </div>
-  <div class="col-3 small" [ngClass]="{'fw-bold' : m_selectedRowIndex===i}">
+  <div class="col-3 small mt-0" [ngClass]="{'fw-bold' : m_selectedRowIndex===i}">
     {{item.job.currentUser()}}-{{item.job.currentUserDescription()}}
   </div>
-  <div class="col-1 small" [ngClass]="{'fw-bold' : m_selectedRowIndex===i}">
+  <div class="col-1 small mt-0" [ngClass]="{'fw-bold' : m_selectedRowIndex===i}">
     {{item.job.number()}}
   </div>
-  <div class="col-1 small" [ngClass]="{'fw-bold' : m_selectedRowIndex===i}">
+  <div class="col-1 small mt-0" [ngClass]="{'fw-bold' : m_selectedRowIndex===i}">
     @if (!m_is_netstat_list()) {
     {{item.job.function()}}
     }
@@ -151,7 +151,7 @@
     }
     }
   </div>
-  <div class="col-1 small" [ngClass]="{'fw-bold' : m_selectedRowIndex===i}">
+  <div class="col-1 small mt-0" [ngClass]="{'fw-bold' : m_selectedRowIndex===i}">
     @if (!m_is_netstat_list()) {
     {{item.job.status()}}
     }
