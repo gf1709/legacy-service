@@ -1,0 +1,50 @@
+<div>
+  <div class="container">
+
+    <div class="row row-cols-auto justify-content-center p-3">
+      <h5>
+        Generatore di codice per la creazione di un entitlement in C# e oracle
+      </h5>
+    </div>
+    <div class="row row-cols-auto justify-content-center">
+      <div class="col input-group input-group-sm mb-2" style="width: 400px;">
+        <input class="form-control" type="file" #csvReader name="Upload CSV" id="txtFileUpload" title="Upload csv file"
+          (change)="uploadListener($event)" accept=".csv" />
+        <span class="input-group-text bg-transparent">
+          <i class="bi bi-upload" title="Selezionare il file CSV" (click)="csvReader.click()"></i>
+        </span>
+      </div>
+    </div>
+
+    <div class="row row-cols-auto justify-content-center">
+      <div class="col col-6 offset-1 input-group input-group-sm mb-2">
+
+        <table class="table table-sm table-bordered small mt-4">
+          <thead>
+            <tr class="small">
+              <th scope="col">#</th>
+              <th scope="col">Description</th>
+              <th scope="col">Nature</th>
+              <th scope="col">Entitlement</th>
+              <th scope="col">Code</th>
+              <th scope="col">Application</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (record of records(); track $index;) {
+            <tr class="small">
+              <th scope="row">{{$index+1}}</th>
+              <td> <span>{{record.description}}</span> </td>
+              <td> <span>{{record.nature}}</span> </td>
+              <td> <span>{{record.entitlement}}</span> </td>
+              <td> <span>{{record.code}}</span> </td>
+              <td> <span>{{record.application}}</span> </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>

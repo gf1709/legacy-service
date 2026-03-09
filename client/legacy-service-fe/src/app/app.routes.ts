@@ -15,6 +15,7 @@ import { DsplogManager } from './component/dsplog-manager/dsplog-manager';
 import { CdcTableCreationManager } from './component/cdc-table-creation-manager/cdc-table-creation-manager';
 import { SqlScriptManager } from './component/sql-script-manager/sql-script-manager';
 import { JavaClassGenerator } from './component/java-class-generator/java-class-generator';
+import { EntitlementCodeGenerator } from './component/entitlement-code-generator/entitlement-code-generator';
 
 export const routes: Routes = [
   { path: '', component: Login },
@@ -33,4 +34,5 @@ export const routes: Routes = [
   { path: 'ifs-manager', component: IfsManager, canActivate: [AuthGaurdService] },
   { path: 'dsplog-manager', component: DsplogManager, canActivate: [AuthGaurdService] },
   { path: 'java-class-generator', component: JavaClassGenerator, canActivate: [AuthGaurdService] },
+  { path: 'entitlement-code-generator', component: EntitlementCodeGenerator, canActivate: [AuthGaurdService] }
 ];
