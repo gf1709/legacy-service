@@ -9,42 +9,174 @@
     <div class="row row-cols-auto justify-content-center">
       <div class="col input-group input-group-sm mb-2" style="width: 400px;">
         <input class="form-control" type="file" #csvReader name="Upload CSV" id="txtFileUpload" title="Upload csv file"
-          (change)="uploadListener($event)" accept=".csv" />
+          (change)="uploadListener($event)" accept=".csv" placeholder="Seleziona il file csv da caricare" />
         <span class="input-group-text bg-transparent">
           <i class="bi bi-upload" title="Selezionare il file CSV" (click)="csvReader.click()"></i>
         </span>
       </div>
     </div>
 
-    <div class="row row-cols-auto justify-content-center">
-      <div class="col col-6 offset-1 input-group input-group-sm mb-2">
+    <form #addNewEntitlementForm="ngForm" (ngSubmit)="saveNewEntitlement()">
+      <div class="row row-cols-auto justify-content-center">
+        <div class="col col-6 offset-1 input-group input-group-sm mb-2">
+          <table class="table table-sm table-bordered small mt-4">
+            <thead>
+              <tr class="small">
+                <th scope="col">#</th>
+                <th scope="col">Description</th>
+                <th scope="col">Nature</th>
+                <th scope="col">Entitlement</th>
+                <th scope="col">Code</th>
+                <th scope="col">Application</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (record of m_records(); track $index;) {
+              <tr class="small">
+                <th scope="row">{{$index}}</th>
+                <td> <span>{{record.description}}</span> </td>
+                <td> <span>{{record.nature}}</span> </td>
+                <td> <span>{{record.entitlement}}</span> </td>
+                <td> <span>{{record.code}}</span> </td>
+                <td> <span>{{record.application}}</span> </td>
+              </tr>
+              }
+              @if (m_toggleShowAddNewRecord) {
+              <tr class="small">
+                <th scope="row">{{m_records().length+1}}</th>
+                <td> <input #description class="form-control form-control-sm" type="text" placeholder="Description"
+                    aria-label="Description" [(ngModel)]="m_description" name="description" required minlength="3"></td>
+                <td> <input #nature class="form-control form-control-sm" type="text" placeholder="Nature"
+                    aria-label="Nature" [(ngModel)]="m_nature" name="nature" required minlength="3"></td>
+                <td> <input #entitlement class="form-control form-control-sm" type="text" placeholder="Entitlement"
+                    aria-label="Entitlement" [(ngModel)]="m_entitlement" name="entitlement" required minlength="3"></td>
+                <td> <input #code class="form-control form-control-sm" type="text" placeholder="Code" aria-label="Code"
+                    [(ngModel)]="m_code" name="code" required minlength="3"></td>
+                <td>
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <input #application class="form-control form-control-sm" type="text" placeholder="Application"
+                      aria-label="Application" [(ngModel)]="m_application" name="application" required minlength="3">
+                    <button class="btn btn-sm btn-outline-primary" type="submit" title="Salva entitlement"
+                      [disabled]="!addNewEntitlementForm.valid"  >
+                      <i class="bi bi-check"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary" type="button" title="Annulla" (click)="toggleNewEntitlement()">
+                      <i class="bi bi-x"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="6" class="text-center">
+                  @if (addNewEntitlementForm.controls['description']?.invalid &&
+                  (addNewEntitlementForm.controls['description']?.dirty ||
+                  addNewEntitlementForm.controls['description']?.touched)) {
+                  @if(addNewEntitlementForm.controls['description']?.hasError('required')) {
+                  <small class="text-danger">
+                    Description is required.
+                  </small>
+                  }
+                  @if(addNewEntitlementForm.controls['description']?.hasError('minlength')) {
+                  <small class="text-danger">
+                    The minimum length for Description field is
+                    {{addNewEntitlementForm.controls['description']?.errors!['minlength'].requiredLength}}
+                    characters.
+                  </small>
+                  }
+                  }
 
-        <table class="table table-sm table-bordered small mt-4">
-          <thead>
-            <tr class="small">
-              <th scope="col">#</th>
-              <th scope="col">Description</th>
-              <th scope="col">Nature</th>
-              <th scope="col">Entitlement</th>
-              <th scope="col">Code</th>
-              <th scope="col">Application</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (record of records(); track $index;) {
-            <tr class="small">
-              <th scope="row">{{$index+1}}</th>
-              <td> <span>{{record.description}}</span> </td>
-              <td> <span>{{record.nature}}</span> </td>
-              <td> <span>{{record.entitlement}}</span> </td>
-              <td> <span>{{record.code}}</span> </td>
-              <td> <span>{{record.application}}</span> </td>
-            </tr>
-            }
-          </tbody>
-        </table>
+                  @else if (addNewEntitlementForm.controls['nature']?.invalid &&
+                  (addNewEntitlementForm.controls['nature']?.dirty ||
+                  addNewEntitlementForm.controls['nature']?.touched)) {
+                  @if(addNewEntitlementForm.controls['nature']?.hasError('required')) {
+                  <small class="text-danger">
+                    Nature is required.
+                  </small>
+                  }
+                  @if(addNewEntitlementForm.controls['nature']?.hasError('minlength')) {
+                  <small class="text-danger">
+                    The minimum length for Nature field is
+                    {{addNewEntitlementForm.controls['nature']?.errors!['minlength'].requiredLength}}
+                    characters.
+                  </small>
+                  }
+                  }
+
+                  @else if (addNewEntitlementForm.controls['entitlement']?.invalid &&
+                  (addNewEntitlementForm.controls['entitlement']?.dirty ||
+                  addNewEntitlementForm.controls['entitlement']?.touched)) {
+                  @if(addNewEntitlementForm.controls['entitlement']?.hasError('required')) {
+                  <small class="text-danger">
+                    Entitlement is required.
+                  </small>
+                  }
+                  @if(addNewEntitlementForm.controls['entitlement']?.hasError('minlength')) {
+                  <small class="text-danger">
+                    The minimum length for Entitlement field is
+                    {{addNewEntitlementForm.controls['entitlement']?.errors!['minlength'].requiredLength}}
+                    characters.
+                  </small>
+                  }
+                  }
+
+                  @else if (addNewEntitlementForm.controls['code']?.invalid &&
+                  (addNewEntitlementForm.controls['code']?.dirty ||
+                  addNewEntitlementForm.controls['code']?.touched)) {
+                  @if(addNewEntitlementForm.controls['code']?.hasError('required')) {
+                  <small class="text-danger">
+                    Code is required.
+                  </small>
+                  }
+                  @if(addNewEntitlementForm.controls['code']?.hasError('minlength')) {
+                  <small class="text-danger">
+                    The minimum length for Code field is
+                    {{addNewEntitlementForm.controls['code']?.errors!['minlength'].requiredLength}}
+                    characters.
+                  </small>
+                  }
+                  }
+
+                  @else if (addNewEntitlementForm.controls['application']?.invalid &&
+                  (addNewEntitlementForm.controls['application']?.dirty ||
+                  addNewEntitlementForm.controls['application']?.touched)) {
+                  @if(addNewEntitlementForm.controls['application']?.hasError('required')) {
+                  <small class="text-danger">
+                    Application is required.
+                  </small>
+                  }
+                  @if(addNewEntitlementForm.controls['application']?.hasError('minlength')) {
+                  <small class="text-danger">
+                    The minimum length for Application field is
+                    {{addNewEntitlementForm.controls['application']?.errors!['minlength'].requiredLength}}
+                    characters.
+                  </small>
+                  }
+                  }
+
+                </td>
+              </tr>
+              }
+            </tbody>
+            <tfoot>
+              <tr>
+                <td class="text-end" colspan="7" style="width: 100px;">
+                  @if (!m_toggleShowAddNewRecord) {
+                  <button class="btn btn-sm btn-primary mx-2" type="button" title="Aggiungi entitlement"
+                    (click)="toggleNewEntitlement()">
+                    <i class="bi bi-plus"></i>
+                  </button>
+                  }
+                  <button class="btn btn-sm btn-secondary" type="button" title="Resetta tabella" (click)="fileReset()">
+                    <i class="bi bi-x"></i>
+                  </button>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
       </div>
-    </div>
+    </form>
+
 
   </div>
 </div>
