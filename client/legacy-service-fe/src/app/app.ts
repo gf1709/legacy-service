@@ -18,7 +18,7 @@ export class App {
 
   protected readonly title = signal('Allitude. Legacy Service');
   private TOAST_TIMEOUT: number = 5000;
-  private timeoutID: number = -1;
+  private timeoutID: NodeJS.Timeout | undefined;
 
   constructor(private router: Router, public authService: AuthenticationService,
     private bkService: BkService, public message_service: MessageHelperService) {
@@ -51,7 +51,7 @@ export class App {
     this.my_toast.nativeElement.classList.remove('show');
     console.log('timeoutID [3a] - clearing timeout:', this.timeoutID);
     clearTimeout(this.timeoutID);
-    this.timeoutID = -1;
+    // this.timeoutID = -1;
     console.log('timeoutID [3b]:', this.timeoutID);
   }
 

@@ -10,6 +10,8 @@ cd client
 - npm install @angular/router @angular/forms
 - npm install bootstrap-icons
 - npm install jwt-decode
+- npm install jszip
+- npm i @types/file-saver
 
 node_modules\.bin\ng new legacy-service-fe
 npm install ngx-toastr --save

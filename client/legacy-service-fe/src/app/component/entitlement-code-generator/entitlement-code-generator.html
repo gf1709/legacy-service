@@ -28,6 +28,7 @@
                 <th scope="col">Entitlement</th>
                 <th scope="col">Code</th>
                 <th scope="col">Application</th>
+                <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
@@ -39,6 +40,12 @@
                 <td> <span>{{record.entitlement}}</span> </td>
                 <td> <span>{{record.code}}</span> </td>
                 <td> <span>{{record.application}}</span> </td>
+                <td class="text-center">
+                  <button class="btn btn-sm" type="button" title="Elimina"
+                    (click)="deleteEntitlement($index)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </td>
               </tr>
               }
               @if (m_toggleShowAddNewRecord) {
@@ -56,18 +63,20 @@
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <input #application class="form-control form-control-sm" type="text" placeholder="Application"
                       aria-label="Application" [(ngModel)]="m_application" name="application" required minlength="3">
-                    <button class="btn btn-sm btn-outline-primary" type="submit" title="Salva entitlement"
-                      [disabled]="!addNewEntitlementForm.valid"  >
+                    <button class="btn btn-sm" type="submit" title="Salva entitlement"
+                      [disabled]="!addNewEntitlementForm.valid">
                       <i class="bi bi-check"></i>
                     </button>
-                    <button class="btn btn-sm btn-outline-secondary" type="button" title="Annulla" (click)="toggleNewEntitlement()">
+                    <button class="btn btn-sm " type="button" title="Annulla"
+                      (click)="toggleNewEntitlement()">
                       <i class="bi bi-x"></i>
                     </button>
                   </div>
                 </td>
+                <td></td>
               </tr>
               <tr>
-                <td colspan="6" class="text-center">
+                <td colspan="7" class="text-center">
                   @if (addNewEntitlementForm.controls['description']?.invalid &&
                   (addNewEntitlementForm.controls['description']?.dirty ||
                   addNewEntitlementForm.controls['description']?.touched)) {
@@ -159,14 +168,19 @@
             </tbody>
             <tfoot>
               <tr>
-                <td class="text-end" colspan="7" style="width: 100px;">
+                <td class="text-center" colspan="7">
                   @if (!m_toggleShowAddNewRecord) {
-                  <button class="btn btn-sm btn-primary mx-2" type="button" title="Aggiungi entitlement"
+                  <button class="btn mx-1" type="button" title="Aggiungi entitlement"
                     (click)="toggleNewEntitlement()">
                     <i class="bi bi-plus"></i>
                   </button>
                   }
-                  <button class="btn btn-sm btn-secondary" type="button" title="Resetta tabella" (click)="fileReset()">
+                  <button class="btn" type="button" title="Genera codice" (click)="generateEntitlementCodes()">
+                    <i class="bi bi-code-slash"></i>
+                  </button>
+
+
+                  <button class="btn" type="button" title="Cancella tutti gli entitlement" (click)="fileReset()">
                     <i class="bi bi-x"></i>
                   </button>
                 </td>

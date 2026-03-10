@@ -1,9 +1,11 @@
+import { saveAs } from 'file-saver';
+// import * as fileSaver from 'file-saver';
 import { Component, signal, WritableSignal } from '@angular/core';
 import { BkService } from '../../services/bk.service';
 import { MessageHelperService } from '../../services/message-helper.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import JSZip from "jszip";
 
 export class CSVRecord {
   public description: string = '';
@@ -137,7 +139,65 @@ export class EntitlementCodeGenerator {
     this.m_code = '';
     this.m_application = '';
     this.m_toggleShowAddNewRecord = !this.m_toggleShowAddNewRecord;
+  }
+
+  deleteEntitlement(index: number) {
+    if (!confirm('Sicuro di voler eliminare questo entitlement ?'))
+      return;
+    this.m_records.update(records => records.filter((_, i) => i !== index));
+  }
+  generateEntitlementCodes() {
+    if (this.m_records().length == 0) {
+      this.message_service.messageShow(this.message_service.msg_type.Error, 'No entitlement to generate code');
+      return;
+    }
+    const zip = new JSZip();
+    for (let record of this.m_records()) {
+      let csCode: string[] = [];
+      csCode.push(' using System.ComponentModel; ');
+      csCode.push(' using XEngine.Controls; ');
+      csCode.push(' using XEngine.Core; ');
+      csCode.push(' namespace XX_UnNamespace');
+      csCode.push(' { ');
+      csCode.push('     [DescriptionAttribute("' + record.description + '")] ');
+      csCode.push('     [NatureAttribute("' + record.nature + '")] ');
+      csCode.push('     [AccessNameAttribute("' + record.entitlement.toUpperCase() + '")] ');
+      csCode.push('     [CategoryAttribute("View")] ');
+      let lineAdditionalInfo = '     [AdditionalInfoAttribute("' + record.code + '","CBM:' + record.application.substring(0, 16);
+      if (record.application.length > 15)
+        lineAdditionalInfo += '","' + record.application.substring(16);
+      lineAdditionalInfo += '")] '
+      csCode.push(lineAdditionalInfo);
+      csCode.push('     public class ' + record.entitlement + 'CBM : XGhostPanel ');
+      csCode.push('     { ');
+      csCode.push('     } ');
+      csCode.push(' } ');
+      this.message_service.messageShow(this.message_service.msg_type.Info, 'Entitlement code for ' + record.entitlement + ' generated successfully');
+      console.log('Entitlement code for ' + record.entitlement + ' generated successfully');
+      console.log(csCode.join('\n'));
+      let binaryData: BlobPart[] = [];
+      for (let line of csCode) {
+        binaryData.push(line + '\n');
+      }
+      zip.file(record.entitlement + '.cs', new Blob(binaryData, { type: 'text/plain' }));
+    }
+
+    let sqlCode: string[] = [];
+    sqlCode.push("PROMPT '---> 01_entitlements/patch'");
+    sqlCode.push(' ');
+    for (let record of this.m_records()) {
+      sqlCode.push("call MERGE_ENTITLEMENT( '" + record.entitlement + "CBM', NULL);");
+    }
+    sqlCode.push(' ');
+    for (let record of this.m_records()) {
+      sqlCode.push("call MERGE_APPLICATION_ENTITLEMENT( '" + record.application + "', '" + record.entitlement + "CBM');");
+    }
+    zip.file('entitlements.sql', new Blob([sqlCode.join('\n')], { type: 'text/plain' }));
+
+    // Salvo il file zip in locale
+    zip.generateAsync({ type: "blob" }).then((content) => {
+      saveAs(content, "cbm-gen-entitlement.zip");
+    });
 
   }
 }
-
