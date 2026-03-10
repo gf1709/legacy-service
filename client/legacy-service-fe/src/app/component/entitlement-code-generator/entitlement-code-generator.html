@@ -8,10 +8,10 @@
     </div>
     <div class="row row-cols-auto justify-content-center">
       <div class="col input-group input-group-sm mb-2" style="width: 400px;">
-        <input class="form-control" type="file" #csvReader name="Upload CSV" id="txtFileUpload" title="Upload csv file"
-          (change)="uploadListener($event)" accept=".csv" placeholder="Seleziona il file csv da caricare" />
+        <input class="form-control" type="file" #csvReader name="Upload " id="txtFileUpload" title="Seleziona il file csv contentente gli entitlement da generare"
+          (change)="uploadListener($event)" accept=".csv" placeholder="Seleziona il file csv contentente gli entitlement da generare" />
         <span class="input-group-text bg-transparent">
-          <i class="bi bi-upload" title="Selezionare il file CSV" (click)="csvReader.click()"></i>
+          <i class="bi bi-upload" title="Seleziona il file csv contentente gli entitlement da generare" (click)="csvReader.click()"></i>
         </span>
       </div>
     </div>
