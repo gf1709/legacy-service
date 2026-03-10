@@ -103,7 +103,7 @@ export class EntitlementCodeGenerator {
     let csvRecord: CSVRecord = new CSVRecord();
     csvRecord.description = this.m_description;
     csvRecord.nature = this.m_nature;
-    csvRecord.entitlement = this.m_entitlement;
+    csvRecord.entitlement = this.m_entitlement.toUpperCase();
     csvRecord.code = this.m_code;
     csvRecord.application = this.m_application;
     console.log('saveNewEntitlement...', csvRecord);
