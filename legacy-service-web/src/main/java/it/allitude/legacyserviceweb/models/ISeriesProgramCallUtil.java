@@ -55,6 +55,7 @@ public class ISeriesProgramCallUtil {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ConnectionService _connectionService;
     ISeriesObjectUtil _objectUtil;
+
     public ISeriesProgramCallUtil(ConnectionService iseriesConnectionService) {
 
         this._connectionService = iseriesConnectionService;
@@ -204,13 +205,13 @@ public class ISeriesProgramCallUtil {
                     || fld.getType().equals("L")
                     || fld.getType().equals("T")) {
                 datInRec.setField(fld.getName(), fld.getValue());
-            } else if (fld.getType().equals("S")) {
-                {
-                    BigDecimal bd = new BigDecimal(fld.getValue());
-                    datInRec.setField(fld.getName(), bd);
+            } else if (fld.getType().equals("S") || fld.getType().equals("P")) {
+                BigDecimal bd = new BigDecimal(0);
+                try {
+                    bd = new BigDecimal(fld.getValue());
+                } catch (NumberFormatException e) {
+                    logger.error("Errore nella conversione del campo " + fld.getName() + " con valore " + fld.getValue(), e);
                 }
-            } else if (fld.getType().equals("P")) {
-                BigDecimal bd = new BigDecimal(fld.getValue());
                 datInRec.setField(fld.getName(), bd);
             }
         }
@@ -234,7 +235,7 @@ public class ISeriesProgramCallUtil {
             } else {
                 String dsOutName = aCall.getDsout();
 
-                RecordFormat datOutRecFormat = getRecordFormat(dsOutName);                
+                RecordFormat datOutRecFormat = getRecordFormat(dsOutName);
                 FFDResponseDTO ffd = _objectUtil.getFFD("", dsOutName);
                 byte[] prmOutBytes = parmList[0].getOutputData();
                 Record prmOut = prmRecordFormat.getNewRecord(prmOutBytes);
@@ -301,7 +302,7 @@ public class ISeriesProgramCallUtil {
             }
             int bMessageLen = (256 * 256 * 256 * Byte.toUnsignedInt(aRequest[bI])) + (256 * 256 * Byte.toUnsignedInt(aRequest[bI + 1])) + (256 * Byte.toUnsignedInt(aRequest[bI + 2])) + Byte.toUnsignedInt(aRequest[bI + 3]);
             bI += 4;
-           if (bMessageLen < 0) {
+            if (bMessageLen < 0) {
                 logger.error("Messagge Len non valida per showISYOutput: " + bMessageLen);
                 break;
             }
@@ -388,9 +389,9 @@ public class ISeriesProgramCallUtil {
             byte[] digits = new byte[digitStrings.length];
             for (int i = 0; i < digitStrings.length; i++) {
                 String d = digitStrings[i].replace("0x", "").trim();
-                byte c=0;
-                try{
-                c = (byte) Integer.parseInt(d, 16);
+                byte c = 0;
+                try {
+                    c = (byte) Integer.parseInt(d, 16);
                 } catch (NumberFormatException e) {
                     logger.error("getDigits error: " + d + " in not a number");
                 }
@@ -406,7 +407,7 @@ public class ISeriesProgramCallUtil {
     }
 
     // // Torna un RecordFormat dato il nome della struttura DS
-    RecordFormat getRecordFormat(String aDsName) throws Exception {        
+    RecordFormat getRecordFormat(String aDsName) throws Exception {
         FFDResponseDTO ffd = _objectUtil.getFFD("", aDsName);
         RecordFormat fmt = new RecordFormat();
         fmt.setName(aDsName);
@@ -475,7 +476,7 @@ public class ISeriesProgramCallUtil {
 
     ArrayList<ISeriesFieldValue> getFieldValuesFromRecord(Record aRec) throws Exception {
         RecordFormat aRecFormat = aRec.getRecordFormat();
-        ArrayList<ISeriesFieldValue> values = new ArrayList<>();        
+        ArrayList<ISeriesFieldValue> values = new ArrayList<>();
         // Serve per prendere le descrizioni dei campi
         FFDResponseDTO ffd = _objectUtil.getFFD("", aRecFormat.getName());
 
@@ -560,16 +561,14 @@ public class ISeriesProgramCallUtil {
                     logger.debug("dsinRecFormat name : " + dsinRecFormat.getName());
                     Record newRec = getRecord(dsinRecFormat, aRequest, bI);
                     if (newRec != null) {
-                        ArrayList<ISeriesFieldValue> values = getFieldValuesFromRecord(newRec);                
+                        ArrayList<ISeriesFieldValue> values = getFieldValuesFromRecord(newRec);
                         pgmCallReq.setValues(values);
-                    }
-                    else {
+                    } else {
                         logger.error("newRec is null for name : " + dsi);
                     }
-                }
-                else {
+                } else {
                     logger.error("dsinRecFormat is null for name : " + dsi);
-                }   
+                }
 
             }
         }
