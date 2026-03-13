@@ -42,25 +42,20 @@ export class ObjectManager {
       }
     ]);
 
-    console.log('[0]-getObjetcList');
     this.bkService.getWRKOBJ(this.objectManagerListFilterParams.libreria, this.objectManagerListFilterParams.nome, this.objectManagerListFilterParams.tipo).subscribe(
       data => {
-        console.log(data);
         this.m_object_list.set(data);
       },
       err => {
-        console.log('errore in fase di esecuzione della richiesta');
+        console.error('errore in fase di esecuzione della richiesta getObjetcList', err);
         this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta');
       }
 
     );
 
-    // console.log('[1]-getObjetcList', x);
     return this.m_object_list;
-    // this.subscriptionToolBarComponents.toArray().forEach(val => val.getAmbienteStatus());
   }
   clean_filter() {
-    console.log('clean_filter');
     this.objectManagerListFilterParams.libreria = '*LIBL';
     this.objectManagerListFilterParams.nome = '';
     this.objectManagerListFilterParams.tipo = '';
@@ -70,26 +65,22 @@ export class ObjectManager {
     this.bkService.getDSPOBJD(o.library, o.name, o.type).subscribe(
       data => {
         this.m_objectDescriptionDetail.set(data);
-        console.log(data);
       },
       err => {
-        console.log('errore in fase di esecuzione della richiesta');
+        console.error('errore in fase di esecuzione della richiesta getDSPOBJD', err);
         this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta');
       }
 
     );
-    console.log(o);
   }
 
   showFFD(o: ObjectDescription) {
-    console.log('FFD:', o);
     this.bkService.getFFD(o.library, o.name).subscribe(
       data => {
         this.m_ffd.set(data);
-        console.log(data);
       },
       err => {
-        console.log('errore in fase di esecuzione della richiesta ffd');
+        console.error('errore in fase di esecuzione della richiesta showFFD', err);
         this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta ffd');
       }
     );
@@ -107,9 +98,7 @@ export class ObjectManager {
           sizeFFD += 10;
         else if (element.fieldType === 'P')
           sizeFFD += (element.fieldLength / 2) + 1;
-        console.log('[1]', element, index, sizeFFD);
         sizeFFD = Math.floor(sizeFFD);
-        console.log('[2]', element, index, sizeFFD);
       });
     }
     return sizeFFD;

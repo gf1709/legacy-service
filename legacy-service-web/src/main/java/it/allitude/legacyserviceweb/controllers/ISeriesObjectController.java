@@ -31,11 +31,10 @@ import it.allitude.legacyserviceweb.DTOs.WRKOBJResponseDTO;
 import it.allitude.legacyserviceweb.DTOs.WRKOBKRequestDTO;
 import it.allitude.legacyserviceweb.models.ISeriesObjectUtil;
 import it.allitude.legacyserviceweb.models.ISeriesSourceUtil;
-import it.allitude.legacyserviceweb.models.LibraryListItem;
 
 @RestController
-@CrossOrigin(origins = { "*" })
-@RequestMapping({ "/api" })
+@CrossOrigin(origins = {"*"})
+@RequestMapping({"/api"})
 
 public class ISeriesObjectController {
 
@@ -44,68 +43,95 @@ public class ISeriesObjectController {
 
     @Autowired
     private ISeriesSourceUtil _sourceUtil;
-    
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @PostMapping("/ffd")
     public ResponseEntity<?> getFFD(@RequestBody FFDRequestDTO ffdInfo) throws Exception {
         FFDResponseDTO responseDTO = _objectUtil.getFFD(ffdInfo.getLibrary(), ffdInfo.getDdsName());
-        if (responseDTO != null && responseDTO.getFields() != null && responseDTO.getFields().size() > 0 && responseDTO.getIdf() != null && responseDTO.getIdf().length() > 0)
-            return ResponseEntity.ok(responseDTO);
-        else
+        if (responseDTO != null && responseDTO.getFields() != null && responseDTO.getFields().size() > 0 && responseDTO.getIdf() != null && responseDTO.getIdf().length() > 0) {
+            return ResponseEntity.ok(responseDTO); 
+        }else {
             return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/wrkobj")
-    public List<WRKOBJResponseDTO> wrkobj(@RequestBody WRKOBKRequestDTO wrkobjInfo) throws Exception {
-        List<WRKOBJResponseDTO> res = _objectUtil.wrkobj(wrkobjInfo);
-        logger.info("wrkobj done");
-        return res;
+    public ResponseEntity<?> wrkobj(@RequestBody WRKOBKRequestDTO wrkobjInfo) {
+        try {
+            List<WRKOBJResponseDTO> res = _objectUtil.wrkobj(wrkobjInfo);
+            logger.info("wrkobj done");
+            return ResponseEntity.ok(res);
+        } catch (Exception ex) {
+            ResponseEntity<?> resEnt = new ResponseEntity<>(ex.toString(), org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR);
+            return resEnt;
+        }
     }
 
     @PostMapping("/dspobjd")
-    public DSPOBJDResponseDTO dspobjd(@RequestHeader("Authorization") String token,
-            @RequestBody DSPOBJDRequestDTO dspobjdInfo) throws Exception {
-        DSPOBJDResponseDTO res = _objectUtil.dspobjd(dspobjdInfo);
-        logger.info("dspobjd done");
-        return res;
+    public ResponseEntity<?> dspobjd(@RequestHeader("Authorization") String token, @RequestBody DSPOBJDRequestDTO dspobjdInfo) {
+        try {
+            DSPOBJDResponseDTO res = _objectUtil.dspobjd(dspobjdInfo);
+            logger.info("dspobjd done");
+            return ResponseEntity.ok(res);
+        } catch (Exception ex) {
+            ResponseEntity<?> resEnt = new ResponseEntity<>(ex.toString(), org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR);
+            return resEnt;
+        }
     }
 
     @PostMapping("/get-source-list")
-    public GetSourceListResponseDTO getSourceList(@RequestBody GetSourceListRequestDTO getSourceInfo)
-            throws Exception {
-        ArrayList<GetSourceListResponseItem> list = _sourceUtil.getSourceList(getSourceInfo.getLibrary(),
-                getSourceInfo.getSourceFile(), getSourceInfo.getSourceMember());
-        GetSourceListResponseDTO res = new GetSourceListResponseDTO(list);
-        return res;
+    public ResponseEntity<?> getSourceList(@RequestBody GetSourceListRequestDTO getSourceInfo) {
+        try {
+            ArrayList<GetSourceListResponseItem> list = _sourceUtil.getSourceList(getSourceInfo.getLibrary(), getSourceInfo.getSourceFile(), getSourceInfo.getSourceMember());
+            GetSourceListResponseDTO res = new GetSourceListResponseDTO(list);
+            return ResponseEntity.ok(res);
+        } catch (Exception ex) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).body(ex.toString());
+        }
     }
 
     @PostMapping("/get-source")
-    public GetSourceResponseDTO getSource(@RequestBody GetSourceRequestDTO getSourceInfo)
-            throws Exception {
-        ArrayList<String> lines = _sourceUtil.getSource(getSourceInfo.getLibrary(),
-                getSourceInfo.getSourceFile(), getSourceInfo.getSourceMember(), getSourceInfo.isExplodeCOPY());
-        GetSourceResponseDTO res = new GetSourceResponseDTO(getSourceInfo.getLibrary(),
-                getSourceInfo.getSourceFile(), getSourceInfo.getSourceMember(), getSourceInfo.isExplodeCOPY(), lines);
-        return res;
+    public ResponseEntity<?> getSource(@RequestBody GetSourceRequestDTO getSourceInfo) {
+        try {
+            ArrayList<String> lines = _sourceUtil.getSource(getSourceInfo.getLibrary(),
+                    getSourceInfo.getSourceFile(), getSourceInfo.getSourceMember(), getSourceInfo.isExplodeCOPY());
+            GetSourceResponseDTO res = new GetSourceResponseDTO(getSourceInfo.getLibrary(),
+                    getSourceInfo.getSourceFile(), getSourceInfo.getSourceMember(), getSourceInfo.isExplodeCOPY(), lines);
+            return ResponseEntity.ok(res);
+        } catch (Exception ex) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).body(ex.toString());
+        }
     }
 
     @GetMapping("/library-list")
-    public ArrayList<LibraryListItem> getLibraryList()
-            throws Exception {
-        return _objectUtil.GetLibraryList();
+    public ResponseEntity<?> getLibraryList() {
+        try {
+            logger.info("Getting library list");
+            return ResponseEntity.ok(_objectUtil.GetLibraryList());
+        } catch (Exception ex) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).body(ex.toString());
+        }
     }
 
     @PutMapping("/library-list/{library}")
-    public void addLibraryToLibraryList(@PathVariable String library)
-            throws Exception {
-        _objectUtil.AddLibraryToLibraryList(library);
+    public ResponseEntity<?> addLibraryToLibraryList(@PathVariable String library) {
+        try {
+            _objectUtil.AddLibraryToLibraryList(library);
+            return ResponseEntity.ok().build();
+        } catch (Exception ex) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).body(ex.toString());
+        }
     }
 
     @DeleteMapping("/library-list/{library}")
-    public void removeLibraryFromLibraryList(@PathVariable String library)
-            throws Exception {
-        _objectUtil.RemoveLibraryFromLibraryList(library);
+    public ResponseEntity<?> removeLibraryFromLibraryList(@PathVariable String library) {
+        try {
+            _objectUtil.RemoveLibraryFromLibraryList(library);
+            return ResponseEntity.ok().build();
+        } catch (Exception ex) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).body(ex.toString());
+        }
     }
+
 }

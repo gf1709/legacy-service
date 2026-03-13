@@ -25,7 +25,6 @@ export class App {
 
     message_service.toasts$.subscribe(
       () => {
-        console.log('message_service.toasts$ changed:', message_service.toasts());
         if (message_service.toasts().length > 0) {
           this.showToast();
         }
@@ -37,26 +36,20 @@ export class App {
   showToast() {
     this.my_toast.nativeElement.classList.add('show');  // visualizza il toast
     // imposto il timeout per rimuovere il toast dopo un certo periodo se non è già stato impostato
-    console.log('timeoutID [2a] - clearing timeout:', this.timeoutID);
     clearTimeout(this.timeoutID);
     this.timeoutID = setTimeout(() => {
       this.deleteAllToastMessages()
     }, this.TOAST_TIMEOUT);
-    console.log('timeoutID [2b]:', this.timeoutID);
   }
 
   deleteAllToastMessages() {
-    console.log('removeToast [3]:', this.message_service.toasts());
     this.message_service.removeAll();
     this.my_toast.nativeElement.classList.remove('show');
-    console.log('timeoutID [3a] - clearing timeout:', this.timeoutID);
     clearTimeout(this.timeoutID);
     // this.timeoutID = -1;
-    console.log('timeoutID [3b]:', this.timeoutID);
   }
 
   logout() {
-    console.log("logging out");
     this.authService.logOut().subscribe(
       data => {
         console.log('logout done');
@@ -76,7 +69,6 @@ export class App {
   }
 
   update_abi_mapper() {
-    console.log('update_abi_mapper...');
     this.bkService.updateLegacyTermialAbiMapper().subscribe(
       () => {
         console.log('update_abi_mapper done');

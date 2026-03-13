@@ -182,7 +182,7 @@ export class JobListViewer {
     this.getJobLogContent(aJobUser, aJobName, aJobNumber).subscribe(
       data => { console.log('joblog content is [2]', this.m_curr_JobLogContent) },
       err => {
-        console.log('errore in fase di esecuzione della richiesta');
+        console.log('errore in fase di esecuzione della richiesta getJobLog', err);
         this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta');
       }
     );
@@ -211,7 +211,7 @@ export class JobListViewer {
         document.body.removeChild(downloadLink);
       },
       err => {
-        console.log('errore in fase di esecuzione della richiesta');
+        console.log('errore in fase di esecuzione della richiesta getJobLogFile', err);
         this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta');
       }
     );
@@ -223,7 +223,7 @@ export class JobListViewer {
         console.log('setJobLogVerbose ok');
       },
       err => {
-        console.log('errore in fase di esecuzione della richiesta');
+        console.log('errore in fase di esecuzione della richiesta setJobLogVerbose', err);
         this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta');
       }
     );
@@ -240,7 +240,7 @@ export class JobListViewer {
         this.m_selectedRowIndex =-1;
       },
       err => {
-        console.log('errore in fase di esecuzione della richiesta');
+        console.log('errore in fase di esecuzione della richiesta endJob', err);
         this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta');
       })
   }
@@ -272,10 +272,9 @@ export class JobListViewer {
         aListIem.callStack.update(() => details['callStack']);
 
         aListIem.userDescription.update(() => details['userDescription']);
-        console.log('[1]-loadDetailInfo', aListIem);
       },
       err => {
-        console.log('errore in fase di esecuzione della richiesta');
+        console.log('errore in fase di esecuzione della richiesta getJobDetail', err);
         this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta');
       }
     );

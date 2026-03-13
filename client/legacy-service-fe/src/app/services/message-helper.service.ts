@@ -24,14 +24,12 @@ export class MessageHelperService {
   }
 
   messageShow(msgType: MsgType, message: string) {
-    console.log('MessageHelperService adding message[1]:', message, this.toasts());
     this.toasts.update(
       (values) => {
         let newMessage: string = new Date().toLocaleString() + " - " + message;
         return [...values, { type: msgType, message: newMessage }];
       }
     );
-    console.log('MessageHelperService adding message[2]:', this.toasts());
   }
 
   error(message: string) {

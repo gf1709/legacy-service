@@ -59,7 +59,7 @@ export class ZztrutManager {
         this.m_historyCall.set(data);
       },
       err => {
-        console.log('errore in fase di esecuzione della richiesta ffd');
+        console.error('errore in fase di esecuzione della richiesta retrieveHistoryCall', err);
         this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta retrieveHistoryCall');
       }
     );
@@ -141,7 +141,7 @@ export class ZztrutManager {
         })
       },
       err => {
-        console.log('errore in fase di esecuzione della richiesta ffd');
+        console.error('callProgram. Errore in fase di esecuzione del programma ', err);
         this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta callProgram');
       }
     );
@@ -193,14 +193,13 @@ export class ZztrutManager {
             newField.control = this.formBuilder.control('');
             fields.push(newField);
             this.dsinput_field_controls.push(newField.control)
-            // console.log('newField is', newField);
           })
           this.m_dsinput_fields.set(fields);
         }
       },
       err => {
-        console.log('errore in fase di esecuzione della richiesta ffd');
-        this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta ffd');
+        console.error('errore in fase di esecuzione della richiesta', err);
+        this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta');
       }
     );
   }
@@ -281,6 +280,7 @@ export class ZztrutManager {
         console.log('deleteCallFromHistory. Saving history call');
       },
       err => {
+        console.error('deleteCallFromHistory. Errore in fase di salvataggio della history call', err);
         this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di salvataggio della history call');
       }
     );

@@ -56,7 +56,7 @@ export class JobManager {
       }
       ,
       err => {
-        console.log('errore in fase di esecuzione della richiesta');
+        console.log('errore in fase di esecuzione della richiesta getJobList', err);
         this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta');
       }
     );

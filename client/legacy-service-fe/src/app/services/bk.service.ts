@@ -381,13 +381,13 @@ export class BkService {
   constructor() { }
 
   getServiziSibank() {
-    console.log('[0] getServiziSibank');
+    // console.log('[0] getServiziSibank');
     return this.httpClient.get<ServizioSibank[]>(environment.apiUrl + "/socket_service_info");
   }
 
 
   getWRKOBJ(alibraryName: string, anObjectName: string, anObjectType: string) {
-    console.log('[0] getWRKOBJ. alibraryName:', alibraryName, ', anObjectName:', anObjectName, ',anObjectType:', anObjectType);
+    // console.log('[0] getWRKOBJ. alibraryName:', alibraryName, ', anObjectName:', anObjectName, ',anObjectType:', anObjectType);
     var parms: { library: string, objectName: string, objectType: string } = {
       library: alibraryName, objectName: anObjectName, objectType: anObjectType
     };
@@ -395,7 +395,7 @@ export class BkService {
   }
 
   getDSPOBJD(alibraryName: string, anObjectName: string, anObjectType: string) {
-    console.log('[0] getDSPOBJD. alibraryName:', alibraryName, ', anObjectName:', anObjectName, ',anObjectType:', anObjectType);
+    // console.log('[0] getDSPOBJD. alibraryName:', alibraryName, ', anObjectName:', anObjectName, ',anObjectType:', anObjectType);
     var parms: { library: string, objectName: string, objectType: string } = {
       library: alibraryName, objectName: anObjectName, objectType: anObjectType
     };
@@ -408,11 +408,11 @@ export class BkService {
 
     // Check cache first
     if (this.ffdCache.has(cacheKey)) {
-      console.log('[CACHE HIT] getFFD:' + cacheKey);
+      // console.log('[CACHE HIT] getFFD:' + cacheKey);
       return of(this.ffdCache.get(cacheKey)!); // return cached as Observable
     }
 
-    console.log('[0] getFFD (cache miss). library:', alibraryName, ', file:', aFileName);
+    // console.log('[0] getFFD (cache miss). library:', alibraryName, ', file:', aFileName);
     var parms = { library: alibraryName, ddsName: aFileName };
 
     return this.httpClient.post<FFDResult>(environment.apiUrl + "/ffd", parms).pipe(
@@ -429,66 +429,66 @@ export class BkService {
   }
 
   getSourceList(alibraryName: string, aFileName: string, aMemberName: string) {
-    console.log('[0] getSourceList. alibraryName:', alibraryName, ', aFileName:', aFileName, ', aMemberName:', aMemberName);
+    // console.log('[0] getSourceList. alibraryName:', alibraryName, ', aFileName:', aFileName, ', aMemberName:', aMemberName);
     var parms: { library: string, sourceFile: string, sourceMember: string } = {
       library: alibraryName, sourceFile: aFileName, sourceMember: aMemberName
     };
     return this.httpClient.post<SourceListResult>(environment.apiUrl + "/get-source-list", parms);
   }
   getSource(alibraryName: string, aFileName: string, aMemberName: string, anExplodeCopy: boolean) {
-    console.log('[0] getSource. alibraryName:', alibraryName, ', aFileName:', aFileName, ', aMemberName:', aMemberName, ',explodeCopy:', anExplodeCopy);
+    // console.log('[0] getSource. alibraryName:', alibraryName, ', aFileName:', aFileName, ', aMemberName:', aMemberName, ',explodeCopy:', anExplodeCopy);
     var parms: { library: string, sourceFile: string, sourceMember: string, explodeCOPY: boolean } = {
       library: alibraryName, sourceFile: aFileName, sourceMember: aMemberName, explodeCOPY: anExplodeCopy
     };
     return this.httpClient.post<SourceResult>(environment.apiUrl + "/get-source", parms);
   }
   getLibraryList() {
-    console.log('[0] getLibraryList');
+    // console.log('[0] getLibraryList');
     return this.httpClient.get<LibraryListItem[]>(environment.apiUrl + "/library-list");
   }
   removeLibraryFromLibraryList(alibraryName: string) {
-    console.log('[0] removeLibraryFromLibraryList. alibraryName:', alibraryName);
+    // console.log('[0] removeLibraryFromLibraryList. alibraryName:', alibraryName);
     return this.httpClient.delete(environment.apiUrl + "/library-list/" + alibraryName);
   }
   addLibraryToLibraryList(alibraryName: string) {
-    console.log('[0] addLibraryToLibraryList. alibraryName:', alibraryName);
+    // console.log('[0] addLibraryToLibraryList. alibraryName:', alibraryName);
     return this.httpClient.put(environment.apiUrl + "/library-list/" + alibraryName, null);
   }
   getSpoolFileList(username: string) {
-    console.log('[0] getSpoolFileList', username);
+    // console.log('[0] getSpoolFileList', username);
     return this.httpClient.get<SpoolFileItem[]>(environment.apiUrl + "/spool-list/" + username);
   }
   getSpoolFileItem(jobName: string, jobuser: string, jobnumber: string, spoolName: string, spoolNumber: number) {
     let fullJobName = jobnumber + "-" + jobuser + "-" + jobName;
-    console.log('[0] getSpoolFileItem');
+    // console.log('[0] getSpoolFileItem');
     return this.httpClient.get<string[]>(environment.apiUrl + "/spool-list/" + fullJobName + "/" + spoolName + "/" + spoolNumber);
   }
   deleteSpoolFileItem(jobName: string, jobuser: string, jobnumber: string, spoolName: string, spoolNumber: number) {
     let fullJobName = jobnumber + "-" + jobuser + "-" + jobName;
-    console.log('[0] deleteSpoolFileItem', fullJobName);
+    // console.log('[0] deleteSpoolFileItem', fullJobName);
     return this.httpClient.delete<string[]>(environment.apiUrl + "/spool-list/" + fullJobName + "/" + spoolName + "/" + spoolNumber);
   }
   deleteAllSpools(username: string) {
-    console.log('[0] deleteAllSpools');
+    // console.log('[0] deleteAllSpools');
     return this.httpClient.delete<string[]>(environment.apiUrl + "/spool-list/deleteAll/" + username.toLocaleUpperCase());
   }
 
   getJobList(aJobUser: string, aJobName: string, aSortByJobName: boolean, aSortByJobStatus: boolean) {
-    console.log('[0] getJobList. aJobUser:', aJobName, ', aJobName:', aJobName, ', aSortByJobName:', aSortByJobName, ', aSortByJobStatus:', aSortByJobStatus);
+    // console.log('[0] getJobList. aJobUser:', aJobName, ', aJobName:', aJobName, ', aSortByJobName:', aSortByJobName, ', aSortByJobStatus:', aSortByJobStatus);
     var parms: { userName: string, jobName: string, sortByJobName: boolean, sortByJobStatus: boolean } = {
       userName: aJobUser, jobName: aJobName, sortByJobName: aSortByJobName, sortByJobStatus: aSortByJobStatus
     };
     return this.httpClient.post(environment.apiUrl + "/wrkactjob", parms);
   }
   netstat_job_info(aPort: number, aJobUser: string, aJobName: string) {
-    console.log('[0] netstat_job_info. aJobUser:', aJobName, ', aJobName:', aJobName, 'aPort', aPort);
+    // console.log('[0] netstat_job_info. aJobUser:', aJobName, ', aJobName:', aJobName, 'aPort', aPort);
     var parms: { port: number, userName: string, jobName: string } = {
       port: aPort, userName: aJobUser, jobName: aJobName
     };
     return this.httpClient.post<JobListItem[]>(environment.apiUrl + "/netstat_job_info", parms);
   }
   endJob(aJobUser: string, aJobName: string, aJobNumber: string) {
-    console.log('[0] endJob. aJobUser:', aJobUser, ', aJobName:', aJobName, ', aJobNumber:', aJobNumber);
+    // console.log('[0] endJob. aJobUser:', aJobUser, ', aJobName:', aJobName, ', aJobNumber:', aJobNumber);
     var parms: { userName: string, jobName: string, jobNumber: string } = {
       userName: aJobUser, jobName: aJobName, jobNumber: aJobNumber
     };
@@ -496,7 +496,7 @@ export class BkService {
   }
 
   getJobLog(aJobs: { name: string, user: string, number: string }[]) {
-    console.log('[0] getJobLog. aJobUser:', aJobs);
+    // console.log('[0] getJobLog. aJobUser:', aJobs);
     var parms: { userName: string, jobName: string, jobNumber: string }[] = [];
     aJobs.forEach(element => {
       parms.push({ userName: element.user, jobName: element.name, jobNumber: element.number })
@@ -505,44 +505,44 @@ export class BkService {
   }
 
   setJoblogVerbose(aJobUser: string, aJobName: string, aJobNumber: string) {
-    console.log('[0] setJoblogVerbose. name, user, number:', aJobUser, aJobUser, aJobNumber);
+    // console.log('[0] setJoblogVerbose. name, user, number:', aJobUser, aJobUser, aJobNumber);
     var parms: { userName: string, jobName: string, jobNumber: string } = {
       userName: aJobUser, jobName: aJobName, jobNumber: aJobNumber
     };
     return this.httpClient.post<void>(environment.apiUrl + "/set-joblog-verbose", parms);
   }
   getJobDetail(aJobUser: string, aJobName: string, aJobNumber: string) {
-    console.log('[0] getJobDetail. aJobUser:', aJobUser, ', aJobName:', aJobName, ', aJobNumber:', aJobNumber);
+    // console.log('[0] getJobDetail. aJobUser:', aJobUser, ', aJobName:', aJobName, ', aJobNumber:', aJobNumber);
     var parms: { userName: string, jobName: string, jobNumber: string } = {
       userName: aJobUser, jobName: aJobName, jobNumber: aJobNumber
     };
     return this.httpClient.post(environment.apiUrl + "/getjobdetail", parms);
   }
   callProgram(input: ProgramCallRequest) {
-    console.log('[0] callProgram. input is :', input);
+    // console.log('[0] callProgram. input is :', input);
     return this.httpClient.post<ProgramCallResponse>(environment.apiUrl + "/call-program", input);
   }
   getSession() {
-    console.log('[0] getSession.');
+    // console.log('[0] getSession.');
     return this.httpClient.get(environment.apiUrl + "/session");
   }
 
   saveHistoryCall(calls: ProgramCallRequest[]) {
-    console.log('[0] saveHistoryCall.', calls);
+    // console.log('[0] saveHistoryCall.', calls);
     return this.httpClient.post(environment.apiUrl + "/history-call-save", calls);
   }
 
   retrieveHistoryCall() {
-    console.log('[0] retrieveHistoryCall.');
+    // console.log('[0] retrieveHistoryCall.');
     return this.httpClient.get<ProgramCallRequest[]>(environment.apiUrl + "/history-call-retrieve");
   }
   logout() {
-    console.log('[0] logout.');
+    // console.log('[0] logout.');
     return this.httpClient.get(environment.apiUrl + "/logout");
   }
 
   createCDCTableDDL(aLibraryName: string, aFileName: string) {
-    console.log('[0] createCDCTableDDL. aLibraryName:', aLibraryName, ', aFileName:', aFileName);
+    // console.log('[0] createCDCTableDDL. aLibraryName:', aLibraryName, ', aFileName:', aFileName);
     var parms: { library: string, file: string } = {
       library: aLibraryName, file: aFileName
     };
@@ -550,7 +550,7 @@ export class BkService {
   }
 
   openResultSet(aSql: string, aRecno: number) {
-    console.log('[0] openResultSet. aSql:', aSql, ', aRecno:', aRecno);
+    // console.log('[0] openResultSet. aSql:', aSql, ', aRecno:', aRecno);
     var parms: { sql: string, recno: number } = {
       sql: aSql, recno: aRecno
     };
@@ -558,30 +558,30 @@ export class BkService {
   }
 
   retrieveHistorySql() {
-    console.log('[0] retrieveHistorySql.');
+    // console.log('[0] retrieveHistorySql.');
     return this.httpClient.get<string[]>(environment.apiUrl + "/history-sql-retrieve");
   }
   listIFSFiles(aDir: string, aPattern: string, fromDate: Date | null, toDate: Date | null) {
-    console.log('[0] listIFSFiles. aDir:', aDir, ', aPattern:', aPattern);
+    // console.log('[0] listIFSFiles. aDir:', aDir, ', aPattern:', aPattern);
     var parms: { directory: string, pattern: string, fromDate: Date | null, toDate: Date | null } = {
       directory: aDir, pattern: aPattern, fromDate: fromDate, toDate: toDate
     };
     return this.httpClient.post<IfsFileListFileResult>(environment.apiUrl + "/utility/listFiles", parms);
   }
   splitIFSFile(aFileName: string) {
-    console.log('[0] splitIFSFileContent. aFileName:', aFileName);
+    // console.log('[0] splitIFSFileContent. aFileName:', aFileName);
     return this.httpClient.post<boolean>(environment.apiUrl + "/utility/splitIFSFileContent", aFileName);
   }
   getIFSFileContent(aFileName: string) {
-    console.log('[0] getIFSFileContent. aFileName:', aFileName);
+    // console.log('[0] getIFSFileContent. aFileName:', aFileName);
     return this.httpClient.post<string[]>(environment.apiUrl + "/utility/getIFSFileContent", aFileName);
   }
   getIFSFileContentZipped(aFileName: string) {
-    console.log('[0] getIFSFileContentZipped. aFileName:', aFileName);
+    // console.log('[0] getIFSFileContentZipped. aFileName:', aFileName);
     return this.httpClient.post<string[]>(environment.apiUrl + "/utility/getIFSFileContentZipped", aFileName);
   }
   getIFSFilesContent(aFileNames: string[]) {
-    console.log('[0] getIFSFilesContent. aFileNames:', aFileNames);
+    // console.log('[0] getIFSFilesContent. aFileNames:', aFileNames);
     return this.httpClient.post<string[]>(environment.apiUrl + "/utility/getIFSFilesContent", aFileNames);
   }
   findSibankCall(aFileNames: string[]) {
@@ -589,15 +589,15 @@ export class BkService {
     return this.httpClient.post<string[]>(environment.apiUrl + "/utility/findSibankCall", aFileNames);
   }
   deleteIFSFile(aFileName: string) {
-    console.log('[0] deleteIFSFile. aFileNames:', aFileName);
+    // console.log('[0] deleteIFSFile. aFileNames:', aFileName);
     return this.httpClient.post<boolean>(environment.apiUrl + "/utility/deleteIFSFile", aFileName);
   }
   deleteIFSFiles(aFileNames: string[]) {
-    console.log('[0] deleteIFSFiles. aFileNames:', aFileNames);
+    // console.log('[0] deleteIFSFiles. aFileNames:', aFileNames);
     return this.httpClient.post<boolean>(environment.apiUrl + "/utility/deleteIFSFiles", aFileNames);
   }
   updateLegacyTermialAbiMapper() {
-    console.log('[0] updateLegacyTermialAbiMapper');
+    // console.log('[0] updateLegacyTermialAbiMapper');
     return this.httpClient.get<void>(environment.apiUrl + "/update_legacy_terminal_abi_mapper");
   }
   showISYDsInput(aInputString: string) {
@@ -610,7 +610,7 @@ export class BkService {
   }
 
   dsplog(aSql: string) {
-    console.log('[0] dsplog. aSql:', aSql);
+    // console.log('[0] dsplog. aSql:', aSql);
     var parms: { sql: string } = {
       sql: aSql
     };

@@ -43,11 +43,11 @@ export class NetstatJobInfo {
   }
 
   netstat_job_info() {
-    console.log('[0]-input_port', this.input_port);
+    // console.log('[0]-input_port', this.input_port);
     this.m_job_list.set([]);
     this.bkService.netstat_job_info(this.jobListParams.port, this.jobListParams.jobUser, this.jobListParams.jobName).subscribe(
       data => {
-        console.log('netstat_job_info data is', data);
+        // console.log('netstat_job_info data is', data);
         let newJobList: JobListItemExtended[] = [];
         let jobItems: any = data;
         jobItems.forEach((i: any) => {
@@ -66,7 +66,7 @@ export class NetstatJobInfo {
         this.m_job_list.set(newJobList);
       },
       err => {
-        console.log('errore in fase di esecuzione della richiesta');
+        console.log('errore in fase di esecuzione della richiesta netstat_job_info', err);
         this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta');
       }
     );

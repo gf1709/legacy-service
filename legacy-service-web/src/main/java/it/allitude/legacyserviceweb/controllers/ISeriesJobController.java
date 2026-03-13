@@ -36,71 +36,115 @@ public class ISeriesJobController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @PostMapping("/netstat_job_info")
-    public ArrayList<JobListResponseDTO> netstat_job_info(@RequestBody NetStatJobInfoRequestDTO in) throws Exception {
+    public ResponseEntity<?> netstat_job_info(@RequestBody NetStatJobInfoRequestDTO in)  {
         ISeriesJobUtil util = _jobUtil;
-        return util.netstat_job_info(in.getPort(), in.getUserName(), in.getJobName());
+        try {
+             ArrayList<JobListResponseDTO> res = util.netstat_job_info(in.getPort(), in.getUserName(), in.getJobName());
+             return ResponseEntity.ok(res);
+        } catch (Exception ex) {
+            ResponseEntity<?> resEnt = new ResponseEntity<>(ex.toString(), org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR);
+            return resEnt;
+        }
     }
 
     @GetMapping("/socket_service_info")
-    public ArrayList<ServiceInfoResponseDTO> getSocketServiceInfo() throws Exception {
+    public ResponseEntity<?> getSocketServiceInfo() {
         ISeriesJobUtil util = _jobUtil;
-        return util.getSocketServiceInfo();
+        try {
+            ArrayList<ServiceInfoResponseDTO> res = util.getSocketServiceInfo();
+            return ResponseEntity.ok(res);
+        } catch (Exception ex) {
+            ResponseEntity<?> resEnt = new ResponseEntity<>(ex.toString(), org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR);
+            return resEnt;
+        }
     }
 
     @PostMapping("/wrkactjob")
-    public ArrayList<JobListResponseDTO> getActiveJobs(@RequestBody WRKACTJOBRequestDTO in) throws Exception {
-        ArrayList<JobListResponseDTO> res = new ArrayList<>();
+    public ResponseEntity<?> getActiveJobs(@RequestBody WRKACTJOBRequestDTO in) {
         ISeriesJobUtil util = _jobUtil;
         WRKACTJOB_Filter filter = new WRKACTJOB_Filter();
         filter.setJobName(in.getJobName());
         filter.setUserName(in.getUserName());
         filter.setSortByJobName(in.isSortByJobName());
         filter.setSortByJobStatus(in.isSortByJobStatus());
-        return util.WRKACTJOB(filter);
+        try {
+            ArrayList<JobListResponseDTO> res = util.WRKACTJOB(filter);
+            return ResponseEntity.ok(res);
+        } catch (Exception ex) {
+            ResponseEntity<?> resEnt = new ResponseEntity<>(ex.toString(), org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR);
+            return resEnt;
+        }
     }
 
     @GetMapping("/session")
-    public JSession getSession() throws Exception {
-        return JSession.getCurrentSession();
+    public ResponseEntity<?> getSession() {
+        try {
+            JSession session = JSession.getCurrentSession();
+            return ResponseEntity.ok(session);
+        } catch (Exception ex) {
+            ResponseEntity<?> resEnt = new ResponseEntity<>(ex.toString(), org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR);
+            return resEnt;
+        }           
     }
 
     @PostMapping("/endjob")
-    public void endJob(@RequestBody JobInfoRequestDTO in) throws Exception {
-
-        ISeriesJobUtil util = _jobUtil;
-        util.endJob(in.getJobName(), in.getUserName(), in.getJobNumber());
+    public ResponseEntity<?> endJob(@RequestBody JobInfoRequestDTO in) {
+        try {
+            ISeriesJobUtil util = _jobUtil;
+            util.endJob(in.getJobName(), in.getUserName(), in.getJobNumber());
+            return ResponseEntity.ok().build();
+        } catch (Exception ex) {
+            ResponseEntity<?> resEnt = new ResponseEntity<>(ex.toString(), org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR);
+            return resEnt;
+        }
     }
 
     @PostMapping("/getjoblog")
-    public ArrayList<String> getJobLog(@RequestBody ArrayList<JobInfoRequestDTO> in) throws Exception {
+    public ResponseEntity<?> getJobLog(@RequestBody ArrayList<JobInfoRequestDTO> in) {
 
         ISeriesJobUtil util = _jobUtil;
         if (in.size() == 1) {
-            return util.getJobLog(in.get(0).getJobName(), in.get(0).getUserName(), in.get(0).getJobNumber());
+            try {
+                return ResponseEntity.ok(util.getJobLog(in.get(0).getJobName(), in.get(0).getUserName(), in.get(0).getJobNumber()));
+            } catch (Exception ex) {
+                ResponseEntity<?> resEnt = new ResponseEntity<>(ex.toString(), org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR);
+                return resEnt;
+            }
         }
 
-        ArrayList<String> res = new ArrayList<>();
-        for (int i = 0; i < in.size(); i++) {
-            // pongo il limite a 100000 righe
-            if (res.size() > 100000) {
-                res.add("ATTENZIONE: log troncato. Raggiunto massimo numero di righe,");
-                res.add("E' stato raggiunto il limite di 100.000 righe. Ridurre il numero di job o di righe di log.");
-                break;
+        try {
+            ArrayList<String> res = new ArrayList<>();
+            for (int i = 0; i < in.size(); i++) {
+                // pongo il limite a 100000 righe
+                if (res.size() > 100000) {
+                    res.add("ATTENZIONE: log troncato. Raggiunto massimo numero di righe,");
+                    res.add("E' stato raggiunto il limite di 100.000 righe. Ridurre il numero di job o di righe di log.");
+                    break;
+                }
+                JobInfoRequestDTO job = in.get(i);
+                ArrayList<String> resSingle = util.getJobLog(job.getJobName(), job.getUserName(), job.getJobNumber());
+                for (String li : resSingle) {
+                    res.add("[" + job.getJobName() + "." + job.getUserName() + "." + job.getJobNumber() + "] " + li);
+                }
             }
-            JobInfoRequestDTO job = in.get(i);
-            ArrayList<String> resSingle = util.getJobLog(job.getJobName(), job.getUserName(), job.getJobNumber());
-            for (String li : resSingle) {
-                res.add("[" + job.getJobName() + "." + job.getUserName() + "." + job.getJobNumber() + "] " + li);
-            }
+            return ResponseEntity.ok(res);
+        } catch (Exception ex) {
+            ResponseEntity<?> resEnt = new ResponseEntity<>(ex.toString(), org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR);
+            return resEnt;
         }
-        return res;
     }
 
     @PostMapping("/set-joblog-verbose")
-    public void setJobLogVerbose(@RequestBody JobInfoRequestDTO in) throws Exception {
+    public ResponseEntity<?> setJobLogVerbose(@RequestBody JobInfoRequestDTO in) {
 
-        ISeriesJobUtil util = _jobUtil;
-        util.setJobLogVerbose(in.getJobName(), in.getUserName(), in.getJobNumber());
+        try {
+             ISeriesJobUtil util = _jobUtil;
+             util.setJobLogVerbose(in.getJobName(), in.getUserName(), in.getJobNumber());
+             return ResponseEntity.ok().build();
+        } catch (Exception ex) {
+            ResponseEntity<?> resEnt = new ResponseEntity<>(ex.toString(), org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR);
+            return resEnt;
+        }
     }
 
     @PostMapping("/getjobdetail")

@@ -22,10 +22,10 @@ export class BasicAuthHtppInterceptorService implements HttpInterceptor {
           Authorization: `${sessionStorage.getItem('token')}`
         }
       })
-      console.log('BasicAuthHtppInterceptorService-Added auth header to the request. request url: ', req.url);
+      // console.log('BasicAuthHtppInterceptorService-Added auth header to the request. request url: ', req.url);
     }
     else {
-      console.log('BasicAuthHtppInterceptorService-No auth header added to the request. request url: ', req.url);
+      console.error('BasicAuthHtppInterceptorService-No auth header added to the request. request url: ', req.url);
     }
 
     this.totalRequests++;
