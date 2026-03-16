@@ -57,12 +57,8 @@ export class IfsManager implements AfterContentChecked {
   }
 
   ngAfterContentChecked(): void {
-    console.log('ngAfterContentChecked');
-
     if (this.m_isyDsInputLineNumberToShow > 0) {
       let lineNumber = this.m_isyDsInputLineNumberToShow;
-      // this.m_currentRow = lineNumber;
-      // console.log('ngAfterContentChecked[1] - m_currentRow:', this.m_currentRow);
       this.m_isyDsInputLineNumberToShow = -1;
       if (this.m_file_content()[lineNumber].requests.length === 0) {
         let line: string = this.m_file_content()[lineNumber].lineContent;
@@ -77,7 +73,7 @@ export class IfsManager implements AfterContentChecked {
             this.cdRef.detectChanges();
           }
           , err => {
-            console.log('errore in fase di esecuzione della richiesta');
+            console.error('errore in fase di esecuzione della richiest ngAfterContentChecked', err);
             this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta');
           }
         );
@@ -102,7 +98,7 @@ export class IfsManager implements AfterContentChecked {
             this.cdRef.detectChanges();
           }
           , err => {
-            console.log('errore in fase di esecuzione della richiesta');
+            console.error('errore in fase di esecuzione della richiest ngAfterContentChecked', err);
             this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta');
           }
         );
@@ -123,7 +119,6 @@ export class IfsManager implements AfterContentChecked {
   }
 
   listFiles() {
-    console.log('[0]-listFiles', this.ifsManagerSearchParams.directory, this.ifsManagerSearchParams.filePattern);
     this.m_selectedRowIndex = -1;
     // this.m_job_list = [];
     this.bkService.listIFSFiles(this.ifsManagerSearchParams.directory, this.ifsManagerSearchParams.filePattern, this.ifsManagerSearchParams.fromDate, this.ifsManagerSearchParams.toDate).subscribe(
@@ -138,18 +133,16 @@ export class IfsManager implements AfterContentChecked {
           parentdir.size = 0;
           this.m_fileList().files.unshift(parentdir);
         }
-        // console.log('listFiles data is', this.m_fileList());
         this.m_allRowsSelected = false;
       }
       , err => {
-        console.log('errore in fase di esecuzione della richiesta');
+        console.error('errore in fase di esecuzione della richiesta');
         this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta');
       }
     );
   }
 
   showFileContent(dir: string, fileName: string, idx: number) {
-    console.log('getFile:', dir, fileName);
     let fileContent: IfsFileContent[] = [];
     let responseRows: number[] = [];
 
@@ -159,15 +152,11 @@ export class IfsManager implements AfterContentChecked {
     this.m_current_file = { dir: dir, file: fileName, idx: idx };
     let index: number = 0;
 
-    console.log('showFileContent-calling getIFSFileContentZipped for ', aFullFileName, new Date());
     this.bkService.getIFSFileContentZipped(aFullFileName).subscribe(
       data => {
-        // console.log('swhoFileConntent compressed message is ', data);
-        console.log('showFileContent-calling getIFSFileContentZipped lines retrieved for ', aFullFileName, new Date());
         data.forEach(
           (b64LineCompressed) => {
             let lines: string[] = this.decompressLines(b64LineCompressed);
-            // console.log('swhoFileConntent decompressed line are [2]', lines);
 
             lines.forEach(
               (line) => {
@@ -183,18 +172,14 @@ export class IfsManager implements AfterContentChecked {
                 ) {
                   responseRows.push(index);
                 }
-                // console.log('showFileContent new ele is ', ifsLine);
                 index += 1;
               });
           })
-        console.log('showFileContent-calling getIFSFileContentZipped lines fetched for ', aFullFileName, new Date());
         this.m_requestResponseRows.set(responseRows);
         this.m_file_content.set(fileContent);
-        console.log('showFileContent-calling getIFSFileContentZipped lines set to show ', new Date());
-        // console.log('getFile data is', this.m_file_content());
       }
       , err => {
-        console.log('errore in fase di esecuzione della richiesta');
+        console.error('errore in fase di esecuzione della richiesta showFileContent', err);
         this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta');
       }
     );
@@ -215,13 +200,11 @@ export class IfsManager implements AfterContentChecked {
         if (value.length > 0)  // Non torno le rihe vuote
           lines.push(value);
       })
-      // console.log('swhoFileConntent decompressed line are [1]', lines);
     }
     return lines;
   }
 
   showFileContentWorking(dir: string, fileName: string, idx: number) {
-    console.log('getFile:', dir, fileName);
     this.m_requestResponseRows.set([]);
     this.m_currentRow = -1;
     let aFullFileName: string = this.getFullFileName(dir, fileName);
@@ -244,22 +227,19 @@ export class IfsManager implements AfterContentChecked {
             ) {
               responseRows.push(index);
             }
-            // console.log('showFileContent new ele is ', ifsLine);
           }
         );
         this.m_requestResponseRows.set(responseRows);
         this.m_file_content.set(fileContent);
-        // console.log('getFile data is', this.m_file_content());
       }
       , err => {
-        console.log('errore in fase di esecuzione della richiesta');
+        console.error('errore in fase di esecuzione della richiesta showFileContent', err);
         this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta');
       }
     );
   }
 
   downloadFile(dir: string, fileName: string, idx: number) {
-    console.log('downloadFile:', dir, fileName);
     let aFullFileName: string = this.getFullFileName(dir, fileName);
     this.m_current_file = { dir: dir, file: fileName, idx: idx };
     this.bkService.getIFSFileContent(aFullFileName).subscribe(
@@ -272,11 +252,9 @@ export class IfsManager implements AfterContentChecked {
             ifsLine.lineNumber = index + 1;
             ifsLine.lineContent = line;
             fileContent.push(ifsLine);
-            // console.log('downloadFile new ele is ', ifsLine);
           }
         );
         this.m_file_content.set(fileContent);
-        // console.log('downloadFile data is', this.m_file_content);
         this.m_file_content().forEach(
           (ele) => {
             binaryData.push(ele.lineContent + '\n');
@@ -290,14 +268,13 @@ export class IfsManager implements AfterContentChecked {
         document.body.removeChild(downloadLink);
       }
       , err => {
-        console.log('errore in fase di esecuzione della richiesta');
+        console.error('errore in fase di esecuzione della richiesta downloadFile', err);
         this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta');
       }
     );
   }
 
   downloadFileListedFileContent() {
-    console.log('downloadFileListedFileContent:');
     let fNames: string[] = [];
     this.m_fileList().files.forEach(
       (ele) => {
@@ -308,7 +285,6 @@ export class IfsManager implements AfterContentChecked {
     this.bkService.getIFSFilesContent(fNames).subscribe(
       data => {
         let binaryData: BlobPart[] = [];
-        // console.log('downloadFile data is', data);
         data.forEach(
           (line) => {
             binaryData.push(line + '\n');
@@ -325,7 +301,7 @@ export class IfsManager implements AfterContentChecked {
         document.body.removeChild(downloadLink);
       }
       , err => {
-        console.log('errore in fase di esecuzione della richiesta');
+        console.error('errore in fase di esecuzione della richiesta downloadFileListedFileContent', err);
         this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta');
       }
     );
@@ -333,7 +309,6 @@ export class IfsManager implements AfterContentChecked {
   }
 
   findSibankCall() {
-    console.log('findSibankCall:');
     let fNames: string[] = [];
     this.m_fileList().files.forEach(
       (ele) => {
@@ -347,7 +322,7 @@ export class IfsManager implements AfterContentChecked {
         alert(data);
       }
       , err => {
-        console.log('errore in fase di esecuzione della richiesta');
+        console.error('errore in fase di esecuzione della richiesta findSibankCall', err);
         this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta');
       }
     );
@@ -355,7 +330,6 @@ export class IfsManager implements AfterContentChecked {
   }
 
   sort(sortCol: string) {
-    console.log('[1] sort, this.m_sort_mode', sortCol, this.m_sort_mode);
     this.m_selectedRowIndex = -1;
     if (sortCol === 'name') {
 
@@ -450,7 +424,6 @@ export class IfsManager implements AfterContentChecked {
         this.m_sort_mode = SortMode.Size_ASC; // l'ordinamento fatto e' crescente
       }
     }
-    console.log('[2] sort, this.m_sort_mode', sortCol, this.m_sort_mode);
   }
 
   deleteAllSelectedFiles() {
@@ -460,7 +433,6 @@ export class IfsManager implements AfterContentChecked {
     }
     this.m_selectedRowIndex = -1;
 
-    console.log('deleteAllListedFiles:');
     let bFullFileNamesToDelete: string[] = [];
     let bFullFileIndexesToDelete: number[] = [];
     for (let idx: number = 0; idx < this.m_fileList().files.length; idx++) {
@@ -474,7 +446,6 @@ export class IfsManager implements AfterContentChecked {
 
     this.bkService.deleteIFSFiles(bFullFileNamesToDelete).subscribe(
       (data) => {
-        console.log('ifs files deleted ', bFullFileNamesToDelete, data);
         const tmpFiles = this.m_fileList().files;
         for (let idx: number = 0; idx < bFullFileIndexesToDelete.length; idx++) {
           tmpFiles.splice(bFullFileIndexesToDelete[idx], 1);
@@ -486,7 +457,7 @@ export class IfsManager implements AfterContentChecked {
         this.message_service.messageShow(this.message_service.msg_type.Info, 'File cancellati');
       },
       err => {
-        console.log('errore in fase di esecuzione della richiesta');
+        console.error('errore in fase di esecuzione della richiesta', err);
         this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta di cancellazione dei file');
       }
     );
@@ -498,10 +469,8 @@ export class IfsManager implements AfterContentChecked {
     //   return;
     this.m_selectedRowIndex = -1;
     this.setCurrentFileEmpty();
-    console.log('delete', dir, fileName);
     this.bkService.deleteIFSFile(bFullFileName).subscribe(
       (data) => {
-        console.log('ifs file deleted ', bFullFileName, data);
         const tmpFiles = this.m_fileList().files;
         tmpFiles.splice(idx, 1);
         this.m_fileList.set({
@@ -511,7 +480,7 @@ export class IfsManager implements AfterContentChecked {
         this.message_service.messageShow(this.message_service.msg_type.Info, 'File ' + bFullFileName + " cancellato");
       },
       err => {
-        console.log('errore in fase di esecuzione della richiesta');
+        console.error('errore in fase di esecuzione della richiesta', err);
         this.message_service.messageShow(this.message_service.msg_type.Error, 'Errore in fase di esecuzione della richiesta di cancellazione del file');
       }
     )
@@ -577,23 +546,18 @@ export class IfsManager implements AfterContentChecked {
     return false;
   }
   showISYDsInput(idx: number) {
-    console.log('showISYDsInput', idx);
     this.m_isyDsInputLineNumberToShow = idx;
   }
 
   showISYDsOutput(idx: number) {
-    console.log('showISYDsOutput', idx);
     this.m_isyDsOutputLineNumberToShow = idx;
   }
 
   selectRow(idx: number, event: any) {
-    console.log('selectRow', idx, event);
     if (event.shiftKey === false) {
       this.m_fileList().files[idx].isSelected = !this.m_fileList().files[idx].isSelected;
-      console.log('selectRow-this.m_fileList().files[idx].isSelected:', this.m_fileList().files[idx].isSelected);
     }
     else {
-      console.log('selectRow - shiftkey true.');
       this.m_fileList().files[idx].isSelected = true;
       let minSelectedIndex: number = 99999999;
       // Trovo dell'indice del primo elemento selezionato
